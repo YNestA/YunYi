@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View,Image,Text,StyleSheet,TouchableNativeFeedback} from 'react-native'
+import {View,Image,Text,StyleSheet,TouchableNativeFeedback,TouchableOpacity} from 'react-native'
 import {StackNavigator, TabNavigator} from 'react-navigation'
 import DiscoverView from '../component/discover/DiscoverView'
 import ConcernView from '../component/concern/ConcernView'
@@ -9,7 +9,8 @@ import MessageCenterView from '../component/message-center/MessageCenterView'
 import {DetailView} from '../component/DetailView'
 import {screenUtils} from '../tools/ScreenUtils'
 import {Passage} from '../component/passage/passage'
-import Edit from '../component/edit-new/edit'
+import EditMain from '../component/edit-new/EditMain'
+import EditTitle from '../component/edit-new/EditTitle'
 
 export class TabIcon extends Component{
     constructor(props){
@@ -47,8 +48,13 @@ export class HeaderButton extends Component{
                 marginLeft:screenUtils.autoSize(15),
                 marginRight:screenUtils.autoSize(15)}}
             >
-                 <TouchableNativeFeedback onPress={this.props.onPress}>
-                     <Text>{this.props.text}</Text>
+                 <TouchableNativeFeedback
+                     onPress={this.props.onPress}
+                     background={TouchableNativeFeedback.Ripple('#ddd',true)}
+                 >
+                     <View style={{padding:screenUtils.autoSize(10)}}>
+                         <Text style={{color:'#333',fontSize:screenUtils.autoFontSize(16)}}>{this.props.text}</Text>
+                     </View>
                  </TouchableNativeFeedback>
             </View>
         );
@@ -166,8 +172,11 @@ export const YunYiNavi=StackNavigator({
     Passage:{
         screen:Passage,
     },
-    Edit:{
-        screen:Edit
+    EditMain:{
+        screen:EditMain
+    },
+    EditTitle:{
+        screen:EditTitle
     },
     Detail:{
         screen:DetailView,

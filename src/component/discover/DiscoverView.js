@@ -13,7 +13,7 @@ class DiscoverView extends Component{
                 <Text>发现！</Text>
                 <TouchableNativeFeedback
                     onPress={()=>{
-                        navigation.navigate('Edit');
+                        navigation.navigate('EditMain');
                     }}
                 >
                     <Text>去编辑页</Text>
@@ -32,6 +32,7 @@ class DiscoverView extends Component{
     }
 }
 
+//redux
 let actions={
     addCount:function (n) {
         return {

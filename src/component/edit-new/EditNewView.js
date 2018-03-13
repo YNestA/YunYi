@@ -28,7 +28,7 @@ export default class EditNewView extends Component{
                 let pro=new Promise((resolve,reject)=>{
                     this.props.screenProps.startEditNew(resolve);
                 }).then((data)=>{
-                    this.props.navigation.navigate('Edit',{selected:true,imgs:data});
+                    this.props.navigation.navigate('EditMain',{selected:true,imgs:data});
                 });
 
 

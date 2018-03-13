@@ -67,7 +67,11 @@ const styles=StyleSheet.create({
     selectButton:{
         width:screenUtils.autoSize(300),
         height:screenUtils.autoSize(80),
+        flex:1,
+        justifyContent:'center'
     },
     selectText:{
+        fontSize:screenUtils.autoFontSize(20),
+        lineHeight:screenUtils.autoSize(80)
     }
 });
