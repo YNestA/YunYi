@@ -1,9 +1,10 @@
 import React,{Component} from 'react'
-import {ImageBackground,View,Text,FlatList,Image,TouchableNativeFeedback,TouchableWithoutFeedback,StyleSheet,Button} from 'react-native'
+import {ScrollView,ImageBackground,View,Text,FlatList,Image,TouchableNativeFeedback,TouchableOpacity,TouchableWithoutFeedback,StyleSheet,Button} from 'react-native'
 import {connect} from 'react-redux'
 import {HeaderButton} from "../../navigation/navi";
 import {screenUtils} from "../../tools/ScreenUtils";
-
+import AddSectionBtn from './AddSectionBtn'
+import Section from './EditSection'
 
 const styles=StyleSheet.create({
     coverBackground: {
@@ -31,82 +32,63 @@ const styles=StyleSheet.create({
         color:'#fff',
         textAlign:'center',
         fontSize:screenUtils.autoFontSize(24)
-    },
-    sectionDelete:{
-        position:'absolute',
-        left:screenUtils.autoSize(3),
-        top:screenUtils.autoSize(3),
-        width:screenUtils.autoSize(15),
-        height:screenUtils.autoSize(15),
-    },
-    sectionDeleteImg:{
-        width:screenUtils.autoSize(15),
-        height:screenUtils.autoSize(15)
-    },
-    sectionContainer:{
-        height:screenUtils.autoSize(100),
-        backgroundColor:'#fff',
-        marginTop:screenUtils.autoSize(10),
-        marginLeft:screenUtils.autoSize(15),
-        marginRight:screenUtils.autoSize(15),
-        borderRadius:screenUtils.autoSize(10)
-    },
-    sectionImg:{
-        position:'absolute',
-        top:screenUtils.autoSize(15),
-        left:screenUtils.autoSize(20),
-        width:screenUtils.autoSize(70),
-        height:screenUtils.autoSize(70)
-    },
-    contentContainer:{
-        height:screenUtils.autoSize(70),
-        marginLeft:screenUtils.autoSize(100),
-        marginRight:screenUtils.autoSize(15),
-        marginTop:screenUtils.autoSize(15),
-        marginBottom:screenUtils.autoSize(15),
-        paddingLeft:screenUtils.autoFontSize(5),
-        paddingRight:screenUtils.autoFontSize(5)
-    },
-    contentText:{
-        color:'#666',
-        fontSize:screenUtils.autoFontSize(17)
     }
 });
 
-class AddSectionBtn extends Component{
-    constructor(props){
-        super(props);
-    }
-    render(){
-        return(
-            <View/>
-        );
-    }
-}
 
-class Section extends Component{
-    constructor(props){
+
+
+class Sections extends Component{
+    constructor(props) {
         super(props);
+        this.state={
+            addBtnShow:[]
+        }
+        this._openComplexBtnCb=this._openComplexBtnCb.bind(this);
+    }
+    componentWillReceiveProps(nextProps){
+        this._setAddBtnShow(nextProps.sections);
+    }
+    _setAddBtnShow(sections){
+        let addBtnShow=sections.map(()=>false);
+        addBtnShow.push(false);
+        this.setState({
+            addBtnShow:addBtnShow
+        });
+    }
+    _openComplexBtnCb(index){
+        this.setState({
+            addBtnShow:this.state.addBtnShow.map((item,index2)=>{
+                return (index===index2);
+            })
+        });
     }
     render(){
+        let {sections}=this.props;
         return(
-            <View style={styles.sectionContainer}>
-                <Image style={styles.sectionImg} source={require('../../img/hikari.jpg')}/>
-                <View style={styles.sectionDelete}>
-                    <TouchableWithoutFeedback onPress={()=>{console.log(3)}}>
-                        <Image style={styles.sectionDeleteImg} source={require('../../img/delete-section.png')}/>
-                    </TouchableWithoutFeedback>
-                </View>
-                <View style={styles.contentContainer}>
-                    <TouchableWithoutFeedback>
-                        <View><Text numberOfLines={3} style={[styles.contentText,true?{color:'#444'}:{}]}>啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊</Text></View>
-                    </TouchableWithoutFeedback>
-                </View>
+            <View>
+                <FlatList
+                    extraData={this.state}
+                    data={sections}
+                    renderItem={({item,index})=>{
+                        return (
+                            <View>
+                                <AddSectionBtn index={index} showComplex={this.state.addBtnShow} openComplexCb={()=>{this._openComplexBtnCb(index)}}/>
+                                <Section index={index} section={item}/>
+                            </View>
+                        );
+                    }}
+                />
+                <AddSectionBtn
+                    index={this.state.addBtnShow.length-1}
+                    showComplex={this.state.addBtnShow}
+                    openComplexCb={()=>{this._openComplexBtnCb(this.state.addBtnShow.length-1)}}
+
+                />
             </View>
         );
     }
 }
-
 class Edit extends Component{
     static navigationOptions=({navigation,screenProps})=>{
         let {params}=navigation.state;
@@ -141,10 +123,9 @@ class Edit extends Component{
         });
     }
     render(){
-        console.log(this.props);
         let {passage,navigation}=this.props;
         return(
-            <View>
+            <ScrollView>
                 <ImageBackground
                     style={styles.coverBackground}
                     source={require('../../img/hikari.jpg')}
@@ -162,14 +143,8 @@ class Edit extends Component{
                         </View>
                     </View>
                 </ImageBackground>
-                <FlatList
-                    data={this.props.passage.sections}
-                    renderItem={({item})=>{
-                        return <Image style={{width:screenUtils.screenWidth,height:150}} source={{uri:item.img.path}}/>
-                    }}
-                />
-                <Section/>
-            </View>
+                <Sections sections={passage.sections}/>
+            </ScrollView>
         );
     }
 }
@@ -181,7 +156,7 @@ let actions={
             payload:{
                 coverImg:imgs[0],
                 sections:imgs.map((item)=>{
-                    return {img:item,content:''};
+                    return {img:item,content:'',text:'',type:'img'};
                 })
             }
         };
@@ -193,9 +168,11 @@ function mapStateToProps(state) {
         passage:state.edit
     }
 }
+
 function mapDispatchToProps(dispatch) {
     return{
-        startImg:(imgs)=>{dispatch(actions.startImg(imgs))}
+        startImg:(imgs)=>{dispatch(actions.startImg(imgs))},
+        addTextSection:(index)=>{dispatch(actions.addTextSection(index))}
     }
 }
 
