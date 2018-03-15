@@ -3878,6 +3878,13 @@ react-native-webview-bridge-updated@^1.0.0:
     invariant "2.2.0"
     keymirror "0.1.1"
 
+react-native-webview-bridge@^0.33.0:
+  version "0.33.0"
+  resolved "https://registry.yarnpkg.com/react-native-webview-bridge/-/react-native-webview-bridge-0.33.0.tgz#7f9b7fb903b4ed13f4edcab52e654e9bffea4fd4"
+  dependencies:
+    invariant "2.2.0"
+    keymirror "0.1.1"
+
 react-native-zss-rich-text-editor@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/react-native-zss-rich-text-editor/-/react-native-zss-rich-text-editor-1.1.0.tgz#c197d797a8ca65e46e2ccbe36e73fa2624d07c1c"

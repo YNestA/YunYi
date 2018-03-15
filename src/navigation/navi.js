@@ -11,6 +11,7 @@ import {screenUtils} from '../tools/ScreenUtils'
 import {Passage} from '../component/passage/passage'
 import EditMain from '../component/edit-new/EditMain'
 import EditTitle from '../component/edit-new/EditTitle'
+import EditText from '../component/edit-new/EditText'
 
 export class TabIcon extends Component{
     constructor(props){
@@ -169,6 +170,9 @@ export const YunYiNavi=StackNavigator({
             header:null,
         }
     },
+    EditText:{
+        screen:EditText,
+    },
     Passage:{
         screen:Passage,
     },
@@ -186,7 +190,7 @@ export const YunYiNavi=StackNavigator({
         }
     }
 },{
-    initialRouteName:'Main',
+    initialRouteName:'EditText',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(50),

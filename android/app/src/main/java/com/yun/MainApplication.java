@@ -9,6 +9,8 @@ import com.facebook.react.ReactPackage;
 import com.facebook.react.shell.MainReactPackage;
 import com.facebook.soloader.SoLoader;
 
+import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -24,7 +26,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
-            new PickerPackage()
+            new PickerPackage(),
+            new WebViewBridgePackage()
       );
     }
 
@@ -45,3 +48,4 @@ public class MainApplication extends Application implements ReactApplication {
     SoLoader.init(this, /* native exopackage */ false);
   }
 }
+
