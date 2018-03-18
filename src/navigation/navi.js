@@ -190,10 +190,10 @@ export const YunYiNavi=StackNavigator({
         }
     }
 },{
-    initialRouteName:'EditText',
+    initialRouteName:'Main',
     navigationOptions:{
         headerStyle:{
-            height:screenUtils.autoSize(50),
+            height:screenUtils.autoSize(55),
             backgroundColor:'#fff',
         },
         headerRight:<View/>,

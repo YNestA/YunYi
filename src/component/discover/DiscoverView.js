@@ -1,10 +1,21 @@
 import React, {Component} from 'react'
-import {View,Text,TouchableNativeFeedback} from 'react-native'
+import {View,Text,TouchableNativeFeedback,BackHandler} from 'react-native'
 import {connect} from 'react-redux'
 
 class DiscoverView extends Component{
     constructor(props){
         super(props);
+        this._onBackHandler=this._onBackHandler.bind(this);
+    }
+    componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._onBackHandler);
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this._onBackHandler);
+    }
+    _onBackHandler(){
+        BackHandler.exitApp();
+        return true;
     }
     render(){
         const navigation=this.props.navigation;

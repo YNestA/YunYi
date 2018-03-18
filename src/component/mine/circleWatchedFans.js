@@ -32,6 +32,5 @@ const styles=StyleSheet.create({
     cell:{
         flex:1,
         height:screenUtils.autoSize(40),
-        textAlign:'center',
     }
 });

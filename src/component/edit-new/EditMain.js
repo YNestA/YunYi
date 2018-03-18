@@ -1,5 +1,8 @@
 import React,{Component} from 'react'
-import {ScrollView,ImageBackground,View,Text,FlatList,Image,TouchableNativeFeedback,TouchableOpacity,TouchableWithoutFeedback,StyleSheet,Button} from 'react-native'
+import {
+    ScrollView, ImageBackground, View, Text, FlatList, Image, TouchableNativeFeedback, TouchableOpacity,
+    TouchableWithoutFeedback, StyleSheet, Button, BackHandler
+} from 'react-native'
 import {connect} from 'react-redux'
 import {HeaderButton} from "../../navigation/navi";
 import {screenUtils} from "../../tools/ScreenUtils";
@@ -74,7 +77,7 @@ class Sections extends Component{
                         return (
                             <View>
                                 <AddSectionBtn index={index} showComplex={this.state.addBtnShow} openComplexCb={()=>{this._openComplexBtnCb(index)}}/>
-                                <Section index={index} section={item}/>
+                                <Section navigation={this.props.navigation} index={index} section={item}/>
                             </View>
                         );
                     }}
@@ -101,6 +104,7 @@ class Edit extends Component{
 
     constructor(props){
         super(props);
+        this._onBackHandler=this._onBackHandler.bind(this);
     }
     _complete(){
         console.log(this.props);
@@ -121,6 +125,15 @@ class Edit extends Component{
             leftPress:this._returnPre.bind(this),
             rightPress:this._complete.bind(this)
         });
+        //安卓返回键监听
+        BackHandler.addEventListener('hardwareBackPress', this._onBackHandler);
+    }
+    componentWillUnmount(){
+        BackHandler.addEventListener('hardwareBackPress',this._onBackHandler);
+    }
+    _onBackHandler(){
+        this.props.navigation.navigate('Main');
+        return true;
     }
     render(){
         let {passage,navigation}=this.props;
@@ -143,7 +156,7 @@ class Edit extends Component{
                         </View>
                     </View>
                 </ImageBackground>
-                <Sections sections={passage.sections}/>
+                <Sections navigation={navigation} sections={passage.sections}/>
             </ScrollView>
         );
     }

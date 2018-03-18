@@ -40,8 +40,8 @@ const styles=StyleSheet.create({
         justifyContent:'center',
     },
     addSectionComplexImage:{
-        width:screenUtils.autoSize(22),
-        height:screenUtils.autoSize(16)
+        width:screenUtils.autoSize(23),
+        height:screenUtils.autoSize(17)
     }
 });
 class AddSectionBtn extends Component{

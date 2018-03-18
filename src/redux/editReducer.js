@@ -26,6 +26,8 @@ export default function editReducer(state = initialState, action) {
             return Object.assign({},state,action.payload);
         case 'DELETE_SECTION':
             return Object.assign({},state,action.payload);
+        case 'EDIT_SECTION_TEXT':
+            return Object.assign({},state,action.payload);
         default:
             return state;
     }

@@ -1214,6 +1214,10 @@
 				document.execCommand('outdent', false, null);
 				zss_editor.enabledEditingItems();
 			}
+            zss_editor.setFontSize = function (em) {
+				document.execCommand('fontsize', true, em);
+				zss_editor.enabledEditingItems();
+			}
 
 			zss_editor.setFontFamily = function(fontFamily) {
 

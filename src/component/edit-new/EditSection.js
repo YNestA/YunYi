@@ -49,7 +49,7 @@ class Section extends Component{
         super(props);
     }
     render(){
-        let {section,sections,index}=this.props;
+        let {section,sections,index,navigation}=this.props;
         return(
             <View style={styles.sectionContainer}>
                 <Image style={styles.sectionImg} source={section.type=='img'?{uri:section.img.path}:require('../../img/text.png')}/>
@@ -59,7 +59,9 @@ class Section extends Component{
                     </TouchableWithoutFeedback>
                 </View>
                 <View style={styles.contentContainer}>
-                    <TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={()=>{
+                        navigation.navigate('EditText',{sectionIndex:index,content:section.content});
+                    }}>
                         <View><Text numberOfLines={3} style={[styles.contentText,section.text?{color:'#444'}:{}]}>{section.text?section.text:'点击添加文字'}</Text></View>
                     </TouchableWithoutFeedback>
                 </View>
