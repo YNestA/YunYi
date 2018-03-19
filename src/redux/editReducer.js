@@ -28,6 +28,10 @@ export default function editReducer(state = initialState, action) {
             return Object.assign({},state,action.payload);
         case 'EDIT_SECTION_TEXT':
             return Object.assign({},state,action.payload);
+        case 'UP_SECTION':
+            return Object.assign({},state,action.payload);
+        case 'DOWN_SECTION':
+            return Object.assign({},state,action.payload);
         default:
             return state;
     }

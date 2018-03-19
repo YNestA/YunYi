@@ -71,8 +71,8 @@ const MainScreenNavi=TabNavigator({
                     tintColor={tintColor}
                     labelTitle={'发现'}
                     focused={focused}
-                    focusedImg={require('../img/discover-light.png')}
-                    notFocusedImg={require('../img/discover-dark.png')}
+                    focusedImg={require('../img/navi/discover-light.png')}
+                    notFocusedImg={require('../img/navi/discover-dark.png')}
                 />;
             },
             headerTitle:'发现',
@@ -87,8 +87,8 @@ const MainScreenNavi=TabNavigator({
                     labelTitle={'圈子'}
                     tintColor={tintColor}
                     focused={focused}
-                    focusedImg={require('../img/concern-light.png')}
-                    notFocusedImg={require('../img/concern-dark.png')}
+                    focusedImg={require('../img/navi/concern-light.png')}
+                    notFocusedImg={require('../img/navi/concern-dark.png')}
                 />;
             },
             headerTitle:'圈子',
@@ -106,8 +106,8 @@ const MainScreenNavi=TabNavigator({
                     labelTitle={'消息'}
                     tintColor={tintColor}
                     focused={focused}
-                    focusedImg={require('../img/message-light.png')}
-                    notFocusedImg={require('../img/message-dark.png')}
+                    focusedImg={require('../img/navi/message-light.png')}
+                    notFocusedImg={require('../img/navi/message-dark.png')}
                 />;
             },
             headerTitle:'消息',
@@ -122,8 +122,8 @@ const MainScreenNavi=TabNavigator({
                     labelTitle={'我的'}
                     tintColor={tintColor}
                     focused={focused}
-                    focusedImg={require('../img/mine-light.png')}
-                    notFocusedImg={require('../img/mine-dark.png')}
+                    focusedImg={require('../img/navi/mine-light.png')}
+                    notFocusedImg={require('../img/navi/mine-dark.png')}
                 />;
             },
             headerTitle:'我的',

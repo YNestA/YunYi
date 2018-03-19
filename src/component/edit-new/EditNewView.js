@@ -9,7 +9,7 @@ export default class EditNewView extends Component{
         return {
             tabBarIcon:({focused, tintColor}) => {
                 return <Image
-                    source={require('../../img/edit-new.png')}
+                    source={require('../../img/navi/edit-new.png')}
                     style={{width:screenUtils.autoSize(70),height:screenUtils.autoSize(70)}}/>;
             },
             headerTitle:'创作',

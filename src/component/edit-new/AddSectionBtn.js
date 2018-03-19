@@ -52,19 +52,19 @@ class AddSectionBtn extends Component{
         let {sections,index}=this.props;
         let simple=<View style={{}}>
                 <TouchableOpacity onPress={()=>{this.props.openComplexCb()}}>
-                    <View style={styles.addSectionSimple}><Image style={styles.addSectionImg} source={require('../../img/add-section.png')}/></View>
+                    <View style={styles.addSectionSimple}><Image style={styles.addSectionImg} source={require('../../img/edit/add-section.png')}/></View>
                 </TouchableOpacity>
             </View>,
             complex=<View style={styles.addSectionComplex}>
                 <View style={styles.addSectionComplexContainer}>
                     <TouchableOpacity onPress={()=>{this.props.addTextSection(index,sections)}}>
-                        <View><Image style={styles.addSectionComplexImage} source={require('../../img/text-icon.png')}/>
+                        <View><Image style={styles.addSectionComplexImage} source={require('../../img/edit/text-icon.png')}/>
                         </View>
                     </TouchableOpacity>
                 </View>
                 <View style={styles.addSectionComplexContainer}>
                     <TouchableOpacity onPress={()=>{this.props.addImgSection(index,sections)}}>
-                        <View><Image style={styles.addSectionComplexImage} source={require('../../img/img-icon.png')}/>
+                        <View><Image style={styles.addSectionComplexImage} source={require('../../img/edit/img-icon.png')}/>
                         </View>
                     </TouchableOpacity>
                 </View>
