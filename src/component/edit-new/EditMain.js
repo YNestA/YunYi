@@ -12,7 +12,7 @@ import Section from './EditSection'
 const styles=StyleSheet.create({
     coverBackground: {
         width:screenUtils.screenWidth,
-        height:screenUtils.autoSize(180)
+        height:screenUtils.autoSize(200)
     },
     coverView:{
         flex:1,
@@ -141,7 +141,7 @@ class Edit extends Component{
             <ScrollView>
                 <ImageBackground
                     style={styles.coverBackground}
-                    source={require('../../img/hikari.jpg')}
+                    source={{uri:passage.coverImg.path}}
                 >
                     <View style={styles.coverView}>
                         <View style={{}}>

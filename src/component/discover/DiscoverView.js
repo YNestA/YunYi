@@ -1,6 +1,48 @@
 import React, {Component} from 'react'
-import {View,Text,TouchableNativeFeedback,BackHandler} from 'react-native'
+import {View,Text,TouchableNativeFeedback,BackHandler,StyleSheet,Image,TouchableWithoutFeedback} from 'react-native'
+import ScrollableTabView,{ScrollableTabBar,DefaultTabBar} from 'react-native-scrollable-tab-view'
 import {connect} from 'react-redux'
+import {screenUtils} from '../../tools/ScreenUtils'
+import PassageList from './PassageList'
+
+const styles=StyleSheet.create({
+    container:{
+        flex:1,
+        backgroundColor:'#f2f2f2'
+    },
+    logo:{
+        width:screenUtils.autoSize(70),
+        height:screenUtils.autoSize(60),
+        marginLeft:screenUtils.autoSize(10),
+        marginRight:screenUtils.autoSize(10)
+    },
+    search:{
+        flexDirection:'row',
+        height:screenUtils.autoSize(50),
+        backgroundColor:'#3f81c1'
+    },
+    searchBox:{
+        backgroundColor:'#fff',
+        height:screenUtils.autoSize(30),
+        marginRight:screenUtils.autoSize(8),
+        borderRadius:screenUtils.autoSize(8),
+        flexDirection:'row',
+        alignItems:'center'
+    },
+    searchIcon:{
+        width:screenUtils.autoSize(25),
+        height:screenUtils.autoSize(25),
+        marginLeft:screenUtils.autoSize(5),
+        marginRight:screenUtils.autoSize(5)
+    },
+    searchText:{
+        fontSize:screenUtils.autoFontSize(15),
+        color:'#888'
+    },
+    tabView:{
+        flex:1
+    }
+});
 
 class DiscoverView extends Component{
     constructor(props){
@@ -20,24 +62,84 @@ class DiscoverView extends Component{
     render(){
         const navigation=this.props.navigation;
         return(
-            <View>
-                <Text>发现！</Text>
-                <TouchableNativeFeedback
-                    onPress={()=>{
-                        navigation.navigate('EditMain');
+            <View style={styles.container}>
+                <View style={styles.search}>
+                    <Image style={styles.logo} source={require('../../img/yunyi.png')} />
+                    <View style={{flex:1,justifyContent:'center'}}>
+                        <TouchableNativeFeedback onPress={()=>{console.log('search')}} >
+                            <View style={styles.searchBox}>
+                                <Image style={styles.searchIcon} source={require('../../img/discover/search.png')}/>
+                                <Text style={styles.searchText}>搜索文章和用户</Text>
+                            </View>
+                        </TouchableNativeFeedback>
+                    </View>
+                </View>
+                <ScrollableTabView
+                    initialPage={0}
+                    tabBarTextStyle={{
+                        fontSize:screenUtils.autoSize(16),
                     }}
+                    tabBarUnderlineStyle={{backgroundColor:'#3f81c1'}}
+                    tabBarBackgroundColor={'#fefefe'}
+                    tabBarInactiveTextColor={'#666'}
+                    tabBarActiveTextColor={'#3f81c1'}
+                    renderTabBar={()=><ScrollableTabBar
+                        style={{
+                            height:screenUtils.autoSize(45)
+                        }}
+                        tabStyle={{
+                            paddingLeft:screenUtils.autoSize(20),
+                            paddingRight:screenUtils.autoSize(20),
+                            height:screenUtils.autoSize(44)}}/>
+                    }
                 >
-                    <Text>去编辑页</Text>
-                </TouchableNativeFeedback>
-                <TouchableNativeFeedback
-                    onPress={()=>{
-                        //navigation.navigate('Passage');
-                        this.props.addCount(1);
-                    }}
-                >
-                    <Text>+1</Text>
-                </TouchableNativeFeedback>
-                <Text>{this.props.count}</Text>
+                    <View style={styles.tabView} tabLabel={'热点'}>
+                        <PassageList classify={'热点'}/>
+                    </View>
+                    <View  style={styles.tabView} tabLabel={'摄影'}>
+                        <TouchableNativeFeedback
+                            onPress={()=>{
+                                navigation.navigate('EditMain');
+                            }}
+                        >
+                            <Text>去编辑页</Text>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback
+                            onPress={()=>{
+                                //navigation.navigate('Passage');
+                                this.props.addCount(1);
+                            }}
+                        >
+                            <Text>+1</Text>
+                        </TouchableNativeFeedback>
+                        <Text>{this.props.count}</Text>
+                    </View>
+                    <View  style={styles.tabView} tabLabel={'美文'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                    <View tabLabel={'旅行'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                    <View tabLabel={'情感'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                    <View tabLabel={'诗词'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                    <View tabLabel={'生活'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                    <View tabLabel={'女神'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                    <View tabLabel={'美食'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                    <View tabLabel={'影视'}>
+                        <PassageList classify={'美文'}/>
+                    </View>
+                </ScrollableTabView>
+
             </View>
         );
     }

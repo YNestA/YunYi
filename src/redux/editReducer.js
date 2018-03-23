@@ -1,5 +1,5 @@
 const initialState = {
-    coverImg: null,
+    coverImg: {},
     title: '',
     sections: [],
 };
