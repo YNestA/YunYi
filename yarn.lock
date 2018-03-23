@@ -3869,13 +3869,19 @@ react-native-popup-dialog@^0.10.46:
     babel-plugin-flow-react-proptypes "^9.1.1"
     prop-types "^15.6.0"
 
-react-native-scrollable-tab-view@^0.8.0:
+"react-native-scrollable-tab-view@https://github.com/YNestA/react-native-scrollable-tab-view.git":
   version "0.8.0"
-  resolved "https://registry.yarnpkg.com/react-native-scrollable-tab-view/-/react-native-scrollable-tab-view-0.8.0.tgz#5cb1fcfce07bf530a3c81ab51fc5071144edac5c"
+  resolved "https://github.com/YNestA/react-native-scrollable-tab-view.git#6fabe7d6c6e871272c1bd2a0db5c3052c2528473"
   dependencies:
     create-react-class "^15.6.2"
     prop-types "^15.6.0"
     react-timer-mixin "^0.13.3"
+
+react-native-swiper@^1.5.13:
+  version "1.5.13"
+  resolved "https://registry.yarnpkg.com/react-native-swiper/-/react-native-swiper-1.5.13.tgz#fa695cd4ab77b9a9df2d2bfee38ea7274dd07a2e"
+  dependencies:
+    prop-types "^15.5.10"
 
 react-native-tab-view@^0.0.74:
   version "0.0.74"
@@ -3897,9 +3903,9 @@ react-native-webview-bridge@^0.33.0:
     invariant "2.2.0"
     keymirror "0.1.1"
 
-react-native-zss-rich-text-editor@^1.1.0:
+"react-native-zss-rich-text-editor@https://github.com/YNestA/react-native-zss-rich-text-editor.git":
   version "1.1.0"
-  resolved "https://registry.yarnpkg.com/react-native-zss-rich-text-editor/-/react-native-zss-rich-text-editor-1.1.0.tgz#c197d797a8ca65e46e2ccbe36e73fa2624d07c1c"
+  resolved "https://github.com/YNestA/react-native-zss-rich-text-editor.git#33802d3d52c7f0f380eb7bbb620a00990ddd7547"
   dependencies:
     react-native-webview-bridge-updated "^1.0.0"
 
