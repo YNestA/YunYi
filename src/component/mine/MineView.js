@@ -1,7 +1,8 @@
 import React, {Component} from 'react'
-import {View,Text,Image,StyleSheet} from 'react-native'
+import {View,Text,Image,StyleSheet,ScrollView} from 'react-native'
 import {screenUtils} from '../../tools/ScreenUtils'
 import {CircleWatchedFans} from './circleWatchedFans'
+import {MineArticle} from "./MineArticle";
 
 export default class MineView extends Component{
     constructor(props){
@@ -9,58 +10,49 @@ export default class MineView extends Component{
     }
     render(){
         return(
-            <View>
+            <ScrollView style={{
+                flex:1,
+                backgroundColor:'#f1f1f3',
+            }}>
                 <View>
-                    <View style={styles.profileImgView}>
-                        <Image source={require('../../img/profilePic.jpg')} style={styles.profileImg}/>
-                    </View>
-                    <View style={styles.profileNameAndSign}>
-                        <Text style={styles.profileName}>我的名字</Text>
-                        <Text style={styles.profileSign}>你的名字是？你的名字是？</Text>
-                    </View>
-                    <View style={styles.profileChangeView}>
-                        <Image source={require('../../img/profile-more.png')} style={styles.profileChange}></Image>
+                    <View style={{
+                        flexDirection: 'row',
+                    }}>
+                        <View>
+                            <Image source={require('../../img/profilePic.jpg')} style={styles.cellFixed}/>
+                        </View>
+                        <View style={styles.profileNameAndSign}>
+                            <Text>我的名字</Text>
+                            <Text style={{overflow:'hidden'}} numberOfLines={1}>你的名字是？你的名字是？dsfasdfasdfadsfadfasdfasdfasdfasdfasdfasdfa</Text>
+                        </View>
+                        <View>
+                            <Image source={require('../../img/profile-more.png')} style={styles.profileChange}/>
+                        </View>
                     </View>
                 </View>
-                <View>
-                    <CircleWatchedFans/>
-                </View>
-            </View>
+                <CircleWatchedFans/>
+                <MineArticle/>
+            </ScrollView>
         );
     }
 }
 
 const styles=StyleSheet.create({
-    profileImgView:{
-        position:'absolute',
-    },
-    profileImg:{
-        width:screenUtils.autoSize(80),
-        height:screenUtils.autoSize(80),
-        borderRadius:screenUtils.autoSize(80),
-        marginLeft:screenUtils.autoSize(10),
+    cellFixed:{
+        height: screenUtils.autoSize(80),
+        width: screenUtils.autoSize(80),
+        borderRadius: screenUtils.autoSize(80),
     },
     profileNameAndSign:{
-        paddingLeft:screenUtils.autoSize(100),
-        paddingRight:screenUtils.autoSize(24),
-        position:'absolute',
-        top:screenUtils.autoSize(23),
-    },
-    profileName:{
-        fontSize:screenUtils.autoSize(18),
-        fontWeight:"500",
-    },
-    profileSign:{
-        fontSize:screenUtils.autoSize(12),
-        fontWeight:"100",
-    },
-    profileChangeView:{
-        position:'absolute',
-        right:screenUtils.autoSize(0),
+        marginTop:screenUtils.autoSize(25),
+        marginLeft:screenUtils.autoSize(5),
+        flex:1,
+        textAlign:'left',
     },
     profileChange:{
         width:screenUtils.autoSize(20),
         height:screenUtils.autoSize(20),
         marginTop:screenUtils.autoSize(30),
+        marginLeft:screenUtils.autoSize(10),
     }
 });
