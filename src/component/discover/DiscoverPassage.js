@@ -73,7 +73,7 @@ const styles=StyleSheet.create({
         paddingRight:screenUtils.autoSize(5)
     },
     infoImg:{
-        marginTop:screenUtils.autoSize(2),
+        marginTop:screenUtils.autoSize(1),
         width:screenUtils.autoSize(20),
         height:screenUtils.autoSize(20)
     },

@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
-import {View,Text,TouchableNativeFeedback,BackHandler,StyleSheet,Image,TouchableWithoutFeedback} from 'react-native'
+import {View,Text,ScrollView,TouchableNativeFeedback,BackHandler,StyleSheet,Image,TouchableWithoutFeedback} from 'react-native'
 import ScrollableTabView,{ScrollableTabBar,DefaultTabBar} from 'react-native-scrollable-tab-view'
 import {connect} from 'react-redux'
 import {screenUtils} from '../../tools/ScreenUtils'
 import PassageList from './PassageList'
+import {HomeSwiper} from './HomeSwiper'
 
 const styles=StyleSheet.create({
     container:{
@@ -85,16 +86,19 @@ class DiscoverView extends Component{
                     tabBarActiveTextColor={'#3f81c1'}
                     renderTabBar={()=><ScrollableTabBar
                         style={{
-                            height:screenUtils.autoSize(45)
+                            height:screenUtils.autoSize(45),
+                            borderWidth:0
                         }}
                         tabStyle={{
                             paddingLeft:screenUtils.autoSize(20),
                             paddingRight:screenUtils.autoSize(20),
-                            height:screenUtils.autoSize(44)}}/>
+                            height:screenUtils.autoSize(45)
+                        }}
+                        />
                     }
                 >
                     <View style={styles.tabView} tabLabel={'热点'}>
-                        <PassageList classify={'热点'}/>
+                        <PassageList frontView={<HomeSwiper/>} classify={'热点'}/>
                     </View>
                     <View  style={styles.tabView} tabLabel={'摄影'}>
                         <TouchableNativeFeedback

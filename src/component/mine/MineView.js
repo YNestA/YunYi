@@ -47,7 +47,6 @@ const styles=StyleSheet.create({
         marginTop:screenUtils.autoSize(25),
         marginLeft:screenUtils.autoSize(5),
         flex:1,
-        textAlign:'left',
     },
     profileChange:{
         width:screenUtils.autoSize(20),

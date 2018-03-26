@@ -1,7 +1,14 @@
 const initialState={
     networkError:false,
     passageLists:{
-        hotPoint:[]
+        '热点':{
+            pageCount:0,
+            passages:[]
+        },
+        '美文':{
+            pageCount:0,
+            passages:[]
+        },
     }
 };
 export default function discoverReducer(state=initialState,action) {
@@ -9,6 +16,8 @@ export default function discoverReducer(state=initialState,action) {
         case 'NETWORK_ERROR':
             return Object.assign({}, state, action.payload);
         case 'INITIAL_PASSAGES':
+            return Object.assign({}, state, action.payload);
+        case 'BOTTOM_REFRESH':
             return Object.assign({}, state, action.payload);
         default:
             return state;
