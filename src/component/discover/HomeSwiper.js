@@ -30,17 +30,17 @@ export class HomeSwiper extends Component{
             >
                 <TouchableWithoutFeedback onPress={()=>{console.log('slide1')}}>
                     <View style={[styles.slide]}>
-                        <Image style={styles.slideImg} source={require('../../img/discover/slide1.jpg')}/>
+                        <Image style={styles.slideImg} source={require('../../img/common/slide11.jpg')}/>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={()=>{console.log('slide2')}}>
                     <View style={[styles.slide]}>
-                    <Image style={styles.slideImg} source={require('../../img/discover/slide2.jpg')}/>
+                    <Image style={styles.slideImg} source={require('../../img/common/slide22.jpg')}/>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback  onPress={()=>{console.log('slide3')}}>
                     <View style={[styles.slide]} >
-                        <Image style={styles.slideImg} source={require('../../img/discover/slide3.jpg')}/>
+                        <Image style={styles.slideImg} source={require('../../img/common/slide33.jpg')}/>
                     </View>
                 </TouchableWithoutFeedback>
             </Swiper>

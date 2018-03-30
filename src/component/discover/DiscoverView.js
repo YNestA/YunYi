@@ -69,7 +69,7 @@ class DiscoverView extends Component{
                     <View style={{flex:1,justifyContent:'center'}}>
                         <TouchableNativeFeedback onPress={()=>{console.log('search')}} >
                             <View style={styles.searchBox}>
-                                <Image style={styles.searchIcon} source={require('../../img/discover/search.png')}/>
+                                <Image style={styles.searchIcon} source={require('../../img/common/y_search.png')}/>
                                 <Text style={styles.searchText}>搜索文章和用户</Text>
                             </View>
                         </TouchableNativeFeedback>
@@ -98,7 +98,7 @@ class DiscoverView extends Component{
                     }
                 >
                     <View style={styles.tabView} tabLabel={'热点'}>
-                        <PassageList frontView={<HomeSwiper/>} classify={'热点'}/>
+                        <PassageList navigation={navigation} frontView={<HomeSwiper/>} classify={'热点'}/>
                     </View>
                     <View  style={styles.tabView} tabLabel={'摄影'}>
                         <TouchableNativeFeedback

@@ -68,7 +68,7 @@ class PassageList extends Component{
                         ListFooterComponent={this._renderFooter}
                         data={passages}
                         renderItem={({item, index}) => {
-                            return (<DiscoverPassage passage={item}/>);
+                            return (<DiscoverPassage navigation={this.props.navigation} passage={item}/>);
                         }}
                         onEndReachedThreshold={0.05}
                         onEndReached={this._bottomRefresh}
@@ -86,8 +86,23 @@ const tempData=[{
     author:{
         authorID:'A20180322',
         headImg:'../../img/asuka.jpg',
+        name:'周瑜'
+    },
+    title:'人人有书读，人人有功练',
+    coverImg:'../../img/hikari.jpg',
+    createTime:'2019-9-30 12:30',
+    thumbHeadImgs:[],
+    passageID:'P20180322',
+    thumbCount:250,
+    commentCount:250,
+    shareCount:250
+},{
+    author:{
+        authorID:'A20180322',
+        headImg:'../../img/asuka.jpg',
         name:'中国古拳法掌门人'
     },
+    createTime:'2019-9-30 12:30',
     title:'人人有书读，人人有功练',
     coverImg:'../../img/hikari.jpg',
     thumbHeadImgs:[],
@@ -101,19 +116,7 @@ const tempData=[{
         headImg:'../../img/asuka.jpg',
         name:'中国古拳法掌门人'
     },
-    title:'人人有书读，人人有功练',
-    coverImg:'../../img/hikari.jpg',
-    thumbHeadImgs:[],
-    passageID:'P20180322',
-    thumbCount:250,
-    commentCount:250,
-    shareCount:250
-},{
-    author:{
-        authorID:'A20180322',
-        headImg:'../../img/asuka.jpg',
-        name:'中国古拳法掌门人'
-    },
+    createTime:'2019-9-30 12:30',
     title:'人人有书读，人人有功练',
     coverImg:'../../img/hikari.jpg',
     thumbHeadImgs:[],
@@ -162,7 +165,7 @@ let actions={
         return myFetch('http://www.baidu.com',{method:'GET',timeout:10000})
             .then((response)=>response.text())
             .then((responseData)=>{
-                let newPassageLists=Object.assign({},/passageLists);
+                let newPassageLists=Object.assign({},passageLists);
                 newPassageLists[classify]={
                     passages:passageLists[classify].passages.concat(tempData),
                     pageCount:passageLists[classify].pageCount+1

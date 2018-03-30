@@ -8,6 +8,7 @@ export default class Loading extends Component{
     render(){
         return(
             <View style={{
+                justifyContent:'center',
                 ...this.props.containerStyle
             }}>
                 <ProgressBarAndroid style={{

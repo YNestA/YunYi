@@ -107,7 +107,7 @@ class Edit extends Component{
         this._onBackHandler=this._onBackHandler.bind(this);
     }
     _complete(){
-        console.log(this.props);
+        console.log(this.props.passage);
     }
     _returnPre(){
         //this.props.navigation.goBack();

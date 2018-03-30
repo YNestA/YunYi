@@ -21,5 +21,6 @@ allprojects {
             url "$rootDir/../node_modules/react-native/android"
         }
         maven { url "https://jitpack.io" }
+        maven { url 'https://github.com/500px/500px-android-blur/raw/master/releases/' }
     }
 }

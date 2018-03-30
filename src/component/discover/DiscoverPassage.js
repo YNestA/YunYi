@@ -96,7 +96,13 @@ const styles=StyleSheet.create({
 class DiscoverPassage extends Component{
     constructor(props){
         super(props);
+        this._openPassage=this._openPassage.bind(this);
     }
+    _openPassage(){
+        let navigation=this.props.navigation;
+        navigation.navigate('Passage',{passage:this.props.passage});
+    }
+
     render() {
         let passage=this.props.passage;
         return (
@@ -107,7 +113,7 @@ class DiscoverPassage extends Component{
                         <Text numberOfLines={1} style={styles.authorName}>{passage.author&&passage.author.name}</Text>
                     </View>
                 </TouchableWithoutFeedback>
-                <TouchableWithoutFeedback onPress={()=>{console.log(3)}}>
+                <TouchableWithoutFeedback onPress={this._openPassage}>
                     <View style={styles.passageContainer}>
                         <Text style={styles.passageTitle}>{passage.title}</Text>
                         <Image style={styles.coverImg} source={require('../../img/hikari.jpg')}/>
@@ -122,17 +128,17 @@ class DiscoverPassage extends Component{
                                     ].map((item,index)=><Image style={styles.thumbUserHeadImg} source={item} key={index}/>)}
                                  </View>
                                 <View style={styles.thumbCountContainer}>
-                                    <Image style={styles.infoImg} source={require('../../img/discover/thumb.png')}/>
+                                    <Image style={styles.infoImg} source={require('../../img/common/y_thumb.png')}/>
                                     <Text style={styles.infoText}>{passage.thumbCount}</Text>
                                 </View>
                             </View>
                             <View style={{flexDirection:'row'}}>
                                 <View style={styles.commentContainer}>
-                                    <Image style={styles.infoImg} source={require('../../img/discover/comment.png')}/>
+                                    <Image style={styles.infoImg} source={require('../../img/common/y_comment.png')}/>
                                     <Text style={styles.infoText}>{passage.commentCount}</Text>
                                 </View>
                                 <View style={styles.shareContainer}>
-                                    <Image style={styles.infoImg} source={require('../../img/discover/share.png')}/>
+                                    <Image style={styles.infoImg} source={require('../../img/common/y_share.png')}/>
                                     <Text style={styles.infoText}>{passage.shareCount}</Text>
                                 </View>
                             </View>
