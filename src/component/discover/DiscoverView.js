@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {View,Text,ScrollView,TouchableNativeFeedback,BackHandler,StyleSheet,Image,TouchableWithoutFeedback} from 'react-native'
+import {StatusBar,View,Text,ScrollView,TouchableNativeFeedback,BackHandler,StyleSheet,Image,TouchableWithoutFeedback} from 'react-native'
 import ScrollableTabView,{ScrollableTabBar,DefaultTabBar} from 'react-native-scrollable-tab-view'
 import {connect} from 'react-redux'
 import {screenUtils} from '../../tools/ScreenUtils'
 import PassageList from './PassageList'
 import {HomeSwiper} from './HomeSwiper'
+import {TabIcon} from '../../navigation/navi'
 
 const styles=StyleSheet.create({
     container:{
@@ -46,24 +47,34 @@ const styles=StyleSheet.create({
 });
 
 class DiscoverView extends Component{
+    static navigationOptions={
+        tabBarIcon:({focused, tintColor}) => {
+            return <TabIcon
+            tintColor={tintColor}
+            labelTitle={'发现'}
+            focused={focused}
+            focusedImg={require('../../img/navi/discover-light.png')}
+            notFocusedImg={require('../../img/navi/discover-dark.png')}
+            />;
+        },
+        header:null,
+        headerTitle:'发现',
+        tabBarLabel:'发现',
+        tabBarOnPress:({jumpToIndex,scene})=>{
+            jumpToIndex(scene.index);
+            StatusBar.setBackgroundColor('#3f81c1');
+            StatusBar.setBarStyle('light-content');
+        }
+    }
     constructor(props){
         super(props);
-        this._onBackHandler=this._onBackHandler.bind(this);
-    }
-    componentDidMount(){
-        BackHandler.addEventListener('hardwareBackPress', this._onBackHandler);
-    }
-    componentWillUnmount(){
-        BackHandler.removeEventListener('hardwareBackPress', this._onBackHandler);
-    }
-    _onBackHandler(){
-        BackHandler.exitApp();
-        return true;
     }
     render(){
+        console.log(this.props);
         const navigation=this.props.navigation;
         return(
             <View style={styles.container}>
+                <StatusBar backgroundColor={'#3f81c1'} barStyle={'light-content'}/>
                 <View style={styles.search}>
                     <Image style={styles.logo} source={require('../../img/yunyi.png')} />
                     <View style={{flex:1,justifyContent:'center'}}>
@@ -101,6 +112,30 @@ class DiscoverView extends Component{
                         <PassageList navigation={navigation} frontView={<HomeSwiper/>} classify={'热点'}/>
                     </View>
                     <View  style={styles.tabView} tabLabel={'摄影'}>
+                        <PassageList navigation={navigation} classify={'摄影'}/>
+                    </View>
+                    <View  style={styles.tabView} tabLabel={'美文'}>
+                        <PassageList navigation={navigation} classify={'美文'}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'旅行'}>
+                        <PassageList navigation={navigation} classify={'旅行'}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'情感'}>
+                        <PassageList navigation={navigation} classify={'情感'}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'诗词'}>
+                        <PassageList navigation={navigation} classify={'诗词'}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'生活'}>
+                        <PassageList navigation={navigation} classify={'生活'}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'女神'}>
+                        <PassageList navigation={navigation} classify={'女神'}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'美食'}>
+                        <PassageList navigation={navigation} classify={'美食'}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'影视'}>
                         <TouchableNativeFeedback
                             onPress={()=>{
                                 navigation.navigate('EditMain');
@@ -117,30 +152,6 @@ class DiscoverView extends Component{
                             <Text>+1</Text>
                         </TouchableNativeFeedback>
                         <Text>{this.props.count}</Text>
-                    </View>
-                    <View  style={styles.tabView} tabLabel={'美文'}>
-                        <PassageList classify={'美文'}/>
-                    </View>
-                    <View tabLabel={'旅行'}>
-                        <PassageList classify={'美文'}/>
-                    </View>
-                    <View tabLabel={'情感'}>
-                        <PassageList classify={'美文'}/>
-                    </View>
-                    <View tabLabel={'诗词'}>
-                        <PassageList classify={'美文'}/>
-                    </View>
-                    <View tabLabel={'生活'}>
-                        <PassageList classify={'美文'}/>
-                    </View>
-                    <View tabLabel={'女神'}>
-                        <PassageList classify={'美文'}/>
-                    </View>
-                    <View tabLabel={'美食'}>
-                        <PassageList classify={'美文'}/>
-                    </View>
-                    <View tabLabel={'影视'}>
-                        <PassageList classify={'美文'}/>
                     </View>
                 </ScrollableTabView>
 

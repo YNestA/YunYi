@@ -1,8 +1,11 @@
 import React,{Component} from 'react'
-import {View,ScrollView,WebView,Text,StyleSheet,Image,ImageBackground,findNodeHandle} from 'react-native'
+import {
+    View, StatusBar, ScrollView, WebView, Text, StyleSheet, Image, ImageBackground, findNodeHandle,
+    BackHandler
+} from 'react-native'
 import {connect} from 'react-redux'
 import HeaderTitle from './HeaderTitle'
-import {Loading,screenUtils,myFetch} from '../../tools/MyTools'
+import {Loading, screenUtils, myFetch, getRoutekey} from '../../tools/MyTools'
 import PassageWebView from './PassageWebView'
 import {BlurView} from 'react-native-blur'
 import PassageFooter from './PassageFooter'
@@ -45,6 +48,7 @@ class Passage extends Component{
     static navigationOptions= ({navigation,screenProps})=>{
         let {params}=navigation.state;
         return {
+            headerRight:<View/>,
             headerTitle: <HeaderTitle author={params.passage.author}/>
         }
     };
@@ -52,8 +56,17 @@ class Passage extends Component{
         super(props);
         this.state = { viewRef: null };
         this._buildPassageHtml=this._buildPassageHtml.bind(this);
+        this._onBackHandler=this._onBackHandler.bind(this);
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress',this._onBackHandler);
+    }
+    _onBackHandler(){
+        this.props.navigation.goBack();
+        return true;
     }
     componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress',this._onBackHandler);
         let {params}=this.props.navigation.state;
         this.props.initPassage(params.passage.passageID);
         this.props.getPassagesPush();
@@ -75,6 +88,7 @@ class Passage extends Component{
         let passage=this.props.passage;
             return (
                 <View style={styles.container}>
+                    <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'}/>
                     {(!passage.passageID||(passage.isCoverBlur&&!this.state.viewRef))&&<Loading
                         containerStyle={{
                             backgroundColor:'#fff',

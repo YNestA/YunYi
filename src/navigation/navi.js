@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
-import {View,Image,Text,StyleSheet,TouchableNativeFeedback,TouchableOpacity} from 'react-native'
-import {StackNavigator, TabNavigator} from 'react-navigation'
+import {View, Image, Text, StyleSheet, TouchableNativeFeedback, TouchableOpacity, BackHandler} from 'react-native'
+import {addNavigationHelpers, StackNavigator, TabNavigator} from 'react-navigation'
 import DiscoverView from '../component/discover/DiscoverView'
 import ConcernView from '../component/concern/ConcernView'
 import EditNewView from '../component/edit-new/EditNewView'
@@ -12,6 +12,8 @@ import Passage from '../component/passage/passage'
 import EditMain from '../component/edit-new/EditMain'
 import EditTitle from '../component/edit-new/EditTitle'
 import EditText from '../component/edit-new/EditText'
+import Welcome from '../component/welcome'
+import {connect} from "react-redux";
 
 export class TabIcon extends Component{
     constructor(props){
@@ -65,54 +67,15 @@ export class HeaderButton extends Component{
 const MainScreenNavi=TabNavigator({
     Discover:{
         screen:DiscoverView,
-        navigationOptions:{
-            tabBarIcon:({focused, tintColor}) => {
-                return <TabIcon
-                    tintColor={tintColor}
-                    labelTitle={'发现'}
-                    focused={focused}
-                    focusedImg={require('../img/navi/discover-light.png')}
-                    notFocusedImg={require('../img/navi/discover-dark.png')}
-                />;
-            },
-            headerTitle:'发现',
-            tabBarLabel:'发现'
-        }
     },
     Concern:{
         screen:ConcernView,
-        navigationOptions:{
-            tabBarIcon:({focused, tintColor}) => {
-                return <TabIcon
-                    labelTitle={'圈子'}
-                    tintColor={tintColor}
-                    focused={focused}
-                    focusedImg={require('../img/navi/concern-light.png')}
-                    notFocusedImg={require('../img/navi/concern-dark.png')}
-                />;
-            },
-            headerTitle:'圈子',
-            tabBarLabel:'圈子'
-        }
     },
     EditNew:{
         screen:EditNewView,
     },
     MessageCenter:{
         screen:MessageCenterView,
-        navigationOptions:{
-            tabBarIcon:({focused, tintColor}) => {
-                return <TabIcon
-                    labelTitle={'消息'}
-                    tintColor={tintColor}
-                    focused={focused}
-                    focusedImg={require('../img/navi/message-light.png')}
-                    notFocusedImg={require('../img/navi/message-dark.png')}
-                />;
-            },
-            headerTitle:'消息',
-            tabBarLabel:'消息'
-        }
     },
     Mine:{
         screen:MineView,
@@ -126,6 +89,7 @@ const MainScreenNavi=TabNavigator({
                     notFocusedImg={require('../img/navi/mine-dark.png')}
                 />;
             },
+            header:null,
             headerTitle:'我的',
             tabBarLabel:'我的'
         }
@@ -163,12 +127,26 @@ const MainScreenNavi=TabNavigator({
     }
 });
 
-export const YunYiNavi=StackNavigator({
+function mainBackHandler() {
+    BackHandler.exitApp();
+    return true;
+}
+MainScreenNavi.componentDidMount=()=>{
+    BackHandler.addEventListener('hardwareBackPress', mainBackHandler);
+};
+MainScreenNavi.componentWillUnmount=()=>{
+    BackHandler.removeEventListener('hardwareBackPress', mainBackHandler);
+};
+
+export default YunYiNavi=StackNavigator({
     Main:{
         screen:MainScreenNavi,
         navigationOptions:{
-            header:null,
+ //           header:null,
         }
+    },
+    Welcome:{
+        screen:Welcome
     },
     EditText:{
         screen:EditText,
@@ -190,13 +168,12 @@ export const YunYiNavi=StackNavigator({
         }
     }
 },{
-    initialRouteName:'Main',
+    initialRouteName:'Welcome',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),
             backgroundColor:'#fff',
         },
-        headerRight:<View/>,
         headerBackTitle:'返回',
         headerTintColor:'#333',
         headerTitleStyle:{
@@ -205,3 +182,4 @@ export const YunYiNavi=StackNavigator({
         },
     }
 });
+

@@ -8,7 +8,7 @@ import {HeaderButton} from "../../navigation/navi";
 import {screenUtils} from "../../tools/ScreenUtils";
 import AddSectionBtn from './AddSectionBtn'
 import Section from './EditSection'
-
+import {getRoutekey} from '../../tools/MyTools'
 const styles=StyleSheet.create({
     coverBackground: {
         width:screenUtils.screenWidth,
@@ -110,8 +110,8 @@ class Edit extends Component{
         console.log(this.props.passage);
     }
     _returnPre(){
-        //this.props.navigation.goBack();
-        this.props.navigation.navigate('Main');
+        let routes=this.props.routes;
+        this.props.navigation.goBack(getRoutekey(routes,'Main'));
     }
     componentDidMount(){
         let {params}=this.props.navigation.state;
@@ -129,10 +129,11 @@ class Edit extends Component{
         BackHandler.addEventListener('hardwareBackPress', this._onBackHandler);
     }
     componentWillUnmount(){
-        BackHandler.addEventListener('hardwareBackPress',this._onBackHandler);
+        BackHandler.removeEventListener('hardwareBackPress',this._onBackHandler);
     }
     _onBackHandler(){
-        this.props.navigation.navigate('Main');
+        let routes=this.props.routes;
+        this.props.navigation.goBack(getRoutekey(routes,'Main'));
         return true;
     }
     render(){
@@ -178,7 +179,8 @@ let actions={
 
 function mapStateToProps(state) {
     return {
-        passage:state.edit
+        passage:state.edit,
+        routes:state.nav.routes
     }
 }
 
