@@ -2,7 +2,7 @@ import React,{Component} from 'react'
 import {View, Text, Button, TextInput, BackHandler,Keyboard} from 'react-native'
 import {HeaderButton} from "../../navigation/navi";
 import {connect} from 'react-redux'
-import {screenUtils} from '../../tools/ScreenUtils'
+import {screenUtils,getRoutekey} from '../../tools/MyTools'
 
 class EditTitle extends Component{
     static navigationOptions=({navigation,screenProps})=>{
@@ -12,14 +12,7 @@ class EditTitle extends Component{
             headerLeft:<HeaderButton text='返回' onPress={params?params.leftPress:()=>{}}/>,
             headerRight:<HeaderButton text='保存' onPress={params?params.rightPress:()=>{}}/>
         }
-    }
-    _onBackHandler(){
-        this.props.navigation.navigate('EditMain');
-        return true;
-    }
-    componentWillUnmount(){
-        BackHandler.removeEventListener('hardwareBackPress', this._onBackHandler);
-    }
+    };
     componentDidMount(){
         this.refs.titleInput.focus();
         //header事件处理
@@ -27,22 +20,19 @@ class EditTitle extends Component{
             leftPress:this._returnPre.bind(this),
             rightPress:this._complete.bind(this)
         });
-        //安卓返回键
-        BackHandler.addEventListener('hardwareBackPress',this._onBackHandler);
     }
 
     _complete(){
         this.props.changeTitle(this.titleValue.replace(/\r|\n|\\s/,''));
         Keyboard.dismiss();
-        this.props.navigation.navigate('EditMain');
+        this.props.navigation.goBack();
     }
     _returnPre(){
         Keyboard.dismiss();
-        this.props.navigation.navigate('EditMain');
+        this.props.navigation.goBack();
     }
     constructor(props){
         super(props);
-        this._onBackHandler=this._onBackHandler.bind(this);
     }
     render(){
         this.titleValue=this.props.title;
@@ -86,7 +76,8 @@ let actions={
 }
 function mapStateToProps(state) {
     return {
-        title:state.edit.title
+        title:state.edit.title,
+        routes:state.nav.routes
     }
 }
 function mapDispatchToProps(dispatch) {

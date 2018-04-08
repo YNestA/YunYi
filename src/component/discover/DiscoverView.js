@@ -74,11 +74,11 @@ class DiscoverView extends Component{
         const navigation=this.props.navigation;
         return(
             <View style={styles.container}>
-                <StatusBar backgroundColor={'#3f81c1'} barStyle={'light-content'}/>
+                <StatusBar translucent={false} backgroundColor={'#3f81c1'} barStyle={'light-content'}/>
                 <View style={styles.search}>
                     <Image style={styles.logo} source={require('../../img/yunyi.png')} />
                     <View style={{flex:1,justifyContent:'center'}}>
-                        <TouchableNativeFeedback onPress={()=>{console.log('search')}} >
+                        <TouchableNativeFeedback onPresas={()=>{console.log('search')}} >
                             <View style={styles.searchBox}>
                                 <Image style={styles.searchIcon} source={require('../../img/common/y_search.png')}/>
                                 <Text style={styles.searchText}>搜索文章和用户</Text>

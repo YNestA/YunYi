@@ -13,7 +13,10 @@ import EditMain from '../component/edit-new/EditMain'
 import EditTitle from '../component/edit-new/EditTitle'
 import EditText from '../component/edit-new/EditText'
 import Welcome from '../component/welcome'
-import {connect} from "react-redux";
+import LoginCenter from '../component/login-register/LoginCenter'
+import PhoneLoginRegister from '../component/login-register/PhoneLoginRegister'
+import CommonRegister from "../component/login-register/CommonRegister"
+import UsernameLogin from "../component/login-register/UsernameLogin";
 
 export class TabIcon extends Component{
     constructor(props){
@@ -148,6 +151,18 @@ export default YunYiNavi=StackNavigator({
     Welcome:{
         screen:Welcome
     },
+    LoginCenter:{
+        screen:LoginCenter
+    },
+    PhoneLoginRegister:{
+        screen:PhoneLoginRegister
+    },
+    CommonRegister:{
+        screen:CommonRegister
+    },
+    UsernameLogin:{
+        screen:UsernameLogin,
+    },
     EditText:{
         screen:EditText,
     },
@@ -168,7 +183,7 @@ export default YunYiNavi=StackNavigator({
         }
     }
 },{
-    initialRouteName:'Welcome',
+    initialRouteName:'LoginCenter',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),
@@ -177,7 +192,7 @@ export default YunYiNavi=StackNavigator({
         headerBackTitle:'返回',
         headerTintColor:'#333',
         headerTitleStyle:{
-            fontSize:screenUtils.autoFontSize(17),
+            fontSize:screenUtils.autoFontSize(19),
             alignSelf:'center'
         },
     }

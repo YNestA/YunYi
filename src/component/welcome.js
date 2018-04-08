@@ -10,7 +10,7 @@ export default class Welcome extends Component{
     }
     componentDidMount(){
         setTimeout(()=>{
-            this.props.navigation.navigate('Main');
+            this.props.navigation.navigate('LoginCenter');
         },3000);
     }
     render(){
