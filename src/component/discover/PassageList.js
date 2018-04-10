@@ -11,11 +11,13 @@ class PassageList extends Component{
     constructor(props){
         super(props);
         this.state={
-            refreshing:0
-        }
+            topRefreshing:0,
+            bottomRefreshing:0
+        };
         this._initialPassages=this._initialPassages.bind(this);
         this._renderFooter=this._renderFooter.bind(this);
         this._bottomRefresh=this._bottomRefresh.bind(this);
+        this._topRefresh=this._topRefresh.bind(this);
     }
     _initialPassages(){
         this.props.initialPassages(this.props.passageLists,this.props.classify);
@@ -24,7 +26,7 @@ class PassageList extends Component{
         this._initialPassages();
     }
     _renderFooter(){
-        if(this.state.refreshing===1){
+        if(this.state.bottomRefreshing===1){
             return <Loading
                 loadingStyle={{
                     width:screenUtils.autoSize(30),
@@ -35,15 +37,21 @@ class PassageList extends Component{
             return <View/>;
         }
     }
-    _bottomRefresh(){
-        if(this.state.refreshing===0){
-            console.log(this.props.passageLists[this.props.classify].pageCount);
-            this.setState({refreshing:1});
-            setTimeout(()=>{
-                this.props.bottomRefresh(this.props.passageLists,this.props.classify,(value)=>{
-                    this.setState({refreshing:value});
-                });
+    _topRefresh(){
+        if(this.state.topRefreshing===0&&this.state.bottomRefreshing===0){
+            this.setState({topRefreshing:1});
+            this.props.topRefresh(this.props.passageLists,this.props.classify,(value)=>{
+                this.setState({topRefreshing:value});
             })
+        }
+    }
+    _bottomRefresh(){
+        if(this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
+            console.log(this.props.passageLists[this.props.classify].pageCount);
+            this.setState({bottomRefreshing:1});
+            this.props.bottomRefresh(this.props.passageLists,this.props.classify,(value)=>{
+                this.setState({bottomRefreshing:value});
+            });
             //this.props.bottomRefresh(this.props.passageLists,this.props.classify,(value)=>{
             //    this.setState({refreshing:value});
             //});
@@ -51,7 +59,7 @@ class PassageList extends Component{
     }
     render() {
         let classify = this.props.classify,
-            {passages,pageCount}= this.props.passageLists[classify],
+            {passages,pageCount}= this.props.passageLists[classify]||{passages:[],pageCount:0},
             frontView=this.props.frontView || <View/>;
 
         if (this.props.networkError) {
@@ -63,6 +71,8 @@ class PassageList extends Component{
             return (
                 passages.length ?
                     <FlatList
+                        refreshing={!!this.state.topRefreshing}
+                        onRefresh={this._topRefresh}
                         extraData={this.state}
                         ListHeaderComponent={frontView}
                         ListFooterComponent={this._renderFooter}
@@ -82,13 +92,57 @@ class PassageList extends Component{
 
 }
 
-const tempData=[{
+const tempData1=[{
     author:{
         authorID:'A20180322',
         headImg:'../../img/asuka.jpg',
         name:'周瑜'
     },
     title:'人人有书读，人人有功练',
+    coverImg:'../../img/hikari.jpg',
+    createTime:'2019-9-30 12:30',
+    thumbHeadImgs:[],
+    passageID:'P20180322',
+    thumbCount:250,
+    commentCount:250,
+    shareCount:250
+},{
+    author:{
+        authorID:'A20180322',
+        headImg:'../../img/asuka.jpg',
+        name:'中国古拳法掌门人'
+    },
+    createTime:'2019-9-30 12:30',
+    title:'人人有书读，人人有功练',
+    coverImg:'../../img/hikari.jpg',
+    thumbHeadImgs:[],
+    passageID:'P20180322',
+    thumbCount:250,
+    commentCount:250,
+    shareCount:250
+},{
+    author:{
+        authorID:'A20180322',
+        headImg:'../../img/asuka.jpg',
+        name:'中国古拳法掌门人'
+    },
+    createTime:'2019-9-30 12:30',
+    title:'人人有书读，人人有功练',
+    coverImg:'../../img/hikari.jpg',
+    thumbHeadImgs:[],
+    passageID:'P20180322',
+    thumbCount:250,
+    commentCount:250,
+    shareCount:250
+}];
+
+const tempData2=[{
+    author:{
+        authorID:'A20180322',
+        headImg:'../../img/asuka.jpg',
+        name:'周瑜'
+    },
+    title:'hahahhahahha',
     coverImg:'../../img/hikari.jpg',
     createTime:'2019-9-30 12:30',
     thumbHeadImgs:[],
@@ -141,7 +195,7 @@ let actions={
             .then((responseData)=>{
                 let newPassageLists=Object.assign({},passageLists);
                 newPassageLists[classify]={
-                    passages:tempData,
+                    passages:tempData1,
                     pageCount:1
                 };
                 return{
@@ -167,7 +221,7 @@ let actions={
             .then((responseData)=>{
                 let newPassageLists=Object.assign({},passageLists);
                 newPassageLists[classify]={
-                    passages:passageLists[classify].passages.concat(tempData),
+                    passages:passageLists[classify].passages.concat(tempData1),
                     pageCount:passageLists[classify].pageCount+1
                 };
                 setLoading(0);
@@ -180,6 +234,35 @@ let actions={
                 };
             }).catch((error)=>{
                 console.log(error);
+                setLoading(0);
+                return {
+                    type:'NETWORK_ERROR',
+                    payload: {
+                        networkError:true,
+                    }
+                };
+            });
+    },
+    topRefresh:function (passageLists,classify,setLoading) {
+        return myFetch('https://www.baidu.com',{method:'GET',timeout:10000})
+            .then((response)=>response.text())
+            .then((responseData)=>{
+                let newPassageLists=Object.assign({},passageLists);
+                newPassageLists[classify]={
+                    passages:tempData2,
+                    pageCount:1
+                };
+                setLoading(0);
+                return {
+                    type:'TOP_REFRESH',
+                    payload:{
+                        networkError:false,
+                        passageLists:newPassageLists
+                    }
+                };
+            }).catch((error)=>{
+                console.log(error);
+                setLoading(0);
                 return {
                     type:'NETWORK_ERROR',
                     payload: {
@@ -199,7 +282,8 @@ function mapDispatchToProps(dispatch) {
     return{
         initialPassages:(passageLists,classify)=>{dispatch(actions.initialPassages(passageLists,classify))},
         setNetworkError:(value)=>{dispatch(actions.setNetworkError(value))},
-        bottomRefresh:(passageLists,classify,pageNum)=>{dispatch(actions.bottomRefresh(passageLists,classify,pageNum))}
+        bottomRefresh:(passageLists,classify,pageNum)=>{dispatch(actions.bottomRefresh(passageLists,classify,pageNum))},
+        topRefresh:(passageLists,classify,pageNum)=>{dispatch(actions.topRefresh(passageLists,classify,pageNum))}
     }
 }
 export default PassageList=connect(mapStateToProps,mapDispatchToProps)(PassageList);

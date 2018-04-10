@@ -46,7 +46,7 @@ class EditText extends Component{
     }
     _onBackHandler(){
         Picker.hide();
-        this.props.navigation.navigate('EditMain');
+        this.props.navigation.goBack();
         return true;
     }
     _renderBarAction(action,selected){
@@ -100,13 +100,13 @@ class EditText extends Component{
             Picker.hide();
             this.richTextEditor.blurContentEditor();
             this.props.editSectionText(this.props.sections,this.sectionIndex,data);
-            this.props.navigation.navigate('EditMain');
+            this.props.navigation.goBack();
         });
     }
     _returnPre(){
         Picker.hide();
         this.richTextEditor.blurContentEditor();
-        this.props.navigation.navigate('EditMain');
+        this.props.navigation.goBack();
     }
 
     _getBarIcon(action,selected){

@@ -19,6 +19,8 @@ export default function discoverReducer(state=initialState,action) {
             return Object.assign({}, state, action.payload);
         case 'BOTTOM_REFRESH':
             return Object.assign({}, state, action.payload);
+        case 'TOP_REFRESH':
+            return Object.assign({},state,action.payload);
         default:
             return state;
     }
