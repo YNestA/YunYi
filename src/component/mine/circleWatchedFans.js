@@ -11,7 +11,8 @@ export class CircleWatchedFans extends Component {
         return (
             <View style={{
                 flexDirection: 'row',
-                marginTop: screenUtils.autoSize(20),
+                paddingTop: screenUtils.autoSize(20),
+                backgroundColor:'#fff',
             }}>
                 <View style={styles.cell}>
                     <Text style={styles.textCenter}>0</Text>

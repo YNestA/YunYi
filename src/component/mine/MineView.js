@@ -13,10 +13,11 @@ export default class MineView extends Component {
         return (
             <View style={{
                 flex: 1,
-                backgroundColor: '#f1f1f3',
+                backgroundColor:'#fff',
             }}>
                 <View style={{
                     flexDirection: 'row',
+                    backgroundColor:'#fff',
                 }}>
                     <View>
                         <Image source={require('../../img/profilePic.jpg')} style={styles.cellFixed}/>

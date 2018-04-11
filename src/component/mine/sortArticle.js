@@ -4,13 +4,13 @@ import {screenUtils} from "../../tools/ScreenUtils";
 
 const styles = StyleSheet.create({
     articleItem:{
-        paddingBottom:screenUtils.autoSize(20),
-        borderColor:'#fff',
-        borderWidth:screenUtils.autoSize(0.4),
+        paddingBottom:screenUtils.autoSize(10),
+        borderColor:'#f1f1f3',
+        borderBottomWidth:screenUtils.autoSize(16),
     },
     imageFirst: {
         width:screenUtils.screenWidth,
-        height:screenUtils.autoSize(250),
+        height:screenUtils.autoSize(200),
         marginTop:screenUtils.autoSize(15),
         marginBottom:screenUtils.autoSize(15),
     },
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     pushDate:{
         flex:1,
         fontSize:screenUtils.autoSize(12),
-        marginLeft:screenUtils.autoSize(8),
+        marginLeft:screenUtils.autoSize(10),
     },
     bottomIcon:{
         flex:1,
@@ -36,12 +36,14 @@ const styles = StyleSheet.create({
         flexDirection:'row',
     },
     imgCommon:{
-        width:screenUtils.autoSize(16),
-        height:screenUtils.autoSize(16),
+        width:screenUtils.autoSize(12),
+        height:screenUtils.autoSize(12),
+        marginRight:screenUtils.autoSize(1),
     },
     textCommon:{
+        top:screenUtils.autoSize(-3),
         fontSize:screenUtils.autoSize(12),
-        marginRight:screenUtils.autoSize(4),
+        marginRight:screenUtils.autoSize(8),
     }
 })
 
