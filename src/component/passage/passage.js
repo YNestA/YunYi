@@ -88,7 +88,7 @@ class Passage extends Component{
         let passage=this.props.passage;
             return (
                 <View style={styles.container}>
-                    <StatusBar backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                    <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                     {(!passage.passageID||(passage.isCoverBlur&&!this.state.viewRef))&&<Loading
                         containerStyle={{
                             backgroundColor:'#fff',

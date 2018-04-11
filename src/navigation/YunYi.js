@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View,Image,Text,StyleSheet} from 'react-native'
+import {View,Image,Text,StyleSheet,BackHandler} from 'react-native'
 import YunYiNavi from './navi'
 import {connect} from 'react-redux'
 import {addNavigationHelpers} from 'react-navigation'

@@ -11,3 +11,18 @@ export default function myFetch(url,opts) {
     }
 
 }
+
+export function getFormData(data) {
+    let formData=new FormData();
+    for( let k in data ){
+        formData.append(k,data[k]);
+    }
+    return formData;
+}
+export function encodePostParams(params) {
+    let kv=[];
+    for(let k in params){
+        kv.push(encodeURIComponent(k)+'='+encodeURIComponent(params[k]));
+    }
+    return kv.join('&');
+}

@@ -20,8 +20,8 @@ const styles=StyleSheet.create({
     },
     search:{
         flexDirection:'row',
-        height:screenUtils.autoSize(50),
-        backgroundColor:'#3f81c1'
+        backgroundColor:'#3f81c1',
+        paddingTop:StatusBar.currentHeight
     },
     searchBox:{
         backgroundColor:'#fff',
@@ -62,19 +62,28 @@ class DiscoverView extends Component{
         tabBarLabel:'发现',
         tabBarOnPress:({jumpToIndex,scene})=>{
             jumpToIndex(scene.index);
-            StatusBar.setBackgroundColor('#3f81c1');
-            StatusBar.setBarStyle('light-content');
         }
     }
     constructor(props){
         super(props);
+        this._backHandler=this._backHandler.bind(this);
+    }
+    _backHandler(){
+        //this.props.navigation.goBack(null);
+        BackHandler.exitApp();
+        return true;
+    }
+    componentWillMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler);
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     render(){
-        console.log(this.props);
         const navigation=this.props.navigation;
         return(
             <View style={styles.container}>
-                <StatusBar translucent={false} backgroundColor={'#3f81c1'} barStyle={'light-content'}/>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <View style={styles.search}>
                     <Image style={styles.logo} source={require('../../img/yunyi.png')} />
                     <View style={{flex:1,justifyContent:'center'}}>
@@ -136,12 +145,20 @@ class DiscoverView extends Component{
                         <PassageList navigation={navigation} classify={'美食'}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'影视'}>
+                        <Text>{this.props.user.userInfo.username+':'+this.props.user.token}</Text>
                         <TouchableNativeFeedback
                             onPress={()=>{
                                 navigation.navigate('EditMain');
                             }}
                         >
                             <Text>去编辑页</Text>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback
+                            onPress={()=>{
+                                navigation.navigate('EditPassageSetting');
+                            }}
+                        >
+                            <Text>Go!</Text>
                         </TouchableNativeFeedback>
                         <TouchableNativeFeedback
                             onPress={()=>{
@@ -171,7 +188,9 @@ let actions={
 }
 function mapStateToProps(state) {
     return{
-        count:state.counter.count
+        count:state.counter.count,
+        user:state.user,
+        routes:state.nav.routes
     };
 }
 function mapDispatchToProps(dispatch) {

@@ -1,14 +1,18 @@
 import React,{Component} from 'react'
 import {
-    ScrollView, ImageBackground, View, Text, FlatList, Image, TouchableNativeFeedback, TouchableOpacity,
+    ScrollView, ImageBackground, View,StatusBar, Text, FlatList, Image, TouchableNativeFeedback, TouchableOpacity,
     TouchableWithoutFeedback, StyleSheet, Button, BackHandler
 } from 'react-native'
 import {connect} from 'react-redux'
+import {NavigationActions} from 'react-navigation'
 import {HeaderButton} from "../../navigation/navi";
 import {screenUtils} from "../../tools/ScreenUtils";
 import AddSectionBtn from './AddSectionBtn'
 import Section from './EditSection'
-import {getRoutekey} from '../../tools/MyTools'
+import {getRoutekey,getFormData,myFetch} from '../../tools/MyTools'
+import UploadTip from './UploadTip'
+import Toast from 'react-native-root-toast'
+
 const styles=StyleSheet.create({
     coverBackground: {
         width:screenUtils.screenWidth,
@@ -104,14 +108,38 @@ class Edit extends Component{
 
     constructor(props){
         super(props);
-        this._onBackHandler=this._onBackHandler.bind(this);
+        this._backHandler=this._backHandler.bind(this);
     }
-    _complete(){
-        console.log(this.props.passage);
+    _upload() {
+        let {passage, user, navigation} = this.props;
+        if(!this.uploading) {
+            if (passage.title) {
+                this.uploading=true;
+                this.refs.uploadTip.show();
+                this.props.upload(passage, user, () => {
+                    this.refs.uploadTip.dismiss();
+                    this.uploading = false;
+                }, navigation);
+            } else {
+                this.uploading=true;
+                Toast.show('标题不能为空', {
+                    position: Toast.positions.BOTTOM,
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                    onHidden:()=>{
+                        this.uploading=false;
+                    }
+                });
+            }
+        }
     }
     _returnPre(){
         let routes=this.props.routes;
-        this.props.navigation.goBack(getRoutekey(routes,'Main'));
+        this.props.navigation.goBack(null);
+        //this.props.navigation.goBack(getRoutekey(routes,'Main'));
+        //let action=NavigationActions.navigate({routeName:'Mine'});
+        //this.props.navigation.navigate('Main',{},action);
     }
     componentDidMount(){
         let {params}=this.props.navigation.state;
@@ -123,42 +151,47 @@ class Edit extends Component{
         //header事件处理
         this.props.navigation.setParams({
             leftPress:this._returnPre.bind(this),
-            rightPress:this._complete.bind(this)
+            rightPress:this._upload.bind(this)
         });
-        //安卓返回键监听
-        BackHandler.addEventListener('hardwareBackPress', this._onBackHandler);
+    }
+    _backHandler(){
+        this.props.navigation.goBack(null);
+        return true;
+    }
+    componentWillMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler);
     }
     componentWillUnmount(){
-        BackHandler.removeEventListener('hardwareBackPress',this._onBackHandler);
-    }
-    _onBackHandler(){
-        let routes=this.props.routes;
-        this.props.navigation.goBack(getRoutekey(routes,'Main'));
-        return true;
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     render(){
         let {passage,navigation}=this.props;
         return(
-            <ScrollView>
-                <ImageBackground
-                    style={styles.coverBackground}
-                    source={{uri:passage.coverImg.path}}
-                >
-                    <View style={styles.coverView}>
-                        <View style={{}}>
-                            <TouchableNativeFeedback  onPress={()=>{navigation.navigate('EditTitle');}}>
-                                <Text style={styles.addTitleText}>{passage.title?passage.title:'点击编辑标题'}</Text>
-                            </TouchableNativeFeedback>
+            <View style={{flex:1}}>
+                <ScrollView>
+                    <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                    <ImageBackground
+                        style={styles.coverBackground}
+                        source={{uri:passage.coverImg.path}}
+                    >
+                        <View style={styles.coverView}>
+                            <View style={{}}>
+                                <TouchableNativeFeedback  onPress={()=>{navigation.navigate('EditTitle');}}>
+                                    <Text style={styles.addTitleText}>{passage.title?passage.title:'点击编辑标题'}</Text>
+                                </TouchableNativeFeedback>
+                            </View>
+                            <View style={styles.editCoverBtn}>
+                                <TouchableNativeFeedback onPress={()=>{console.log(2)}}>
+                                    <Text style={styles.editCoverText}>编辑封面</Text>
+                                </TouchableNativeFeedback>
+                            </View>
                         </View>
-                        <View style={styles.editCoverBtn}>
-                            <TouchableNativeFeedback onPress={()=>{console.log(2)}}>
-                                <Text style={styles.editCoverText}>编辑封面</Text>
-                            </TouchableNativeFeedback>
-                        </View>
-                    </View>
-                </ImageBackground>
-                <Sections navigation={navigation} sections={passage.sections}/>
-            </ScrollView>
+                    </ImageBackground>
+                    <Sections navigation={navigation} sections={passage.sections}/>
+
+                </ScrollView>
+                <UploadTip ref={'uploadTip'}/>
+            </View>
         );
     }
 }
@@ -174,20 +207,81 @@ let actions={
                 })
             }
         };
+    },
+    upload:function (passage,user,cb,navigation) {
+        let coverImg=passage.coverImg;
+        let formData=getFormData({
+            //passages:JSON.stringify(passage),
+            coverImg: {
+                uri: coverImg.path,
+                type: 'multipart/form-data',
+                name: coverImg.path.slice(coverImg.path.lastIndexOf('\/')+1, coverImg.path.length)
+            }
+        });
+        passage.sections.forEach((section,index)=>{
+            if(section.type=='img'){
+                let img=section.img;
+                formData.append('imgs',{
+                    uri:img.path,
+                    type: img.mime,
+                    name: img.path.slice(img.path.lastIndexOf('\/'), img.path.length)
+                });
+            }
+        });
+        return myFetch('http://www.baidu.com',{
+            timeout:30000,
+            method:'POST',
+            headers:{
+                'Content-Type':'multipart/form-data',
+                'user_token':user.token
+            },
+            body:formData
+        }).then(response=>response.text())
+            .then(responseData=>{
+                cb();
+                navigation.navigate('EditPassageSetting');
+                return {
+                    type:'UPLOAD_IMGS',
+                    payload:{
+                        coverImg:{
+                            uri:responseData.coverImg
+                        },
+                        sections:passage.sections.map((item)=>{
+                            if(item.type=='img'){
+                                item.img.uri=responseData.imgs.shift();
+                            }
+                            return item;
+                        })
+                    }
+                };
+            })
+            .catch(err=>{
+                cb();
+                Toast.show('上传失败',{
+                    position: Toast.positions.BOTTOM,
+                    shadow: true,
+                    animation: true,
+                    hideOnPress: true,
+                });
+                console.log(err);
+            })
+
     }
 };
 
 function mapStateToProps(state) {
     return {
         passage:state.edit,
-        routes:state.nav.routes
+        routes:state.nav.routes,
+        user:state.user
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return{
         startImg:(imgs)=>{dispatch(actions.startImg(imgs))},
-        addTextSection:(index)=>{dispatch(actions.addTextSection(index))}
+//        addTextSection:(index)=>{dispatch(actions.addTextSection(index))},
+        upload:(passage,user,cb,navigation)=>{dispatch(actions.upload(passage,user,cb,navigation))}
     }
 }
 

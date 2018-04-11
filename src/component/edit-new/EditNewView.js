@@ -25,7 +25,6 @@ export default class EditNewView extends Component{
     componentWillMount(){
         this.props.navigation.setParams({
             tabBarOnPress:({jumpToIndex,scene})=>{
-                console.log(1);
                 let pro=new Promise((resolve,reject)=>{
                     this.props.screenProps.startEditNew(resolve);
                 }).then((data)=>{

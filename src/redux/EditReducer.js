@@ -2,6 +2,11 @@ const initialState = {
     coverImg: {},
     title: '',
     sections: [],
+    passageSetting:{
+        public:true,
+        classify:'其他',
+        allowComment:true
+    }
 };
 /*img*/
 /*
@@ -31,6 +36,10 @@ export default function editReducer(state = initialState, action) {
         case 'UP_SECTION':
             return Object.assign({},state,action.payload);
         case 'DOWN_SECTION':
+            return Object.assign({},state,action.payload);
+        case 'CHANGE_SETTING':
+            return Object.assign({},state,action.payload);
+        case 'UPLOAD_IMGS':
             return Object.assign({},state,action.payload);
         default:
             return state;

@@ -1,7 +1,8 @@
 import React,{Component} from 'react'
-import {View,Text,StatusBar} from 'react-native'
+import {connect} from 'react-redux'
+import {View, Text, StatusBar, BackHandler} from 'react-native'
 
-export default class Welcome extends Component{
+class Welcome extends Component{
     static navigationOptions={
         header:null
     };
@@ -9,10 +10,30 @@ export default class Welcome extends Component{
         super(props);
     }
     componentDidMount(){
-        setTimeout(()=>{
-            this.props.navigation.navigate('LoginCenter');
-        },3000);
+        myStorage.sync={
+            user(params){
+                params.resolve(null);
+            }
+        };
+        myStorage.load({
+            key:'user',
+        }).then(ret=>{
+            if(ret) {
+                this.props.loadUser(ret.userInfo, ret.token);
+                setTimeout(() => {
+                    this.props.navigation.navigate('Main');
+                }, 2000);
+            }else{
+                setTimeout(() => {
+                    this.props.navigation.navigate('LoginCenter');
+                }, 2000);
+            }
+        }).catch(err=>{
+            console.log(err);
+        });
+
     }
+
     render(){
         return(
             <View style={{flex:1,backgroundColor:'#000',justifyContent:'center'}}>
@@ -22,3 +43,26 @@ export default class Welcome extends Component{
         );
     }
 }
+
+let actions={
+    loadUser:function (userInfo,token) {
+        return {
+            type:'LOAD_USER',
+            payload:{
+                isLogin:true,
+                token:token,
+                userInfo:userInfo
+            }
+        }
+    }
+};
+function mapStateToProps(state) {
+    return {user:state.user};
+}
+function mapDispatchToProps(dispatch) {
+    return {
+        loadUser:(userInfo,token)=>{dispatch(actions.loadUser(userInfo,token))}
+    }
+}
+
+export default Welcome=connect(mapStateToProps,mapDispatchToProps)(Welcome);

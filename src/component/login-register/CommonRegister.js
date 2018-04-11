@@ -1,5 +1,8 @@
 import React,{Component} from 'react'
-import {View,Text,TextInput,StyleSheet,StatusBar,TouchableWithoutFeedback,TouchableOpacity} from 'react-native'
+import {
+    View, Text, TextInput, StyleSheet, StatusBar, TouchableWithoutFeedback, TouchableOpacity,
+    BackHandler
+} from 'react-native'
 import {screenUtils} from "../../tools/ScreenUtils";
 
 const styles=StyleSheet.create({
@@ -55,6 +58,18 @@ export default class CommonRegister extends Component{
     constructor(props){
         super(props);
         this._commonRegister=this._commonRegister.bind(this);
+        this._backHandler=this._backHandler.bind(this);
+    }
+    _backHandler(){
+        this.props.navigation.goBack(null);
+        return true;
+    }
+    componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler);
+    }
+    componentWillUnmount(){
+        console.log('remove');
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     _commonRegister(){
         this.props.navigation.navigate('Main');
