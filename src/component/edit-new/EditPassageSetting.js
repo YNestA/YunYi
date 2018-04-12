@@ -92,8 +92,8 @@ class EditPassageSetting extends Component{
                     <View style={styles.setting}>
                         <Text style={styles.settingText}>是否公开</Text>
                         <Switch
-                            value={passage.passageSetting.public}
-                            onValueChange={(value)=>{this._changeSetting({public:value})}}
+                            value={!!passage.passageSetting.public}
+                            onValueChange={(value)=>{this._changeSetting({public:!!value})}}
                         />
                     </View>
                     <Text style={styles.tip}>可自行控制文章展示范围</Text>
@@ -104,8 +104,8 @@ class EditPassageSetting extends Component{
                     <View style={styles.setting}>
                         <Text style={styles.settingText}>允许评论</Text>
                         <Switch
-                            value={passage.passageSetting.allowComment}
-                            onValueChange={(value)=>{this._changeSetting({allowComment:value})}}
+                            value={!!passage.passageSetting.allowcomments}
+                            onValueChange={(value)=>{this._changeSetting({allowcomments:!!value})}}
                         />
                     </View>
                     <Text style={styles.tip}>开启后读者可以在美篇或微信对文章进行评论</Text>
@@ -128,25 +128,30 @@ let actions={
         }
     },
     complete:function (passage,navigation,user,cb) {
-        return myFetch('http://www.baidu.com', {
+        //alert(JSON.stringify(passage));
+        return myFetch('http://10.12.137.198:4441/api/article/insert', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                user_token:user.token
+                'user_token':user.token
             },
             body: encodePostParams({
-                passage: JSON.stringify(passage)
-            }),
-        }).then(response => response.text())
+                passage:JSON.stringify(passage)
+            })
+        }).then(response => response.json())
             .then(responseData => {
-                alert(responseData);
+            //    alert(JSON.stringify(responseData));
                 cb();
-                navigation.navigate('Main', {}, NavigationActions.navigate({routeName:'Mine'}));
-                return {
-                    type: 'COMPLETE',
-                    payload: {
-                        passageID: '111',
+                if(responseData.code==10001) {
+                    navigation.navigate('Main', {}, NavigationActions.navigate({routeName: 'Mine'}));
+                    return {
+                        type: 'COMPLETE',
+                        payload: {
+                            passageID: responseData.data.passageID,
+                        }
                     }
+                }else{
+                    alert('网络繁忙');
                 }
             })
             .catch(err=>{

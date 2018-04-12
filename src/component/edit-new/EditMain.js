@@ -228,7 +228,7 @@ let actions={
                 });
             }
         });
-        return myFetch('http://www.baidu.com',{
+        return myFetch('http://10.12.137.198:4441/api/img/upload',{
             timeout:30000,
             method:'POST',
             headers:{
@@ -236,26 +236,37 @@ let actions={
                 'user_token':user.token
             },
             body:formData
-        }).then(response=>response.text())
+        }).then(response=>response.json())
             .then(responseData=>{
+                alert(JSON.stringify(responseData));
                 cb();
-                navigation.navigate('EditPassageSetting');
-                return {
-                    type:'UPLOAD_IMGS',
-                    payload:{
-                        coverImg:{
-                            uri:responseData.coverImg
-                        },
-                        sections:passage.sections.map((item)=>{
-                            if(item.type=='img'){
-                                item.img.uri=responseData.imgs.shift();
-                            }
-                            return item;
-                        })
-                    }
-                };
+                if(responseData.code==10001) {
+                    navigation.navigate('EditPassageSetting');
+                    return {
+                        type: 'UPLOAD_IMGS',
+                        payload: {
+                            coverImg:Object.assign({},passage.coverImg, {
+                                url: responseData.data.coverImg
+                            }),
+                            sections: passage.sections.map((item) => {
+                                if (item.type == 'img') {
+                                    item.img.url = responseData.data.imgs.shift();
+                                }
+                                return item;
+                            })
+                        }
+                    };
+                }else{
+                    Toast.show('上传失败',{
+                        position: Toast.positions.BOTTOM,
+                        shadow: true,
+                        animation: true,
+                        hideOnPress: true,
+                    });
+                }
             })
             .catch(err=>{
+                alert(err);
                 cb();
                 Toast.show('上传失败',{
                     position: Toast.positions.BOTTOM,
