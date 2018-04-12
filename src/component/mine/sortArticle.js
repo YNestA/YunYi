@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, StyleSheet, FlatList} from 'react-native';
+import {View, Text, Image, StyleSheet, FlatList,TouchableWithoutFeedback} from 'react-native';
 import {screenUtils} from "../../tools/ScreenUtils";
 
 const styles = StyleSheet.create({
@@ -14,11 +14,38 @@ const styles = StyleSheet.create({
         marginTop:screenUtils.autoSize(15),
         marginBottom:screenUtils.autoSize(15),
     },
+    articleTagAndName:{
+        flex:1,
+        flexDirection:"row",
+        justifyContent:"flex-start",
+        alignItems:'center',
+    },
+    articleTag:{
+        fontSize:screenUtils.autoSize(10),
+        marginLeft:screenUtils.autoSize(8),
+        borderWidth:screenUtils.autoSize(0.6),
+        borderRadius:screenUtils.autoSize(5),
+        borderColor:"#A9A9A9",
+        color:"#A9A9A9",
+        paddingLeft:screenUtils.autoSize(6),
+        paddingRight:screenUtils.autoSize(4),
+        paddingBottom:screenUtils.autoSize(1),
+        paddingTop:screenUtils.autoSize(2),
+        marginTop:screenUtils.autoSize(15),
+    },
     articleName:{
         marginTop:screenUtils.autoSize(15),
-        marginLeft:screenUtils.autoSize(8),
-        marginRight:screenUtils.autoSize(8),
-        fontSize:screenUtils.autoSize(15),
+        marginLeft:screenUtils.autoSize(4),
+        fontSize:screenUtils.autoSize(18),
+    },
+    chooseCircle:{
+        position:'absolute',
+        bottom:screenUtils.autoSize(60),
+        right:screenUtils.autoSize(20),
+        borderRadius:screenUtils.autoSize(8),
+        color:"#fff",
+        fontSize:screenUtils.autoSize(12),
+        backgroundColor:"rgba(0,0,0,0.1)",
     },
     bottomData:{
         width:screenUtils.screenWidth,
@@ -51,26 +78,39 @@ export class ShortArticle extends Component {
     constructor(props) {
         super(props);
     }
+
+    _onPressArticleItem(){
+        let navigation = this.props.navigation;
+        console.log(navigation);
+    }
+
     _renderItem=({item})=>(
-        <View style={styles.articleItem}>
-            <Text style={styles.articleName}>{item.articleName}</Text>
-            <Image
-                style={styles.imageFirst}
-                source={require('../../img/common/slide11.jpg')}/>
-            <View style={styles.bottomData}>
-                <Text style={styles.pushDate}>2018-03-04</Text>
-                <View style={styles.bottomIcon}>
-                    <Image style={[styles.imgCommon]} source={require('../../img/eye.png')}/>
-                    <Text style={[styles.textCommon]}>{item.watchedNum}</Text>
-                    <Image style={[styles.imgCommon]} source={require('../../img/common/y_thumb.png')}/>
-                    <Text style={[styles.textCommon]}>{item.thumbUpNum}</Text>
-                    <Image style={[styles.imgCommon]} source={require('../../img/common/y_comment.png')}/>
-                    <Text style={[styles.textCommon]}>{item.commentNum}</Text>
-                    <Image style={[styles.imgCommon]} source={require('../../img/common/y_share.png')}/>
-                    <Text style={[styles.textCommon]}>{item.shareNum}</Text>
+        <TouchableWithoutFeedback
+            onPress={this._onPressArticleItem}>
+            <View style={styles.articleItem}>
+                <View style={styles.articleTagAndName}>
+                    <Text style={styles.articleTag}>{item.articleTag}</Text>
+                    <Text style={styles.articleName}>{item.articleName}</Text>
+                </View>
+                <Image
+                    style={styles.imageFirst}
+                    source={require('../../img/common/slide11.jpg')}/>
+                <Text style={styles.chooseCircle}>其他</Text>
+                <View style={styles.bottomData}>
+                    <Text style={styles.pushDate}>2018-03-04</Text>
+                    <View style={styles.bottomIcon}>
+                        <Image style={styles.imgCommon} source={require('../../img/eye.png')}/>
+                        <Text style={styles.textCommon}>{item.watchedNum}</Text>
+                        <Image style={styles.imgCommon} source={require('../../img/common/y_thumb.png')}/>
+                        <Text style={styles.textCommon}>{item.thumbUpNum}</Text>
+                        <Image style={styles.imgCommon} source={require('../../img/common/y_comment.png')}/>
+                        <Text style={styles.textCommon}>{item.commentNum}</Text>
+                        <Image style={styles.imgCommon} source={require('../../img/common/y_share.png')}/>
+                        <Text style={styles.textCommon}>{item.shareNum}</Text>
+                    </View>
                 </View>
             </View>
-        </View>
+        </TouchableWithoutFeedback>
     );
     render() {
         return(
@@ -83,6 +123,7 @@ export class ShortArticle extends Component {
 }
 const templateItemData=[{
     articleName:'这是文章标题',
+    articleTag:'私密',
     articleImg:'../../img/common/slide11.jpg',
     watchedNum:'234',
     thumbUpNum:'235',
@@ -90,6 +131,7 @@ const templateItemData=[{
     shareNum:'237',
 },{
     articleName:'这是文章标题',
+    articleTag:'私密',
     articleImg:'../../img/common/slide11.jpg',
     watchedNum:'234',
     thumbUpNum:'235',
@@ -97,6 +139,7 @@ const templateItemData=[{
     shareNum:'237',
 },{
     articleName:'这是文章标题',
+    articleTag:'私密',
     articleImg:'../../img/common/slide11.jpg',
     watchedNum:'234',
     thumbUpNum:'235',
@@ -104,6 +147,7 @@ const templateItemData=[{
     shareNum:'237',
 },{
     articleName:'这是文章标题',
+    articleTag:'公开',
     articleImg:'../../img/common/slide11.jpg',
     watchedNum:'234',
     thumbUpNum:'235',

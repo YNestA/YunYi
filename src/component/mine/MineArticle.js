@@ -12,6 +12,8 @@ export class MineArticle extends Component {
     render() {
         return (
             <ScrollableTabView
+                tabBarActiveTextColor='#9B30FF'
+                tabBarUnderlineStyle='#9B30FF'
                 renderTabBar={() => <ScrollableTabBar/>}>
                 <View tabLabel={'全部文章'}>
                     <ShortArticle/>
