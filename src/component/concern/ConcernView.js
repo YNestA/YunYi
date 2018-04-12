@@ -30,8 +30,8 @@ export default class ConcernView extends Component{
             tabBarLabel: '关注',
             tabBarOnPress:({jumpToIndex,scene})=>{
                 jumpToIndex(scene.index);
-                StatusBar.setBackgroundColor('#fff');
-                StatusBar.setBarStyle('dark-content');
+            //    StatusBar.setBackgroundColor('#fff');
+            //    StatusBar.setBarStyle('dark-content');
 
             }
         };
@@ -44,7 +44,6 @@ export default class ConcernView extends Component{
     render(){
         return(
             <View style={{flex:1}}>
-                <StatusBar />
                 <ConcernPassages navigation={this.props.navigation}/>
             </View>
         );

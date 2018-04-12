@@ -41,6 +41,7 @@ class EditText extends Component{
         BackHandler.addEventListener('hardwareBackPress',this._onBackHandler);
 
     }
+
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this._onBackHandler);
     }

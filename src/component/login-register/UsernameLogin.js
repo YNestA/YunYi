@@ -1,7 +1,12 @@
 import React,{Component} from 'react'
-import {View,Text,TextInput,StyleSheet,StatusBar,TouchableWithoutFeedback,TouchableOpacity} from 'react-native'
-import {screenUtils} from "../../tools/ScreenUtils";
+import {
+    View, Text, TextInput, StyleSheet, StatusBar, TouchableWithoutFeedback, TouchableOpacity,
+    BackHandler
+} from 'react-native'
+import {screenUtils,myFetch,getFormData,encodePostParams} from "../../tools/MyTools";
 import {HeaderButton} from '../../navigation/navi'
+import {connect} from "react-redux";
+import Toast from 'react-native-root-toast'
 
 const styles=StyleSheet.create({
     container:{
@@ -46,7 +51,7 @@ const styles=StyleSheet.create({
     }
 });
 
-export default class UsernameLogin extends Component{
+class UsernameLogin extends Component{
     static navigationOptions=({navigation})=>{
         let params=navigation.state.params;
         return {
@@ -56,12 +61,81 @@ export default class UsernameLogin extends Component{
     };
     constructor(props){
         super(props);
+        this.state={
+            username:'',
+            password:'',
+            disabled:false
+        };
         this._login=this._login.bind(this);
+        this._showTip=this._showTip.bind(this);
+    }
+    _backHandler(){
+        this.props.navigation.goBack();
+        return true;
+    }
+    componentWillUnmount(){
+        clearInterval(this.intervalId);
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler.bind(this));
+    }
+    _showTip(message,onHidden){
+        Toast.show(message,{
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+            onHidden:onHidden
+        });
     }
     _login(){
-        this.props.navigation.navigate('Main');
+        let {username,password}=this.state,
+            activeFunc=()=>{this.setState({disabled:false});};
+
+        this.setState({disabled:true});
+        if(username.length==0){
+            this._showTip('昵称不能为空',activeFunc);
+        }else if(password.length==0){
+            this._showTip('密码不能为空',activeFunc);
+        }else {
+
+            myFetch('http://222.20.31.65:4441/api/login', {
+                timeout: 10000,
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: encodePostParams({
+                    username: username,
+                    password: password
+                })
+            }).then(response => response.json())
+                .then(responseData => {
+                    alert(JSON.stringify(responseData));
+                    if (responseData.code == 1) {
+                        myStorage.save({
+                            key: 'user',
+                            data: {
+                                userInfo: {
+                                    username: username
+                                },
+                                token: responseData.data.token,
+                                isLogin: true,
+
+                            }
+                        });
+                        this.props.login({username: username}, responseData.data.token);
+                        this.props.navigation.navigate('Main');
+                    }
+                    console.log(responseData);
+                    activeFunc();
+                })
+                .catch((error) => {
+                    console.log(error);
+                    activeFunc();
+                });
+        };
     }
     componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler.bind(this));
         this.props.navigation.setParams({
             rightCb:()=>{
                 this.props.navigation.navigate('PhoneLoginRegister',{fromRegister:true});
@@ -81,6 +155,9 @@ export default class UsernameLogin extends Component{
                         maxLength={15}
                         keyboardType={'numeric'}
                         caretHidden={true}
+                        onChangeText={(text)=>{
+                            this.setState({username:text});
+                        }}
                     />
                 </View>
                 <View style={styles.field}>
@@ -92,12 +169,38 @@ export default class UsernameLogin extends Component{
                         maxLength={16}
                         caretHidden={true}
                         secureTextEntry={true}
+                        onChangeText={(text)=>{
+                            this.setState({password:text});
+                        }}
                     />
                 </View>
-                <TouchableOpacity activeOpacity={0.8} onPress={this._commonRegister}>
+                <TouchableOpacity disabled={this.state.disabled} activeOpacity={0.8} onPress={this._login}>
                     <View style={styles.loginBtn}><Text style={styles.loginText}>登录</Text></View>
                 </TouchableOpacity>
             </View>
         );
     }
 }
+
+let actions={
+    login:function (userInfo,token) {
+        return {
+            type:'LOGIN',
+            payload:{
+                isLogin:true,
+                token:token,
+                userInfo:userInfo
+            }
+        }
+    }
+};
+function mapStateToProps(state) {
+    return {user:state.user};
+}
+function mapDispatchToProps(dispatch) {
+    return {
+        login:(userInfo,token)=>{dispatch(actions.login(userInfo,token))}
+    }
+}
+
+export default UsernameLogin=connect(mapStateToProps,mapDispatchToProps)(UsernameLogin);

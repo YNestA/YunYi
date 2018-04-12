@@ -1,5 +1,8 @@
 import React,{Component} from 'react'
-import {StyleSheet,View,Text,StatusBar,Image,ImageBackground,TouchableOpacity,TouchableNativeFeedback,TouchableWithoutFeedback} from 'react-native'
+import {
+    StyleSheet, View, Text, StatusBar, Image, ImageBackground, TouchableOpacity, TouchableNativeFeedback,
+    TouchableWithoutFeedback, BackHandler
+} from 'react-native'
 import {screenUtils} from '../../tools/MyTools'
 
 const styles=StyleSheet.create({
@@ -45,6 +48,17 @@ export default class LoginCenter extends Component{
     constructor(props){
         super(props);
         this._enterMain=this._enterMain.bind(this);
+        this._backHandler=this._backHandler.bind(this);
+    }
+    _backHandler(){
+        BackHandler.exitApp();
+        return true;
+    }
+    componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler);
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     _enterMain(){
         this.props.navigation.navigate('Main');

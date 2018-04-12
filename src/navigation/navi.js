@@ -1,6 +1,9 @@
 import React, {Component} from 'react'
-import {View, Image, Text, StyleSheet, TouchableNativeFeedback, TouchableOpacity, BackHandler} from 'react-native'
-import {addNavigationHelpers, StackNavigator, TabNavigator} from 'react-navigation'
+import {
+    View, Image, Text, StyleSheet, TouchableNativeFeedback, TouchableOpacity, BackHandler,
+    StatusBar
+} from 'react-native'
+import {addNavigationHelpers, StackNavigator, TabBarBottom ,TabNavigator} from 'react-navigation'
 import DiscoverView from '../component/discover/DiscoverView'
 import ConcernView from '../component/concern/ConcernView'
 import EditNewView from '../component/edit-new/EditNewView'
@@ -17,6 +20,7 @@ import LoginCenter from '../component/login-register/LoginCenter'
 import PhoneLoginRegister from '../component/login-register/PhoneLoginRegister'
 import CommonRegister from "../component/login-register/CommonRegister"
 import UsernameLogin from "../component/login-register/UsernameLogin";
+import EditPassageSetting from "../component/edit-new/EditPassageSetting";
 
 export class TabIcon extends Component{
     constructor(props){
@@ -100,6 +104,7 @@ const MainScreenNavi=TabNavigator({
 },{
     initialRouteName:'Discover',
     tabBarPosition: 'bottom',
+    backBehavior:'none',
     swipeEnabled: false,
     lazy: true,
     animationEnabled: false,
@@ -130,22 +135,15 @@ const MainScreenNavi=TabNavigator({
     }
 });
 
-function mainBackHandler() {
-    BackHandler.exitApp();
-    return true;
-}
-MainScreenNavi.componentDidMount=()=>{
-    BackHandler.addEventListener('hardwareBackPress', mainBackHandler);
-};
-MainScreenNavi.componentWillUnmount=()=>{
-    BackHandler.removeEventListener('hardwareBackPress', mainBackHandler);
-};
-
 export default YunYiNavi=StackNavigator({
     Main:{
         screen:MainScreenNavi,
         navigationOptions:{
  //           header:null,
+            headerStyle:{
+                paddingTop:StatusBar.currentHeight,
+                height:screenUtils.autoSize(55)+StatusBar.currentHeight,
+            }
         }
     },
     Welcome:{
@@ -165,6 +163,9 @@ export default YunYiNavi=StackNavigator({
     },
     EditText:{
         screen:EditText,
+    },
+    EditPassageSetting:{
+        screen:EditPassageSetting
     },
     Passage:{
         screen:Passage,

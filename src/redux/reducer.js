@@ -5,6 +5,8 @@ import discoverReducer from './DiscoverReducer'
 import passageReducer from './PassageReducer'
 import concernReducer from './ConcernReducer'
 import naviReducer from './NaviReducer'
+import userReducer from './UserReducer'
+import messageCenterReducer from "./MessageCenterReducer";
 
 export default combineReducers({
     counter:counterReducer,
@@ -12,5 +14,7 @@ export default combineReducers({
     discover:discoverReducer,
     passage:passageReducer,
     concern:concernReducer,
-    nav:naviReducer
+    MessageCenter:messageCenterReducer,
+    nav:naviReducer,
+    user:userReducer
 });

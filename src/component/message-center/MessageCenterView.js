@@ -1,7 +1,16 @@
 import React, {Component} from 'react'
-import {View,Text} from 'react-native'
+import {View,Text,ScrollView,FlatList,StyleSheet} from 'react-native'
 import {TabIcon} from '../../navigation/navi'
-export default class MessageCenterView extends Component{
+import MessageEntry from './MessageEntry'
+import {connect} from 'react-redux'
+
+const styles=StyleSheet.create({
+    container:{
+        flex:1,
+        backgroundColor:'#fff'
+    }
+});
+class MessageCenterView extends Component{
     static navigationOptions={
         tabBarIcon:({focused, tintColor}) => {
             return <TabIcon
@@ -13,17 +22,48 @@ export default class MessageCenterView extends Component{
             />;
         },
         headerLeft:<View/>,
+        headerRight:<View/>,
         headerTitle:'消息',
         tabBarLabel:'消息'
-    }
+    };
     constructor(props){
         super(props);
     }
     render(){
+        let {messageCenter}=this.props;
+        let entrys=messageCenter.messageTypes.map((item)=>{
+            return messageCenter[item];
+        });
         return(
-            <View>
-                <Text>消息！</Text>
+            <View style={styles.container}>
+                <ScrollView>
+                    <FlatList
+                        data={entrys}
+                        extraData={this.state}
+                        renderItem={({item})=>{
+                            return <MessageEntry navigation={this.props.navigation} entry={item}/>;
+                        }}
+                    />
+                </ScrollView>
             </View>
         );
     }
 }
+
+let actions={
+
+};
+function mapStateToProps(state) {
+    return {
+        user:state.user,
+        routes:state.nav.routes,
+        messageCenter:state.MessageCenter
+    }
+}
+function mapDispatchToProps(dispatch) {
+    return {
+
+    };
+}
+
+export default MessageCenterView=connect(mapStateToProps,mapDispatchToProps)(MessageCenterView);

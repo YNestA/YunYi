@@ -1,6 +1,9 @@
 import React,{Component} from 'react'
 import Toast from 'react-native-root-toast'
-import {View,Text,TextInput,StyleSheet,StatusBar,TouchableWithoutFeedback,TouchableOpacity} from 'react-native'
+import {
+    View, Text, TextInput, StyleSheet, StatusBar, TouchableWithoutFeedback, TouchableOpacity,
+    BackHandler
+} from 'react-native'
 import {screenUtils,myFetch} from "../../tools/MyTools";
 
 const styles=StyleSheet.create({
@@ -71,7 +74,14 @@ export default class PhoneLoginRegister extends Component{
             headerRight:<View/>
         };
     };
-
+    _showTip(message){
+        Toast.show(message,{
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+        });
+    }
     _loginRegister(){
         let toast=Toast.show('验证码错误',{
             position: Toast.positions.BOTTOM,
@@ -112,12 +122,21 @@ export default class PhoneLoginRegister extends Component{
         };
         this._loginRegister=this._loginRegister.bind(this);
         this._getCheckCode=this._getCheckCode.bind(this);
+        this._showTip=this._showTip.bind(this);
+        this._backHandler=this._backHandler.bind(this);
+    }
+    _backHandler(){
+        this.props.navigation.goBack(null);
+        return true;
+    }
+    componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler);
     }
     componentWillUnmount(){
         clearInterval(this.intervalId);
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     render(){
-        console.log(this.props.navigation);
         let params=this.props.navigation.state.params,
             fromRegister=params?params.fromRegister:false;
         return(
