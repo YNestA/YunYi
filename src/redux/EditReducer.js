@@ -3,9 +3,10 @@ const initialState = {
     title: '',
     sections: [],
     passageSetting:{
-        public:true,
-        classify:'其他',
-        allowComment:true
+        public:1,
+        classify:0,
+        allowcomments:1,
+//        status:1, //是否删除,1不删除
     }
 };
 /*img*/

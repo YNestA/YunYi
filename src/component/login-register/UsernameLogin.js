@@ -97,7 +97,7 @@ class UsernameLogin extends Component{
             this._showTip('密码不能为空',activeFunc);
         }else {
 
-            myFetch('http://222.20.31.65:4441/api/login', {
+            myFetch('http://10.12.137.198:4441/api/login', {
                 timeout: 10000,
                 method: 'POST',
                 headers: {
@@ -110,7 +110,7 @@ class UsernameLogin extends Component{
             }).then(response => response.json())
                 .then(responseData => {
                     alert(JSON.stringify(responseData));
-                    if (responseData.code == 1) {
+                    if (responseData.code == 10001) {
                         myStorage.save({
                             key: 'user',
                             data: {
@@ -129,6 +129,7 @@ class UsernameLogin extends Component{
                     activeFunc();
                 })
                 .catch((error) => {
+                    alert(error);
                     console.log(error);
                     activeFunc();
                 });

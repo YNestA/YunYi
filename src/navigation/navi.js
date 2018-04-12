@@ -21,6 +21,11 @@ import PhoneLoginRegister from '../component/login-register/PhoneLoginRegister'
 import CommonRegister from "../component/login-register/CommonRegister"
 import UsernameLogin from "../component/login-register/UsernameLogin";
 import EditPassageSetting from "../component/edit-new/EditPassageSetting";
+import MessageCenterConcern from "../component/message-center/MessageCenterConcern";
+import MessageCenterLetter from "../component/message-center/MessageCenterLetter";
+import MessageCenterNotification from "../component/message-center/MessageCenterNotification";
+import MessageCenterShare from "../component/message-center/MessageCenterShare";
+import MessageCenterThumbComment from "../component/message-center/MessageCenterThumbComment";
 
 export class TabIcon extends Component{
     constructor(props){
@@ -176,6 +181,21 @@ export default YunYiNavi=StackNavigator({
     EditTitle:{
         screen:EditTitle
     },
+    MessageCenterConcern:{
+        screen:MessageCenterConcern
+    },
+    MessageCenterLetter:{
+        screen:MessageCenterLetter
+    },
+    MessageCenterNotification:{
+        screen:MessageCenterNotification
+    },
+    MessageCenterShare:{
+        screen:MessageCenterShare
+    },
+    MessageCenterThumbComment:{
+        screen:MessageCenterThumbComment
+    },
     Detail:{
         screen:DetailView,
         navigationOptions:{
@@ -184,7 +204,7 @@ export default YunYiNavi=StackNavigator({
         }
     }
 },{
-    initialRouteName:'LoginCenter',
+    initialRouteName:'Welcome',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),
