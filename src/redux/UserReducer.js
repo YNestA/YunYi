@@ -2,7 +2,9 @@ const initialState={
     isLogin:false,
     token:'',
     userInfo:{
-        username:''
+        userID:'',
+        username:'',
+        phoneNum:''
     }
 };
 export default function passageReducer(state=initialState,action) {

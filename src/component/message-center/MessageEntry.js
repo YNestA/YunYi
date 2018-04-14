@@ -68,7 +68,9 @@ class MessageEntry extends Component{
     };
     _enterEntry(){
         let {messageCenter,user,navigation,entry}=this.props;
-        this.props.clearNotRead(entry.type,messageCenter,user,navigation);
+        //this.props.clearNotRead(entry.type,messageCenter,user,navigation);
+        let type=this.props.entry.type;
+        navigation.navigate('MessageCenter'+type[0].toUpperCase()+type.slice(1,type.length));
     }
     render(){
         let {entry}=this.props;
@@ -91,10 +93,13 @@ class MessageEntry extends Component{
 
 let actions={
     clearNotRead:function (type,messageCenter,user,navigation) {
+        /*
         let payload={};
         payload[type]=Object.assign({},messageCenter[type],{notRead:0});
         type=type[0].toUpperCase()+type.slice(1,type.length);
+        */
         navigation.navigate('MessageCenter'+type);
+        /*
         //navigation.navigate('CommonRegister');
         return myFetch('https://www.baidu.com',{
             method:'POST',
@@ -117,6 +122,7 @@ let actions={
                 alert(err);
                 console.log(err);
             });
+        */
     }
 };
 

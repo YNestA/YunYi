@@ -67,13 +67,13 @@ export default class LoginCenter extends Component{
         return (
             <ImageBackground style={{flex:1}} source={require('../../img/darling.jpg')}>
                 <View style={{flex:1}}>
-                    <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
+                    <StatusBar translucent={false} barStyle={'dark-content'}/>
                     <View style={styles.closeContainer}>
-                         <TouchableOpacity onPress={this._enterMain}>
+                         <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#ddd',true)} onPress={this._enterMain}>
                              <View style={styles.close}>
                                  <Image style={styles.closeImg} source={require('../../img/edit/delete-section.png')}/>
                              </View>
-                         </TouchableOpacity>
+                         </TouchableNativeFeedback>
                     </View>
                     <View style={styles.loginList}>
                         <TouchableWithoutFeedback  onPress={()=> {
@@ -92,12 +92,12 @@ export default class LoginCenter extends Component{
                                 <Text style={styles.loginText}>手机登录</Text>
                             </View>
                         </TouchableWithoutFeedback>
-                        <TouchableWithoutFeedback   onPress={this._enterMain}>
+                        <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#ddd',true)}  onPress={this._enterMain}>
                             <View style={styles.login}>
                                 <Image style={styles.loginImg} source={require('../../img/common/eye_fill.png')}/>
                                 <Text style={styles.loginText}>随便看看</Text>
                             </View>
-                        </TouchableWithoutFeedback>
+                        </TouchableNativeFeedback>
                     </View>
                 </View>
             </ImageBackground>

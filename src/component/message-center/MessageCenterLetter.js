@@ -11,6 +11,17 @@ export default class MessageCenterLetter extends Component{
     };
     constructor(props){
         super(props);
+        this._backHandler=this._backHandler.bind(this);
+    }
+    _backHandler(){
+        this.props.navigation.goBack(null);
+        return true;
+    }
+    componentWillMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler);
+    }
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     render(){
         return <View/>;

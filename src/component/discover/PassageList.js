@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View,Text,FlatList} from 'react-native'
+import {View,Text,FlatList,InteractionManager} from 'react-native'
 import DiscoverPassage from './DiscoverPassage'
 import {connect} from "react-redux";
 import Loading from '../../tools/loading'
@@ -23,7 +23,9 @@ class PassageList extends Component{
         this.props.initialPassages(this.props.passageLists,this.props.classify);
     }
     componentDidMount(){
-        this._initialPassages();
+        InteractionManager.runAfterInteractions(() => {
+            this._initialPassages();
+        });
     }
     _renderFooter(){
         if(this.state.bottomRefreshing===1){
@@ -47,7 +49,6 @@ class PassageList extends Component{
     }
     _bottomRefresh(){
         if(this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
-            console.log(this.props.passageLists[this.props.classify].pageCount);
             this.setState({bottomRefreshing:1});
             this.props.bottomRefresh(this.props.passageLists,this.props.classify,(value)=>{
                 this.setState({bottomRefreshing:value});

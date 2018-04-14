@@ -4,8 +4,18 @@ import {
     View, Text, TextInput, StyleSheet, StatusBar, TouchableWithoutFeedback, TouchableOpacity,
     BackHandler
 } from 'react-native'
-import {screenUtils,myFetch} from "../../tools/MyTools";
+import {screenUtils, myFetch, encodePostParams} from "../../tools/MyTools";
+import {connect} from "react-redux";
 
+function showTip(message,hiddenCb) {
+    Toast.show(message,{
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        onHidden:hiddenCb,
+    });
+}
 const styles=StyleSheet.create({
     container:{
         flex:1,
@@ -67,7 +77,7 @@ const styles=StyleSheet.create({
     }
 });
 
-export default class PhoneLoginRegister extends Component{
+class PhoneLoginRegister extends Component{
     static navigationOptions=({navigation})=>{
         return {
             headerTitle:'手机号登录/注册',
@@ -83,13 +93,27 @@ export default class PhoneLoginRegister extends Component{
         });
     }
     _loginRegister(){
-        let toast=Toast.show('验证码错误',{
-            position: Toast.positions.BOTTOM,
-            shadow: true,
-            animation: true,
-            hideOnPress: true,
-        });
-        this.props.navigation.navigate('CommonRegister');
+        let {phoneNum,checkCode}=this.state
+;        if(!this.state.sending){
+            this.setState({sending:true});
+            if(phoneNum.length==0){
+                showTip('请输入手机号',()=>{
+                    this.setState({sending:false});
+                });
+            }else if(checkCode.length==0){
+                showTip('请输入验证码',()=>{
+                    this.setState({sending:false});
+                });
+            }else if(phoneNum.length!=11){
+                showTip('请输入正确的手机号',()=>{
+                    this.setState({sending:false});
+                });
+            }else {
+                this.props.phoneLoginRegister(phoneNum,checkCode,this.props.navigation,()=>{
+                    this.setState({sending:false});
+                });
+            }
+        }
     }
     _getCheckCode(){
         if(!this.state.getCheckCode) {
@@ -119,6 +143,9 @@ export default class PhoneLoginRegister extends Component{
         this.state={
             getCheckCode:false,
             retryTime:60,
+            phoneNum:'',
+            checkCode:'',
+            sending:false,
         };
         this._loginRegister=this._loginRegister.bind(this);
         this._getCheckCode=this._getCheckCode.bind(this);
@@ -151,6 +178,9 @@ export default class PhoneLoginRegister extends Component{
                         maxLength={11}
                         keyboardType={'numeric'}
                         caretHidden={true}
+                        onChangeText={(text)=>{
+                            this.setState({phoneNum:text});
+                        }}
                     />
                 </View>
                 <View style={styles.field}>
@@ -162,6 +192,9 @@ export default class PhoneLoginRegister extends Component{
                         keyboardType={'numeric'}
                         maxLength={6}
                         caretHidden={true}
+                        onChangeText={(text)=>{
+                            this.setState({checkCode:text});
+                        }}
                     />
                     <TouchableWithoutFeedback
                         disabled={this.state.getCheckCode}
@@ -174,10 +207,66 @@ export default class PhoneLoginRegister extends Component{
                     </TouchableWithoutFeedback>
                 </View>
                 <Text style={styles.tip}>新用户验证手机即可完成注册</Text>
-                <TouchableOpacity activeOpacity={0.8} onPress={this._loginRegister}>
+                <TouchableOpacity disabled={this.state.sending} activeOpacity={0.8} onPress={this._loginRegister}>
                     <View style={styles.loginBtn}><Text style={styles.loginText}>{fromRegister?'下一步':'登录'}</Text></View>
                 </TouchableOpacity>
             </View>
         );
     }
 }
+
+let actions={
+    phoneLoginRegister:function (phoneNum,checkCode,navigation,cb) {
+        return myFetch('http://www.baidu.com',{
+            method:'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: encodePostParams({
+                phoneNum: phoneNum,
+                checkCode: checkCode
+            })
+        }).then(response=>response.json())
+            .then(responseData=>{
+                if(responseData.code==10003){
+                    let token=responseData.data.token,
+                        user={
+                            isLogin:true,
+                            token:token,
+                            userInfo:{
+                                username:'',
+                                userID:'',
+                                phoneNum:phoneNum,
+                            }
+                        };
+                    myStorage.save({
+                        key:'user',
+                        data:user
+                    });
+                    navigation.navigate('Main');
+                    return {
+                        type:'LOGIN',
+                        payload:user
+                    };
+                }else if (responseData.code==10004){
+                    navigation.navigate('CommonRegister',{phoneNum:phoneNum});
+                }else{
+                    showTip('验证失败',cb);
+                }
+            }).catch(err=>{
+                alert(err);
+                showTip('验证失败',cb);
+            })
+
+    }
+};
+function mapStateToProps(state) {
+    return {user:state.user};
+}
+function mapDispatchToProps(dispatch) {
+    return {
+        phoneLoginRegister:(phoneNum,checkCode,navigation,cb)=>{dispatch(actions.phoneLoginRegister(phoneNum,checkCode,navigation,cb))}
+    }
+}
+
+export default PhoneLoginRegister=connect(mapStateToProps,mapDispatchToProps)(PhoneLoginRegister);
