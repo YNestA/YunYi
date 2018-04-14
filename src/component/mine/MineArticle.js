@@ -1,49 +1,27 @@
-import React,{Component} from 'react';
-import {View,Text,Image,StyleSheet} from 'react-native';
+import React, {Component} from 'react';
+import {View, Text, Image, StyleSheet} from 'react-native';
 import {screenUtils} from "../../tools/ScreenUtils";
+import ScrollableTabView, {ScrollableTabBar, DefaultTabBar} from 'react-native-scrollable-tab-view'
+import {ShortArticle} from './sortArticle'
 
-export class MineArticle extends Component{
-    constructor(props){
+export class MineArticle extends Component {
+    constructor(props) {
         super(props);
     }
-    render(){
-        return(
-            <View style={{
-                flex:1,
-                flexDirection:'row',
-                justifyContent:'space-between',
-                backgroundColor:'#fff'
-            }}>
-                <View>
-                    <View style={styles.textSize}>
-                        <Text style={styles.fileSize}>全部文章</Text>
-                        <Text style={[styles.fileSize,{marginLeft:screenUtils.autoSize(30)}]}>回收站</Text>
-                    </View>
+
+    render() {
+        return (
+            <ScrollableTabView
+                tabBarActiveTextColor='#9B30FF'
+                tabBarUnderlineStyle='#9B30FF'
+                renderTabBar={() => <ScrollableTabBar/>}>
+                <View tabLabel={'全部文章'}>
+                    <ShortArticle/>
                 </View>
-                <View>
-                    <Image source={require('../../img/file.png')} style={styles.imageIcon}/>
+                <View tabLabel={'回收站'}>
+                    <ShortArticle/>
                 </View>
-            </View>
+            </ScrollableTabView>
         );
     }
 }
-
-const styles=StyleSheet.create({
-    textSize:{
-        flexDirection:'row',
-        backgroundColor:'#bbb',
-        marginLeft:screenUtils.autoSize(10),
-        paddingTop:screenUtils.autoSize(10),
-        paddingBottom:screenUtils.autoSize(10),
-    },
-    fileSize:{
-        fontSize:screenUtils.autoSize(18),
-    },
-    imageIcon:{
-        marginBottom:screenUtils.autoSize(10),
-        marginTop:screenUtils.autoSize(14),
-        width:screenUtils.autoSize(16),
-        height:screenUtils.autoSize(16),
-        marginRight:screenUtils.autoSize(30),
-    }
-});
