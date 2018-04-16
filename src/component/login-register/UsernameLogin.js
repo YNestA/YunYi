@@ -115,7 +115,8 @@ class UsernameLogin extends Component{
                             key: 'user',
                             data: {
                                 userInfo: {
-                                    username: username
+                                    username: username,
+                                    userID:'',
                                 },
                                 token: responseData.data.token,
                                 isLogin: true,

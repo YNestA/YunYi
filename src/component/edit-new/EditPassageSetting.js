@@ -3,6 +3,7 @@ import {View,Text,TouchableOpacity,StyleSheet,BackHandler,Switch,StatusBar} from
 import {connect} from 'react-redux'
 import {NavigationActions} from 'react-navigation'
 import {screenUtils, myFetch, encodePostParams} from '../../tools/MyTools'
+import PassageClassify from '../../redux/PassageClassify'
 
 const styles=StyleSheet.create({
     container:{
@@ -98,7 +99,7 @@ class EditPassageSetting extends Component{
                     </View>
                     <Text style={styles.tip}>可自行控制文章展示范围</Text>
                     <TouchableOpacity activeOpacity={0.5}>
-                        <View style={styles.setting}><Text style={styles.settingText}>文章分类</Text><Text style={styles.settingEnter}>{passage.passageSetting.classify+' >'}</Text></View>
+                        <View style={styles.setting}><Text style={styles.settingText}>文章分类</Text><Text style={styles.settingEnter}>{PassageClassify[passage.passageSetting.classify]+'  >'}</Text></View>
                     </TouchableOpacity>
                     <Text style={styles.tip}>正确设置分类的文章将展示在首页</Text>
                     <View style={styles.setting}>
