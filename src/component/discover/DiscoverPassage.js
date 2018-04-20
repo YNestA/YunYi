@@ -97,35 +97,34 @@ class DiscoverPassage extends Component{
     constructor(props){
         super(props);
         this._openPassage=this._openPassage.bind(this);
+        this._openUser=this._openUser.bind(this);
     }
     _openPassage(){
         let navigation=this.props.navigation;
         navigation.navigate('Passage',{passage:this.props.passage});
     }
-
+    _openUser(){
+        let navigation=this.props.navigation;
+        navigation.navigate('OtherUser');
+    }
     render() {
         let passage=this.props.passage;
         return (
             <View style={styles.container}>
-                <TouchableWithoutFeedback onPress={()=>{console.log(2)}}>
+                <TouchableWithoutFeedback onPress={this._openUser}>
                     <View style={styles.authorContainer}>
-                        <Image style={styles.authorHeadImg} source={require('../../img/asuka.jpg')}/>
+                        <Image style={styles.authorHeadImg} source={{uri:passage.author.headImg}}/>
                         <Text numberOfLines={1} style={styles.authorName}>{passage.author&&passage.author.name}</Text>
                     </View>
                 </TouchableWithoutFeedback>
                 <TouchableWithoutFeedback onPress={this._openPassage}>
                     <View style={styles.passageContainer}>
                         <Text style={styles.passageTitle}>{passage.title}</Text>
-                        <Image style={styles.coverImg} source={require('../../img/hikari.jpg')}/>
+                        <Image style={styles.coverImg} source={{uri:passage.coverImg}}/>
                         <View style={styles.otherInfo}>
                             <View style={{flexDirection:'row'}}>
                                 <View style={styles.thumbContainer}>
-                                    {passage.thumbHeadImgs&&[
-                                        require('../../img/user1.jpg'),
-                                        require('../../img/user2.jpg'),
-                                        require('../../img/user3.jpg'),
-                                        require('../../img/user1.jpg')
-                                    ].map((item,index)=><Image style={styles.thumbUserHeadImg} source={item} key={index}/>)}
+                                    {passage.thumbHeadImgs&&passage.thumbHeadImgs.map((item,index)=><Image style={styles.thumbUserHeadImg} source={{uri:item}} key={index}/>)}
                                  </View>
                                 <View style={styles.thumbCountContainer}>
                                     <Image style={styles.infoImg} source={require('../../img/common/y_thumb.png')}/>

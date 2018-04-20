@@ -107,8 +107,8 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
-        renderscriptTargetApi 23
-        renderscriptSupportModeEnabled true
+        //renderscriptTargetApi 23
+        //renderscriptSupportModeEnabled true
     }
     splits {
         abi {
@@ -141,7 +141,7 @@ android {
 
 dependencies {
     compile project(':react-native-autoheight-webview')
-    compile project(':react-native-blur')
+    //compile project(':react-native-blur')
     compile project(':react-native-picker')
     compile project(':react-native-image-crop-picker')
     compile fileTree(dir: "libs", include: ["*.jar"])

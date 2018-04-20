@@ -6,6 +6,7 @@ import {
 } from 'react-native'
 import {screenUtils, myFetch, encodePostParams} from "../../tools/MyTools";
 import {connect} from "react-redux";
+import {ip} from "../../settings";
 
 function showTip(message,hiddenCb) {
     Toast.show(message,{
@@ -38,11 +39,11 @@ const styles=StyleSheet.create({
     },
     fieldInput:{
         flex:1,
-        padding:0,
+        paddingVertical:screenUtils.autoSize(15),
         color:'#444',
         height:screenUtils.autoSize(60),
         fontSize:screenUtils.autoFontSize(17),
-        lineHeight:screenUtils.autoSize(60)
+        lineHeight:screenUtils.autoSize(30)
     },
     checkCode:{
         justifyContent:'center'
@@ -117,7 +118,7 @@ class PhoneLoginRegister extends Component{
     }
     _getCheckCode(){
         if(!this.state.getCheckCode) {
-            myFetch('https://www.baidu.com');
+            myFetch('http://'+ip+':4441/api/sms?phone='+this.state.phoneNum);
             this.setState({
                 getCheckCode: true,
                 retryTime: 60,
@@ -177,7 +178,7 @@ class PhoneLoginRegister extends Component{
                         placeholder={'请输入手机号'}
                         maxLength={11}
                         keyboardType={'numeric'}
-                        caretHidden={true}
+                        caretHidden={false}
                         onChangeText={(text)=>{
                             this.setState({phoneNum:text});
                         }}
@@ -191,7 +192,7 @@ class PhoneLoginRegister extends Component{
                         placeholder={'请输入验证码'}
                         keyboardType={'numeric'}
                         maxLength={6}
-                        caretHidden={true}
+                        caretHidden={false}
                         onChangeText={(text)=>{
                             this.setState({checkCode:text});
                         }}
@@ -217,18 +218,21 @@ class PhoneLoginRegister extends Component{
 
 let actions={
     phoneLoginRegister:function (phoneNum,checkCode,navigation,cb) {
-        return myFetch('http://www.baidu.com',{
+        return myFetch(`http://${ip}:4441/api/sms/login`,{
             method:'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: encodePostParams({
-                phoneNum: phoneNum,
-                checkCode: checkCode
+                phone: phoneNum,
+                messageCode: checkCode
             })
         }).then(response=>response.json())
             .then(responseData=>{
-                if(responseData.code==10003){
+                //alert(responseData);
+                //responseData=JSON.parse(responseData);
+                //alert(JSON.stringify(responseData));
+                if(responseData.code==10001){
                     let token=responseData.data.token,
                         user={
                             isLogin:true,
@@ -243,12 +247,13 @@ let actions={
                         key:'user',
                         data:user
                     });
+                    showTip('登录成功',cb);
                     navigation.navigate('Main');
                     return {
                         type:'LOGIN',
                         payload:user
                     };
-                }else if (responseData.code==10004){
+                }else if (responseData.code==10103){
                     navigation.navigate('CommonRegister',{phoneNum:phoneNum});
                 }else{
                     showTip('验证失败',cb);

@@ -7,6 +7,7 @@ import {screenUtils} from "../../tools/ScreenUtils";
 import Toast from "react-native-root-toast";
 import {encodePostParams, myFetch} from "../../tools/MyTools";
 import {connect} from "react-redux";
+import {ip} from "../../settings";
 
 function showTip(message,hiddenCb) {
     Toast.show(message,{
@@ -40,11 +41,11 @@ const styles=StyleSheet.create({
     },
     fieldInput:{
         flex:1,
-        padding:0,
+        paddingVertical:screenUtils.autoSize(15),
         color:'#444',
         height:screenUtils.autoSize(60),
         fontSize:screenUtils.autoFontSize(17),
-        lineHeight:screenUtils.autoSize(60)
+        lineHeight:screenUtils.autoSize(30)
     },
     registerBtn:{
         marginTop:screenUtils.autoSize(30),
@@ -91,12 +92,16 @@ class CommonRegister extends Component{
         BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     _commonRegister(){
-        let phoneNum=this.props.navigation.state.params.phoneNum,
+        let phoneNum=this.props.navigation.state.params&&this.props.navigation.state.params.phoneNum,
             {sending,username,password,password2}=this.state;
         if(!sending){
             this.setState({sending:true});
             if(username.length==0){
                 showTip('请输入昵称',()=>{
+                    this.setState({sending:false});
+                });
+            }else if(/^\d+$/.test(username)){
+                showTip('昵称不能为纯数字',()=>{
                     this.setState({sending:false});
                 });
             }else if(password.length==0||password2.length==0){
@@ -108,7 +113,7 @@ class CommonRegister extends Component{
                     this.setState({sending:false});
                 });
             }else {
-                this.props.commonRegister(username,password,this.props.navigation,()=>{
+                this.props.commonRegister(phoneNum,username,password,this.props.navigation,()=>{
                     this.setState({sending:false});
                 });
             }
@@ -125,8 +130,8 @@ class CommonRegister extends Component{
                         underlineColorAndroid="transparent"
                         placeholder={'请输入昵称，最多12字'}
                         maxLength={12}
-                        keyboardType={'numeric'}
-                        caretHidden={true}
+                        //keyboardType={'numeric'}
+                        caretHidden={false}
                         onChangeText={(text)=>{
                             this.setState({username:text});
                         }}
@@ -139,10 +144,10 @@ class CommonRegister extends Component{
                         style={styles.fieldInput}
                         placeholder={'请输入6-16位密码'}
                         maxLength={16}
-                        caretHidden={true}
+                        caretHidden={false}
                         secureTextEntry={true}
                         onChangeText={(text)=>{
-                            this.setState({username2:text});
+                            this.setState({password:text});
                         }}
                     />
                 </View>
@@ -154,9 +159,9 @@ class CommonRegister extends Component{
                         placeholder={'请再输一次'}
                         secureTextEntry={true}
                         maxLength={16}
-                        caretHidden={true}
+                        caretHidden={false}
                         onChangeText={(text)=>{
-                            this.setState({password:text});
+                            this.setState({password2:text});
                         }}
                     />
                 </View>
@@ -170,14 +175,14 @@ class CommonRegister extends Component{
 
 let actions={
     commonRegister:function (phoneNum,username,password,navigation,cb) {
-        return myFetch('http://www.baidu.com',{
+        return myFetch(`http://${ip}:4441/api/register`,{
             method:'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             },
             body: encodePostParams({
-                phoneNum: phoneNum,
-                username:username,
+                phone: phoneNum||15927168840,
+                nickname:username,
                 password:password
             })
         }).then(response=>response.json())
@@ -188,7 +193,7 @@ let actions={
                             isLogin:true,
                             token:token,
                             userInfo:{
-                                username:'',
+                                username:username,
                                 userID:'',
                                 phoneNum:phoneNum,
                             }
@@ -197,14 +202,15 @@ let actions={
                         key:'user',
                         data:user
                     });
+                    showTip('注册成功',cb);
                     navigation.navigate('Main');
                     return {
                         type:'LOGIN',
                         payload:user
                     };
-                }else if (responseData.code==10005){
+                }else if (responseData.code==10105){
                     showTip('请先验证手机号',cb);
-                }else if(responseData.code==100006){
+                }else if(responseData.code==10110){
                     showTip('昵称已存在',cb);
                 } else{
                     showTip('验证失败',cb);

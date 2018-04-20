@@ -99,7 +99,7 @@ class PassageFooter extends Component{
                         <TouchableOpacity>
                             <View style={styles.infoBox}>
                                 <Image style={styles.infoImg} source={require('../../img/common/y_comment.png')}/>
-                                <Text style={styles.infoText}>112</Text>
+                                <Text style={styles.infoText}>{passage.commentCount>0?passage.commentCount:'评论'}</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity>
@@ -109,13 +109,15 @@ class PassageFooter extends Component{
                                     :
                                     <Image style={styles.infoImg}  source={require('../../img/common/y_thumb.png')}/>
                                 }
-                                <Text style={[styles.infoText,(passage.ifThumb)?styles.thumbText:{}]}>423</Text>
+                                <Text style={[styles.infoText,(passage.ifThumb)?styles.thumbText:{}]}>{
+                                    passage.thumbCount>0?passage.thumbCount:'点赞'
+                                }</Text>
                             </View>
                         </TouchableOpacity>
                         <TouchableOpacity>
                             <View style={styles.infoBox}>
                                 <Image style={styles.infoImg} source={require('../../img/common/y_share.png')}/>
-                                <Text style={styles.infoText}>142</Text>
+                                <Text style={styles.infoText}>{passage.shareCount>0?passage.shareCount:'分享'}</Text>
                             </View>
                         </TouchableOpacity>
                     </View>

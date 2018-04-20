@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { View, Image, Text, findNodeHandle, StyleSheet } from 'react-native';
-import { BlurView } from 'react-native-blur';
 
 export default class Menu extends Component {
     constructor(props) {

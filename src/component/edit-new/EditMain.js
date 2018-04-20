@@ -12,6 +12,7 @@ import Section from './EditSection'
 import {getRoutekey,getFormData,myFetch} from '../../tools/MyTools'
 import UploadTip from './UploadTip'
 import Toast from 'react-native-root-toast'
+import {ip} from "../../settings";
 
 const styles=StyleSheet.create({
     coverBackground: {
@@ -180,11 +181,15 @@ class Edit extends Component{
                                     <Text style={styles.addTitleText}>{passage.title?passage.title:'点击编辑标题'}</Text>
                                 </TouchableNativeFeedback>
                             </View>
-                            <View style={styles.editCoverBtn}>
-                                <TouchableNativeFeedback onPress={()=>{console.log(2)}}>
-                                    <Text style={styles.editCoverText}>编辑封面</Text>
-                                </TouchableNativeFeedback>
-                            </View>
+                            {/*
+                                <View style={styles.editCoverBtn}>
+                                    <TouchableNativeFeedback onPress={() => {
+                                        console.log(2)
+                                    }}>
+                                        <Text style={styles.editCoverText}>编辑封面</Text>
+                                    </TouchableNativeFeedback>
+                                </View>
+                            */}
                         </View>
                     </ImageBackground>
                     <Sections navigation={navigation} sections={passage.sections}/>
@@ -228,7 +233,7 @@ let actions={
                 });
             }
         });
-        return myFetch('http://10.12.137.198:4441/api/img/upload',{
+        return myFetch(`http://${ip}:4441/api/img/upload`,{
             timeout:30000,
             method:'POST',
             headers:{
@@ -238,7 +243,7 @@ let actions={
             body:formData
         }).then(response=>response.json())
             .then(responseData=>{
-                alert(JSON.stringify(responseData));
+                //alert(JSON.stringify(responseData));
                 cb();
                 if(responseData.code==10001) {
                     navigation.navigate('EditPassageSetting');

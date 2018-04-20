@@ -7,6 +7,7 @@ import {screenUtils,myFetch,getFormData,encodePostParams} from "../../tools/MyTo
 import {HeaderButton} from '../../navigation/navi'
 import {connect} from "react-redux";
 import Toast from 'react-native-root-toast'
+import {ip} from "../../settings";
 
 const styles=StyleSheet.create({
     container:{
@@ -50,7 +51,15 @@ const styles=StyleSheet.create({
         textAlign:'center'
     }
 });
-
+function showTip(message,onHidden){
+    Toast.show(message,{
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        onHidden:onHidden
+    });
+}
 class UsernameLogin extends Component{
     static navigationOptions=({navigation})=>{
         let params=navigation.state.params;
@@ -92,12 +101,12 @@ class UsernameLogin extends Component{
 
         this.setState({disabled:true});
         if(username.length==0){
-            this._showTip('昵称不能为空',activeFunc);
+            showTip('昵称不能为空',activeFunc);
         }else if(password.length==0){
-            this._showTip('密码不能为空',activeFunc);
+            showTip('密码不能为空',activeFunc);
         }else {
 
-            myFetch('http://10.12.137.198:4441/api/login', {
+            myFetch(`http://${ip}:4441/api/username/login`, {
                 timeout: 10000,
                 method: 'POST',
                 headers: {
@@ -109,13 +118,14 @@ class UsernameLogin extends Component{
                 })
             }).then(response => response.json())
                 .then(responseData => {
-                    alert(JSON.stringify(responseData));
+                    //alert(JSON.stringify(responseData));
                     if (responseData.code == 10001) {
                         myStorage.save({
                             key: 'user',
                             data: {
                                 userInfo: {
-                                    username: username,
+                                    username: '',
+                                    phoneNum:'',
                                     userID:'',
                                 },
                                 token: responseData.data.token,
@@ -124,7 +134,12 @@ class UsernameLogin extends Component{
                             }
                         });
                         this.props.login({username: username}, responseData.data.token);
+                        showTip('登录成功',activeFunc);
                         this.props.navigation.navigate('Main');
+                    }else if(responseData.code==10103){
+                        showTip('用户不存在',activeFunc);
+                    }else if(responseData.code==10107){
+                        showTip('密码错误',activeFunc);
                     }
                     console.log(responseData);
                     activeFunc();
@@ -149,13 +164,13 @@ class UsernameLogin extends Component{
             <View style={styles.container}>
                 <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                 <View style={styles.field}>
-                    <Text style={styles.fieldText}>昵称</Text>
+                    <Text style={styles.fieldText}>用户名</Text>
                     <TextInput
                         style={styles.fieldInput}
                         underlineColorAndroid="transparent"
-                        placeholder={'请输入昵称，最多15字'}
+                        placeholder={'请输入昵称或手机号'}
                         maxLength={15}
-                        keyboardType={'numeric'}
+                     //   keyboardType={'numeric'}
                         caretHidden={true}
                         onChangeText={(text)=>{
                             this.setState({username:text});

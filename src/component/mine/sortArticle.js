@@ -99,7 +99,7 @@ export class ShortArticle extends Component {
                 <View style={styles.bottomData}>
                     <Text style={styles.pushDate}>2018-03-04</Text>
                     <View style={styles.bottomIcon}>
-                        <Image style={styles.imgCommon} source={require('../../img/eye.png')}/>
+                        <Image style={styles.imgCommon} source={require('../../img/common/eye_fill.png')}/>
                         <Text style={styles.textCommon}>{item.watchedNum}</Text>
                         <Image style={styles.imgCommon} source={require('../../img/common/y_thumb.png')}/>
                         <Text style={styles.textCommon}>{item.thumbUpNum}</Text>

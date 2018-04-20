@@ -7,17 +7,21 @@ import {connect} from 'react-redux'
 import HeaderTitle from './HeaderTitle'
 import {Loading, screenUtils, myFetch, getRoutekey} from '../../tools/MyTools'
 import PassageWebView from './PassageWebView'
-import {BlurView} from 'react-native-blur'
 import PassageFooter from './PassageFooter'
 import Comments from './comments'
 import PassagesPush from './PassagesPush'
+import {encodePostParams} from "../../tools/MyFetch";
+import {ip} from '../../settings'
 
 const styles=StyleSheet.create({
     container:{
         flex:1,
     },
+    whiteBackground:{
+        backgroundColor:'#fff'
+    },
     passageContainer:{
-        backgroundColor:'#fff',
+ //       backgroundColor:'#fff',
         marginBottom:screenUtils.autoSize(20),
     },
     title:{
@@ -49,7 +53,7 @@ class Passage extends Component{
         let {params}=navigation.state;
         return {
             headerRight:<View/>,
-            headerTitle: <HeaderTitle author={params.passage.author}/>
+            headerTitle: <HeaderTitle navigation={navigation} author={params.passage.author}/>
         }
     };
     constructor(props){
@@ -60,6 +64,7 @@ class Passage extends Component{
     }
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress',this._onBackHandler);
+        this.props.setLoading(true);
     }
     _onBackHandler(){
         this.props.navigation.goBack();
@@ -68,7 +73,7 @@ class Passage extends Component{
     componentDidMount(){
         BackHandler.addEventListener('hardwareBackPress',this._onBackHandler);
         let {params}=this.props.navigation.state;
-        this.props.initPassage(params.passage.passageID);
+        this.props.initPassage(params.passage.passageID,this.props.navigation);
         this.props.getPassagesPush();
     }
     _buildPassageHtml(sections){
@@ -81,15 +86,16 @@ class Passage extends Component{
             }
         }).join('<br>');
     }
-    imageLoaded(){
-        this.setState({ viewRef: findNodeHandle(this.a) });
+    _getTime(time){
+        let date=new Date(time);
+        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()}`;
     }
     render(){
         let passage=this.props.passage;
             return (
                 <View style={styles.container}>
                     <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
-                    {(!passage.passageID||(passage.isCoverBlur&&!this.state.viewRef))&&<Loading
+                    {(passage.loading)&&<Loading
                         containerStyle={{
                             backgroundColor:'#fff',
                             position:'absolute',
@@ -99,31 +105,22 @@ class Passage extends Component{
                     />}
                     { passage.isCoverBlur&&
                         <Image
-                            ref={(a) => {
-                                this.a = a;
-                            }}
-                            onLoadEnd={this.imageLoaded.bind(this)}
+                            blurRadius={5}
                             style={{position: 'absolute', width: '100%', height: '100%'}}
-                            source={require('../../img/user4.jpg')}
-                        />
-                    }
-                    {(this.state.viewRef)&&
-                        <BlurView
-                            style={{position:'absolute',left:0,right:0,top:0,bottom:0}}
-                            viewRef={this.state.viewRef}
-                            blurType="light"
-                            blurAmount={15}
+                            source={{uri:passage.coverImg}}
                         />
                     }
                     <ScrollView>
                         { passage.passageID&&
                             <View>
-                                <View style={styles.passageContainer}>
+                                <View style={[styles.passageContainer,!passage.isCoverBlur? styles.whiteBackground:{}]}>
                                     <Text style={styles.title}>
                                         {passage.title}
                                     </Text>
                                     <View style={styles.passageInfo}>
-                                        <Text style={styles.passageTime}>{passage.createTime.split(' ')[0]}</Text>
+                                        <Text style={styles.passageTime}>{
+                                            this._getTime(passage.createTime)
+                                        }</Text>
                                         <Text style={styles.passageAuthor} numberOfLines={1}>{passage.author.name}</Text>
                                         <Text style={styles.passageRead}>阅读 {passage.readCount}</Text>
                                     </View>
@@ -133,7 +130,7 @@ class Passage extends Component{
                                 </View>
                                 <Comments/>
                                 { passage.passagesPush.length>0?
-                                    <PassagesPush passages={passage.passagesPush}/>:
+                                    <PassagesPush passage={passage}/>:
                                     <View/>
                                 }
                             </View>
@@ -146,88 +143,62 @@ class Passage extends Component{
 }
 
 let actions={
-    initPassage:function (passageID) {
-        return myFetch('https://www.baidu.com',{method:'GET',timeout:10000})
-            .then((response)=>response.text())
+    initPassage:function (passageID,navigation) {
+        return myFetch(`http://${ip}:4441/api/article/${passageID}`,{
+                method:'GET',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            timeout:10000
+        })
+            .then((response)=>response.json())
             .then((responseData)=>{
-                return {
-                    type:'INIT_PASSAGE',
-                    payload:{
-                        passageID:passageID,
+                //alert(JSON.stringify(responseData));
+                if(responseData.code==10001) {
+                    let data = responseData.data[0];
+                    navigation.setParams({passage:{
                         author:{
-                            authorID:'A20180322',
-                            headImg:'../../img/asuka.jpg',
-                            name:'周瑜'
-                        },
-                        isCoverBlur:false,
-                        title:'人人有书读，人人有功练',
-                        readCount:1500,
-                        coverImg:'../../img/hikari.jpg',
-                        createTime:'2019-9-30 12:30',
-                        commentCount:89,
-                        comments:[
-                            {
-                                name:'刘涛',
-                                content:'我顶啊，楼主说的好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-                                time:'2018-5-30',
-                                headImg:'',
-                                thumbCount:43
+                            authorID:'',
+                            headImg: data.avatar,
+                            name:data.nickname
+                        }}
+                    });
+                    return {
+                        type: 'INIT_PASSAGE',
+                        payload: {
+                            loading:false,
+                            passageID: passageID,
+                            author: {
+                                authorID: data.userUuid,
+                                headImg: data.avatar,
+                                name: data.nickname,
+                                isFollow:false,
                             },
-                            {
-                                name:'刘涛',
-                                content:'我顶啊，楼主说的好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-                                time:'2018-5-30',
-                                headImg:'',
-                                thumbCount:133,
-                                everThumb:true
-                            },
-                            {
-                                name:'刘涛',
-                                content:'我顶啊，楼主说的好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-                                time:'2018-5-30',
-                                headImg:'',
-                                thumbCount:43
-                            },
-                            {
-                                name:'刘涛',
-                                content:'我顶啊，楼主说的好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-                                time:'2018-5-30',
-                                headImg:'',
-                                thumbCount:43
-                            },
-                            {
-                                name:'刘涛',
-                                content:'我顶啊，楼主说的好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-                                time:'2018-5-30',
-                                headImg:'',
-                                thumbCount:43
-                            },
-                        ],
-                        sections:[
-                            {
-                                content: `<div style="text-align: left;">改变，其方向不管是善也好，恶也罢，都是无情的。  无论你是否希望这样，人总是这样改变着，而且一旦改变，就再也变不回原来的样子了  那种变化会将幸福捉住，还是会把不幸吸引，就看人们各自的选择了。  更进一步就像“祸兮福之所倚，福兮祸之所伏※”说的那样，什么是幸福，什么是不幸，单靠那一瞬间做出的判断是无法说明的。今天认为不幸的事情，或许明天就会因为那不幸而遇到什么好事。  【※原文：禍福は糾える縄の如し。<font size="5"><br></font></div>`,
-                                img: null,
-                                text: " 我是中国古拳法掌门人 改变，其方向不管是善也好，恶也罢，都是无情的。 无论你是否希望这样，人总是这样改变着，而且一旦改变，就再也变不回原来的样子了 那种变化会将幸福捉住，还是会把不幸吸引，就看人们各自的选择了。 更进一步就像“祸兮福之所倚，福兮祸之所伏※”说的那样，什么是幸福，什么是不幸，单靠那一瞬间做出的判断是无法说明的。今天认为不幸的事情，或许明天就会因为那不幸而遇到什么好事。 【※原文：禍福は糾える縄の如し。（福祸就像结在一起的绳子）】 就算输给了沉痛的创伤，以那创伤为垫脚石会造就出一个新的自己也说不定。相反，如果那个伤口过于沉痛的话，也可能会让人再也振作不起来。 但是那个分界线到底在哪谁也说不清楚。 我明白的事情只有一件。 ",
-                                type: "text"
-                            },
-                            {
-                                content: `<div style="text-align: center;"><span style="font-size: 1em;">啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊我要说点什么</span></div>`,
-                                img:{
-                                    url:'https://c2.hoopchina.com.cn/uploads/star/event/images/180326/a2b2780779b0673e50ca24c8bff71cc6dd57eed8.png'
+                            isCoverBlur: false,
+                            title: data.title,
+                            readCount: data.readnumber,
+                            coverImg: data.image,
+                            createTime: data.createTime,
+                            thumbCount:data.likeNum,
+                            commentCount:data.commentNum,
+                            shareCount:data.shareNum,
+                            comments: [
+                                /*
+                                {
+                                    name:'刘涛',
+                                    content:'我顶啊，楼主说的好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
+                                    time:'2018-5-30',
+                                    headImg:'',
+                                    thumbCount:43
                                 },
-                                text: " 啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊我要说点什么 ",
-                                type: "img"
-                            },
-                            {
-                                content:`<div style="text-align: center;"><span style="font-size: 1em;">中国古拳法</span></div><div style="text-align: center;"><span style="font-size: 1em;">中国古拳法</span></div><div style="text-align: center;"><span style="font-size: 1em;">中国古拳法</span></div>`,
-                                img: null,
-                                text: " 中国古拳法 中国古拳法 中国古拳法 ",
-                                type: "text",
-                            }
-                        ],
-                    }
-                };
+                                */
+                            ],
+                            sections: JSON.parse(data.content)
+                        }
+                    };
+                }
             }).catch((error)=> {
+                alert(error);
                 console.log(error);
             });
     },
@@ -269,6 +240,14 @@ let actions={
             }).catch((error)=>{
                 console.log(error);
             })
+    },
+    setLoading:function (value) {
+        return {
+            type:'PASSAGE_SET_LOADING',
+            payload:{
+                loading:value
+            }
+        }
     }
 };
 
@@ -279,8 +258,9 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
     return{
-        initPassage:(passageID)=>{dispatch(actions.initPassage(passageID))},
-        getPassagesPush:()=>{dispatch(actions.getPassagesPush())}
+        initPassage:(passageID,navigation)=>{dispatch(actions.initPassage(passageID,navigation))},
+        getPassagesPush:()=>{dispatch(actions.getPassagesPush())},
+        setLoading:(value)=>{dispatch(actions.setLoading(value))}
     };
 }
 export default Passage=connect(mapStateToProps,mapDispatchToProps)(Passage);
