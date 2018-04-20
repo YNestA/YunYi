@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Text, Image, StyleSheet} from 'react-native';
+import {View, Text, Image, StyleSheet,TouchableNativeFeedback} from 'react-native';
 import {screenUtils} from "../../tools/ScreenUtils";
 
 export class CircleWatchedFans extends Component {
@@ -14,18 +14,23 @@ export class CircleWatchedFans extends Component {
                 paddingTop: screenUtils.autoSize(20),
                 backgroundColor:'#fff',
             }}>
-                <View style={styles.cell}>
-                    <Text style={styles.textCenter}>0</Text>
-                    <Text style={styles.textCenter}>圈子</Text>
-                </View>
-                <View style={[styles.cell, styles.borderShortLine]}>
-                    <Text style={styles.textCenter}>0</Text>
-                    <Text style={styles.textCenter}>关注</Text>
-                </View>
-                <View style={styles.cell}>
-                    <Text style={styles.textCenter}>0</Text>
-                    <Text style={styles.textCenter}>粉丝</Text>
-                </View>
+                <TouchableNativeFeedback
+                    background={TouchableNativeFeedback.Ripple("#0ff", false) }
+                >
+                    <View style={[styles.cell, styles.borderShortLine]}>
+                        <Text style={styles.textCenter}>0</Text>
+                        <Text style={styles.textCenter}>关注</Text>
+                    </View>
+                </TouchableNativeFeedback>
+
+                <TouchableNativeFeedback
+                    background={TouchableNativeFeedback.Ripple("#0ff", false) }
+                >
+                    <View style={styles.cell}>
+                        <Text style={styles.textCenter}>0</Text>
+                        <Text style={styles.textCenter}>粉丝</Text>
+                    </View>
+                </TouchableNativeFeedback>
             </View>
         );
     }

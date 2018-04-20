@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native'
+import {View, Text, Image, StyleSheet} from 'react-native'
 import {screenUtils} from '../../tools/ScreenUtils'
 
 export class AvaterNameSignChange extends Component{
