@@ -119,13 +119,22 @@ class EditPassageSetting extends Component{
                             dropdownStyle={{
                                 width:'100%'
                             }}
+                            dropdownTextStyle={{
+                                paddingRight:screenUtils.autoSize(15),
+                                textAlign:'right',
+                                fontSize:screenUtils.autoFontSize(16)
+                            }}
+                            dropdownTextHighlightStyle={{
+                                color:'#fff',
+                                backgroundColor:'#777'
+                            }}
                             defaultIndex={passage.passageSetting.classify}
                             options={PassageClassify}
                             onSelect={(index)=>{
                                 this._changeSetting({classify:index});
                             }}
                         >
-                            <View style={styles.setting}><Text style={styles.settingText}>文章分类</Text><Text style={styles.settingEnter}>{PassageClassify[passage.passageSetting.classify]+'  >'}</Text></View>
+                            <View style={styles.setting}><Text style={styles.settingText}>文章分类</Text><Text style={styles.settingEnter}>{PassageClassify[passage.passageSetting.classify]}</Text></View>
                         </ModalDropdown>
                     </TouchableOpacity>
                     <Text style={styles.tip}>正确设置分类的文章将展示在首页</Text>

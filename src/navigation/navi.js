@@ -198,6 +198,9 @@ export default YunYiNavi=StackNavigator({
     MessageCenterThumbComment:{
         screen:MessageCenterThumbComment
     },
+    OtherUser:{
+        screen:OtherUser,
+    },
     Detail:{
         screen:DetailView,
         navigationOptions:{
