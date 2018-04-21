@@ -29,6 +29,7 @@ class Welcome extends Component{
                 }, 2000);
             }
         }).catch(err=>{
+            alert(err);
             console.log(err);
         });
 

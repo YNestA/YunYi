@@ -9,5 +9,4 @@ export default PassageClassify={
     7:'女神',
     8:'美食',
     9:'影视',
-    10:'其他'
 };
