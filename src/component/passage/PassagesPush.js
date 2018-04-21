@@ -4,8 +4,11 @@ import {screenUtils} from "../../tools/ScreenUtils";
 
 const styles=StyleSheet.create({
     container:{
-        backgroundColor:'#fff',
+    //    backgroundColor:'#fff',
         marginBottom:screenUtils.autoSize(80)
+    },
+    whiteBackground:{
+        backgroundColor:'#fff'
     },
     header:{
         flexDirection:'row',
@@ -71,12 +74,14 @@ export default class PassagesPush extends Component{
         )
     }
     render(){
-        let passages=this.props.passages;
+        let passage=this.props.passage,
+            passages=passage.passagesPush;
         return(
             <FlatList
-                style={
-                    styles.container
-                }
+                style={[
+                    styles.container,
+                    !passage.isCoverBlur?styles.whiteBackground:{}
+                ]}
                 extraData={this.state}
                 ListHeaderComponent={this._renderHeader(passages.length)}
                 data={passages}

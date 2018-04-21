@@ -4,7 +4,6 @@ import android.app.Application;
 
 import com.facebook.react.ReactApplication;
 import com.dscj.autoheightwebview.AutoHeightWebViewPackage;
-import com.cmcewen.blurview.BlurViewPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
 import com.facebook.react.ReactNativeHost;
@@ -30,7 +29,6 @@ public class MainApplication extends Application implements ReactApplication {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
             new AutoHeightWebViewPackage(),
-            new BlurViewPackage(),
             new PickerViewPackage(),
             new PickerPackage(),
             new WebViewBridgePackage()

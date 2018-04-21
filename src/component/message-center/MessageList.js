@@ -35,12 +35,12 @@ class MessageList extends Component{
             })
         }
     }
-    _bottomRefresh(){
+    _bottomRefresh(e){
         let {messages,user}=this.props;
         if(messages.content.length<10){
             return;
         }
-        if(this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
+        if(e.distanceFromEnd!=0&&this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
             this.setState({bottomRefreshing:1});
             this.props.getMore(messages,user,()=>{
                 this.setState({bottomRefreshing:0});
@@ -83,7 +83,7 @@ class MessageList extends Component{
                 <FlatList
                     refreshing={!!this.state.topRefreshing}
                     onRefresh={this._topRefresh}
-                    onEndReachedThreshold={0.03}
+                    onEndReachedThreshold={0.1}
                     onEndReached={this._bottomRefresh}
                     ListHeaderComponent={this._renderHeader}
                     ListFooterComponent={this._renderFooter}

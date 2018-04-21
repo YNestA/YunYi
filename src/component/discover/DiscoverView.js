@@ -148,14 +148,14 @@ class DiscoverView extends Component{
                         <Text>{this.props.user.userInfo.username+':'+this.props.user.token}</Text>
                         <TouchableNativeFeedback
                             onPress={()=>{
-                                navigation.navigate('EditMain');
+                                navigation.navigate('OtherUser');
                             }}
                         >
-                            <Text>去编辑页</Text>
+                            <Text>退出</Text>
                         </TouchableNativeFeedback>
                         <TouchableNativeFeedback
                             onPress={()=>{
-                                navigation.navigate('EditPassageSetting');
+                                navigation.navigate('LoginCenter');
                             }}
                         >
                             <Text>Go!</Text>

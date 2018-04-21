@@ -5,8 +5,11 @@ import {screenUtils} from "../../tools/ScreenUtils";
 
 const styles=StyleSheet.create({
     container:{
-        backgroundColor:'#fff',
+    //    backgroundColor:'#fff',
         marginBottom:screenUtils.autoSize(20)
+    },
+    whiteBackground:{
+        backgroundColor:'#fff'
     },
     commentContainer:{
         flexDirection:'row',
@@ -153,11 +156,10 @@ class Comments extends Component{
         }
     }
     render(){
-        console.log(this.props);
         let passage=this.props.passage;
         return(
             <FlatList
-                style={styles.container}
+                style={[styles.container,!passage.isCoverBlur?styles.whiteBackground:{}]}
                 extraData={this.state}
                 ListHeaderComponent={this._renderHeader(passage.commentCount)}
                 ListFooterComponent={this._renderFooter(passage.commentCount)}

@@ -36,7 +36,7 @@ const styles={
         lineHeight:screenUtils.autoSize(25),
         fontSize:screenUtils.autoFontSize(14)
     }
-}
+};
 export default class HeaderTitle extends Component{
     constructor(props){
         super(props);
@@ -46,10 +46,12 @@ export default class HeaderTitle extends Component{
             <View style={styles.container}>
                 <TouchableNativeFeedback
                     background={TouchableNativeFeedback.Ripple('#ddd',true)}
-                    onPress={()=>{console.log('go author')}}
+                    onPress={()=>{
+                        this.props.navigation.navigate('OtherUser');
+                    }}
                 >
                     <View style={styles.authorContainer}>
-                        <Image style={styles.authorImg} source={require('../../img/user1.jpg')}/>
+                        <Image style={styles.authorImg} source={{uri:this.props.author.headImg}}/>
                         <Text style={styles.authorName} numberOfLines={1}>{this.props.author.name}</Text>
                     </View>
                 </TouchableNativeFeedback>
