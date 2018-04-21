@@ -26,6 +26,7 @@ import MessageCenterLetter from "../component/message-center/MessageCenterLetter
 import MessageCenterNotification from "../component/message-center/MessageCenterNotification";
 import MessageCenterShare from "../component/message-center/MessageCenterShare";
 import MessageCenterThumbComment from "../component/message-center/MessageCenterThumbComment";
+import AllSetting from "../component/mine/AllSetting";
 
 export class TabIcon extends Component{
     constructor(props){
@@ -107,7 +108,7 @@ const MainScreenNavi=TabNavigator({
         }
     }
 },{
-    initialRouteName:'Discover',
+    initialRouteName:'Mine',
     tabBarPosition: 'bottom',
     backBehavior:'none',
     swipeEnabled: false,
@@ -202,9 +203,12 @@ export default YunYiNavi=StackNavigator({
             headerTitle:'详情页',
             headerRight:<View/>
         }
-    }
+    },
+    AllSetting:{
+        screen:AllSetting
+    },
 },{
-    initialRouteName:'Welcome',
+    initialRouteName:'Main',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),

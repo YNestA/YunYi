@@ -1,12 +1,13 @@
-import {combineReducers} from 'redux'
-import counterReducer from './CountReducer'
-import editReducer from './EditReducer'
-import discoverReducer from './DiscoverReducer'
-import passageReducer from './PassageReducer'
-import concernReducer from './ConcernReducer'
-import naviReducer from './NaviReducer'
-import userReducer from './UserReducer'
+import {combineReducers} from 'redux';
+import counterReducer from './CountReducer';
+import editReducer from './EditReducer';
+import discoverReducer from './DiscoverReducer';
+import passageReducer from './PassageReducer';
+import concernReducer from './ConcernReducer';
+import naviReducer from './NaviReducer';
+import userReducer from './UserReducer';
 import messageCenterReducer from "./MessageCenterReducer";
+import avaterNameSignReducer from "./AvaterNameSignReducer";
 
 export default combineReducers({
     counter:counterReducer,
@@ -16,5 +17,6 @@ export default combineReducers({
     concern:concernReducer,
     MessageCenter:messageCenterReducer,
     nav:naviReducer,
-    user:userReducer
+    user:userReducer,
+    userMessage:avaterNameSignReducer,
 });
