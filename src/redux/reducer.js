@@ -7,6 +7,7 @@ import concernReducer from './ConcernReducer'
 import naviReducer from './NaviReducer'
 import userReducer from './UserReducer'
 import messageCenterReducer from "./MessageCenterReducer";
+import avaterNameSignReducer from "./AvaterNameSignReducer";
 import otherUserReducer from './OtherUserReducer'
 
 export default combineReducers({
@@ -18,5 +19,6 @@ export default combineReducers({
     MessageCenter:messageCenterReducer,
     OtherUser:otherUserReducer,
     nav:naviReducer,
-    user:userReducer
+    user:userReducer,
+    userMessage:avaterNameSignReducer,
 });

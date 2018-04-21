@@ -26,6 +26,7 @@ import MessageCenterLetter from "../component/message-center/MessageCenterLetter
 import MessageCenterNotification from "../component/message-center/MessageCenterNotification";
 import MessageCenterShare from "../component/message-center/MessageCenterShare";
 import MessageCenterThumbComment from "../component/message-center/MessageCenterThumbComment";
+import AllSetting from "../component/mine/AllSetting";
 import OtherUser from '../component/other-user/OtherUser'
 
 export class TabIcon extends Component{
@@ -66,7 +67,7 @@ export class HeaderButton extends Component{
             >
                  <TouchableNativeFeedback
                      onPress={this.props.onPress}
-                     background={TouchableNativeFeedback.Ripple('rgba(0,0,0,0.15)',true) }
+                     background={TouchableNativeFeedback.Ripple('#ddd',true)}
                  >
                      <View style={{padding:screenUtils.autoSize(10)}}>
                          <Text style={{color:'#333',fontSize:screenUtils.autoFontSize(16)}}>{this.props.text}</Text>
@@ -196,9 +197,6 @@ export default YunYiNavi=StackNavigator({
     },
     MessageCenterThumbComment:{
         screen:MessageCenterThumbComment
-    },
-    OtherUser:{
-        screen:OtherUser
     },
     Detail:{
         screen:DetailView,
