@@ -216,7 +216,7 @@ export default YunYiNavi=StackNavigator({
         screen:SignNameChangeDetail
     }
 },{
-    initialRouteName:'Main',
+    initialRouteName:'Welcome',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),
