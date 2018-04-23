@@ -209,7 +209,7 @@ export default YunYiNavi=StackNavigator({
         }
     }
 },{
-    initialRouteName:'Welcome',
+    initialRouteName:'Main',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),

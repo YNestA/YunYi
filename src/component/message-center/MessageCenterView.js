@@ -11,21 +11,36 @@ const styles=StyleSheet.create({
     }
 });
 class MessageCenterView extends Component{
-    static navigationOptions={
-        tabBarIcon:({focused, tintColor}) => {
-            return <TabIcon
-            labelTitle={'消息'}
-            tintColor={tintColor}
-            focused={focused}
-            focusedImg={require('../../img/navi/message-light.png')}
-            notFocusedImg={require('../../img/navi/message-dark.png')}
-            />;
-        },
-        headerLeft:<View/>,
-        headerRight:<View/>,
-        headerTitle:'消息',
-        tabBarLabel:'消息'
+    static navigationOptions=({navigation})=>{
+        let {params}=navigation.state;
+        return {
+            tabBarIcon:({focused, tintColor}) => {
+                return <TabIcon
+                    labelTitle={'消息'}
+                    tintColor={tintColor}
+                    focused={focused}
+                    focusedImg={require('../../img/navi/message-light.png')}
+                    notFocusedImg={require('../../img/navi/message-dark.png')}
+                />;
+            },
+                headerLeft:<View/>,
+            headerRight:<View/>,
+            headerTitle:'消息',
+            tabBarLabel:'消息',
+            tabBarOnPress:params?params.tabBarOnPress:null
+        }
     };
+    componentWillMount(){
+        this.props.navigation.setParams({
+            tabBarOnPress:({jumpToIndex,scene})=>{
+                if(this.props.user.isLogin) {
+                    jumpToIndex(scene.index);
+                }else{
+                    this.props.navigation.navigate('LoginCenter');
+                }
+            }
+        });
+    }
     constructor(props){
         super(props);
     }
