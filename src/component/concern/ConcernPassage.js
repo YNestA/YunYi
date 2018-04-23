@@ -117,17 +117,21 @@ export default class ConcernPassage extends Component{
     constructor(props){
         super(props);
         this._openPassage=this._openPassage.bind(this);
+        this._openUser=this._openUser.bind(this);
     }
     _openPassage(){
         let navigation=this.props.navigation;
         navigation.navigate('Passage',{passage:this.props.passage});
     }
-
+    _openUser(){
+        let navigation=this.props.navigation;
+        navigation.navigate('OtherUser');
+    }
     render() {
         let passage=this.props.passage;
         return (
             <View style={styles.container}>
-                <TouchableWithoutFeedback onPress={()=>{console.log(2)}}>
+                <TouchableWithoutFeedback onPress={this._openUser}>
                     <View style={styles.authorContainer}>
                         <View style={styles.author}>
                             <Image style={styles.authorHeadImg} source={require('../../img/asuka.jpg')}/>

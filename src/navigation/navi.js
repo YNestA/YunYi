@@ -199,6 +199,9 @@ export default YunYiNavi=StackNavigator({
     MessageCenterThumbComment:{
         screen:MessageCenterThumbComment
     },
+    OtherUser:{
+        screen:OtherUser,
+    },
     Detail:{
         screen:DetailView,
         navigationOptions:{
@@ -213,7 +216,7 @@ export default YunYiNavi=StackNavigator({
         screen:SignNameChangeDetail
     }
 },{
-    initialRouteName:'Welcome',
+    initialRouteName:'Main',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),

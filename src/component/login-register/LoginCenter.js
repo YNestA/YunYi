@@ -51,7 +51,12 @@ export default class LoginCenter extends Component{
         this._backHandler=this._backHandler.bind(this);
     }
     _backHandler(){
-        BackHandler.exitApp();
+        let {params}=this.props.navigation.state;
+        if(params&&params.firstEnter) {
+            BackHandler.exitApp();
+        }else{
+            this.props.navigation.goBack(null);
+        }
         return true;
     }
     componentDidMount(){
@@ -61,7 +66,12 @@ export default class LoginCenter extends Component{
         BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     _enterMain(){
-        this.props.navigation.navigate('Main');
+        let {params}=this.props.navigation.state;
+        if(params&&params.firstEnter) {
+            this.props.navigation.navigate('Main');
+        }else{
+            this.props.navigation.goBack(null);
+        }
     }
     render(){
         return (

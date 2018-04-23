@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
 import {View,Text,Image} from 'react-native'
-import {screenUtils} from "../../tools/ScreenUtils";
 import {connect} from 'react-redux'
+import {screenUtils} from "../../tools/ScreenUtils";
 
-export default class EditNewView extends Component{
+class EditNewView extends Component{
     static navigationOptions= ({navigation,screenProps})=>{
         let {params}=navigation.state;
         return {
@@ -25,13 +25,15 @@ export default class EditNewView extends Component{
     componentWillMount(){
         this.props.navigation.setParams({
             tabBarOnPress:({jumpToIndex,scene})=>{
-                let pro=new Promise((resolve,reject)=>{
-                    this.props.screenProps.startEditNew(resolve);
-                }).then((data)=>{
-                    this.props.navigation.navigate('EditMain',{selected:true,imgs:data});
-                });
-
-
+                if(this.props.user.isLogin) {
+                    let pro = new Promise((resolve, reject) => {
+                        this.props.screenProps.startEditNew(resolve);
+                    }).then((data) => {
+                        this.props.navigation.navigate('EditMain', {selected: true, imgs: data});
+                    });
+                }else{
+                    this.props.navigation.navigate('LoginCenter');
+                }
             }
         });
     }
@@ -41,3 +43,9 @@ export default class EditNewView extends Component{
         );
     }
 }
+function mapStateToProps(state) {
+    return {
+        user:state.user,
+    }
+}
+export default EditNewView=connect(mapStateToProps)(EditNewView);

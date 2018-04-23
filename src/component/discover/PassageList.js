@@ -192,7 +192,7 @@ let actions={
         }
     },
     initialPassages:function (passageLists,classify) {
-        return myFetch(`http://${ip}:4441/api/articles/refresh/`,{method:'GET',timeout:10000})
+        return myFetch(`http://${ip}:4441/api/articles/refresh/?classify=${classify}`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
                 //alert(JSON.stringify(responseData));
@@ -236,7 +236,7 @@ let actions={
             });
     },
     bottomRefresh:function (passageLists,classify,setLoading) {
-        return myFetch(`http://${ip}:4441/api/load/${passageLists.pageCount}/`,{method:'GET',timeout:10000})
+        return myFetch(`http://${ip}:4441/api/load/${passageLists.pageCount}/?classify=${classify}'`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
                 let data=responseData.data,
@@ -281,7 +281,7 @@ let actions={
             });
     },
     topRefresh:function (passageLists,classify,setLoading) {
-        return myFetch(`http://${ip}:4441/api/articles/refresh/`,{method:'GET',timeout:10000})
+        return myFetch(`http://${ip}:4441/api/articles/refresh/?classify=${classify}`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
                 let data=responseData.data,

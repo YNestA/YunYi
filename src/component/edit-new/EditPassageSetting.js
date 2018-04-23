@@ -7,6 +7,7 @@ import PassageClassify from '../../redux/PassageClassify'
 import {ip} from "../../settings";
 import Toast from "react-native-root-toast";
 import UploadTip from "./UploadTip"
+import ModalDropdown from 'react-native-modal-dropdown'
 
 function showTip(message,hiddenCb) {
     Toast.show(message,{
@@ -113,8 +114,28 @@ class EditPassageSetting extends Component{
                         />
                     </View>
                     <Text style={styles.tip}>可自行控制文章展示范围</Text>
-                    <TouchableOpacity activeOpacity={0.5}>
-                        <View style={styles.setting}><Text style={styles.settingText}>文章分类</Text><Text style={styles.settingEnter}>{PassageClassify[passage.passageSetting.classify]+'  >'}</Text></View>
+                    <TouchableOpacity activeOpacity={0.8}>
+                        <ModalDropdown
+                            dropdownStyle={{
+                                width:'100%'
+                            }}
+                            dropdownTextStyle={{
+                                paddingRight:screenUtils.autoSize(15),
+                                textAlign:'right',
+                                fontSize:screenUtils.autoFontSize(16)
+                            }}
+                            dropdownTextHighlightStyle={{
+                                color:'#fff',
+                                backgroundColor:'#777'
+                            }}
+                            defaultIndex={passage.passageSetting.classify}
+                            options={PassageClassify}
+                            onSelect={(index)=>{
+                                this._changeSetting({classify:index});
+                            }}
+                        >
+                            <View style={styles.setting}><Text style={styles.settingText}>文章分类</Text><Text style={styles.settingEnter}>{PassageClassify[passage.passageSetting.classify]}</Text></View>
+                        </ModalDropdown>
                     </TouchableOpacity>
                     <Text style={styles.tip}>正确设置分类的文章将展示在首页</Text>
                     <View style={styles.setting}>
@@ -146,6 +167,7 @@ let actions={
     },
     complete:function (passage,navigation,user,cb) {
         //alert(JSON.stringify(passage));
+        alert(JSON.stringify(passage));
         return myFetch(`http://${ip}:4441/api/article/insert`, {
             method: 'POST',
             headers: {

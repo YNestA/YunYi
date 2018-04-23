@@ -1,11 +1,13 @@
 import React, {Component} from 'react'
 import {View,StatusBar,ScrollView,Image,Text,StyleSheet,TouchableWithoutFeedback,TouchableNativeFeedback} from 'react-native'
 import {TabIcon} from '../../navigation/navi'
+import {connect} from 'react-redux'
 import ConcernPassages from './ConcernPassages'
 import {myFetch,screenUtils} from '../../tools/MyTools'
 
-export default class ConcernView extends Component{
+class ConcernView extends Component{
     static navigationOptions=({navigation,screenProps})=> {
+        let {params}=navigation.state;
         return {
             tabBarIcon:({focused, tintColor}) => {
                 return <TabIcon
@@ -28,15 +30,21 @@ export default class ConcernView extends Component{
                         </TouchableWithoutFeedback>,
             headerTitle:'关注',
             tabBarLabel: '关注',
-            tabBarOnPress:({jumpToIndex,scene})=>{
-                jumpToIndex(scene.index);
-            //    StatusBar.setBackgroundColor('#fff');
-            //    StatusBar.setBarStyle('dark-content');
-
-            }
+            tabBarOnPress:params?params.tabBarOnPress:null
         };
     };
     componentDidMount(){
+    }
+    componentWillMount(){
+        this.props.navigation.setParams({
+            tabBarOnPress:({jumpToIndex,scene})=>{
+                if(this.props.user.isLogin) {
+                    jumpToIndex(scene.index);
+                }else{
+                    this.props.navigation.navigate('LoginCenter');
+                }
+            }
+        });
     }
     constructor(props){
         super(props);
@@ -49,3 +57,10 @@ export default class ConcernView extends Component{
         );
     }
 }
+
+function mapStateToProps(state) {
+    return {
+        user:state.user
+    };
+}
+export default ConcernView=connect(mapStateToProps)(ConcernView);

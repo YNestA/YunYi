@@ -25,10 +25,11 @@ class Welcome extends Component{
                 }, 2000);
             }else{
                 setTimeout(() => {
-                    this.props.navigation.navigate('LoginCenter');
+                    this.props.navigation.navigate('LoginCenter',{firstEnter:true});
                 }, 2000);
             }
         }).catch(err=>{
+            alert(err);
             console.log(err);
         });
 
