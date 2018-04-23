@@ -27,7 +27,8 @@ import MessageCenterNotification from "../component/message-center/MessageCenter
 import MessageCenterShare from "../component/message-center/MessageCenterShare";
 import MessageCenterThumbComment from "../component/message-center/MessageCenterThumbComment";
 import AllSetting from "../component/mine/AllSetting";
-import OtherUser from '../component/other-user/OtherUser'
+import OtherUser from '../component/other-user/OtherUser';
+import SignNameChangeDetail from '../component/mine/SignNameChangeDetail'
 
 export class TabIcon extends Component{
     constructor(props){
@@ -204,6 +205,12 @@ export default YunYiNavi=StackNavigator({
             headerTitle:'详情页',
             headerRight:<View/>
         }
+    },
+    AllSetting:{
+        screen:AllSetting
+    },
+    SignNameChangeDetail:{
+        screen:SignNameChangeDetail
     }
 },{
     initialRouteName:'Welcome',
