@@ -173,7 +173,7 @@ let actions={
 function mapStateToProps(state) {
     return {
         user:state.user,
-        otherUser:state.OtherUser
+        otherUser:state.OtherUser,
     }
 }
 

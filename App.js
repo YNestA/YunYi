@@ -4,7 +4,7 @@ import {createStore,applyMiddleware} from 'redux'
 import reducer from './src/redux/reducer'
 import reduxPromise from 'redux-promise'
 import {Provider, connect} from 'react-redux'
-import YunYi from './src/navigation/YunYi'
+import YunYi ,{reactNavigationMiddleware}from './src/navigation/YunYi'
 import Stroage from 'react-native-storage'
 
 console.disableYellowBox=true;
@@ -16,7 +16,7 @@ global.myStorage=new Stroage({
     enableCache:true,
 });
 
-let store=createStore(reducer,applyMiddleware(reduxPromise));
+export let store=createStore(reducer,applyMiddleware(reduxPromise),applyMiddleware(reactNavigationMiddleware));
 export default class App extends Component {
     render() {
         return (

@@ -1,5 +1,6 @@
 import YunYiNavi from '../navigation/navi';
 
+
 export default function naviReducer(state , action) {
     let nextState;
     switch (action.type) {

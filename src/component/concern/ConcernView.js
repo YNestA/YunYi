@@ -7,7 +7,6 @@ import {myFetch,screenUtils} from '../../tools/MyTools'
 
 class ConcernView extends Component{
     static navigationOptions=({navigation,screenProps})=> {
-        let {params}=navigation.state;
         return {
             tabBarIcon:({focused, tintColor}) => {
                 return <TabIcon
@@ -30,21 +29,11 @@ class ConcernView extends Component{
                         </TouchableWithoutFeedback>,
             headerTitle:'关注',
             tabBarLabel: '关注',
-            tabBarOnPress:params?params.tabBarOnPress:null
         };
     };
     componentDidMount(){
     }
     componentWillMount(){
-        this.props.navigation.setParams({
-            tabBarOnPress:({jumpToIndex,scene})=>{
-                if(this.props.user.isLogin) {
-                    jumpToIndex(scene.index);
-                }else{
-                    this.props.navigation.navigate('LoginCenter');
-                }
-            }
-        });
     }
     constructor(props){
         super(props);

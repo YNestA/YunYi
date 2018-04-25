@@ -5,28 +5,23 @@ import {connect} from 'react-redux'
 import {addNavigationHelpers} from 'react-navigation'
 import {SelectDialog} from "../component/edit-new/SelectDialog";
 import {screenUtils} from '../tools/ScreenUtils'
-
-class AppWithNavigationState extends Component {
-    render() {
-        return (
-            <YunYiNavi
-                navigation={addNavigationHelpers({
-                    dispatch: this.props.dispatch,
-                    state: this.props.nav
-                })}
-                screenProps={this.props.screenProps}
-            />
-        );
-    }
-}
+import {
+    createReduxBoundAddListener,
+    createReactNavigationReduxMiddleware,
+} from 'react-navigation-redux-helpers';
 
 const mapStateToProps = state => ({
     nav: state.nav,
 });
 
-let YunYiNavi2=connect(mapStateToProps)(AppWithNavigationState);
+export const reactNavigationMiddleware = createReactNavigationReduxMiddleware(
+    "Welcome",
+    state => state.nav,
+);
+const addListener = createReduxBoundAddListener("Welcome");
 
-export default class YunYi extends Component{
+
+class YunYi extends Component{
     constructor(props){
         super(props);
         this._startEditNew=this._startEditNew.bind(this);
@@ -39,7 +34,13 @@ export default class YunYi extends Component{
             <View style={{
                 flex:1,
             }}>
-                <YunYiNavi2 screenProps={{startEditNew:this._startEditNew}} />
+                <YunYiNavi screenProps={{startEditNew:this._startEditNew}}
+                           navigation={addNavigationHelpers({
+                               dispatch: this.props.dispatch,
+                               state: this.props.nav,
+                               addListener,
+                           })}
+                />
                 <SelectDialog
                     ref='selectDialog'
                 />
@@ -47,3 +48,4 @@ export default class YunYi extends Component{
         );
     }
 }
+export default YunYi=connect(mapStateToProps)(YunYi);

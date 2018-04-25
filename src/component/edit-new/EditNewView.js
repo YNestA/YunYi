@@ -5,7 +5,6 @@ import {screenUtils} from "../../tools/ScreenUtils";
 
 class EditNewView extends Component{
     static navigationOptions= ({navigation,screenProps})=>{
-        let {params}=navigation.state;
         return {
             tabBarIcon:({focused, tintColor}) => {
                 return <Image
@@ -14,7 +13,6 @@ class EditNewView extends Component{
             },
             headerTitle:'创作',
             tabBarLabel:'创作',
-            tabBarOnPress:params?params.tabBarOnPress:null,
         };
     }
 
@@ -23,19 +21,6 @@ class EditNewView extends Component{
         super(props);
     }
     componentWillMount(){
-        this.props.navigation.setParams({
-            tabBarOnPress:({jumpToIndex,scene})=>{
-                if(this.props.user.isLogin) {
-                    let pro = new Promise((resolve, reject) => {
-                        this.props.screenProps.startEditNew(resolve);
-                    }).then((data) => {
-                        this.props.navigation.navigate('EditMain', {selected: true, imgs: data});
-                    });
-                }else{
-                    this.props.navigation.navigate('LoginCenter');
-                }
-            }
-        });
     }
     render(){
         return(

@@ -31,15 +31,6 @@ class MessageCenterView extends Component{
         }
     };
     componentWillMount(){
-        this.props.navigation.setParams({
-            tabBarOnPress:({jumpToIndex,scene})=>{
-                if(this.props.user.isLogin) {
-                    jumpToIndex(scene.index);
-                }else{
-                    this.props.navigation.navigate('LoginCenter');
-                }
-            }
-        });
     }
     constructor(props){
         super(props);

@@ -1,9 +1,10 @@
 import React, {Component} from 'react'
+import {store} from '../../App'
 import {
     View, Image, Text, StyleSheet, TouchableNativeFeedback, TouchableOpacity, BackHandler,
     StatusBar
 } from 'react-native'
-import {addNavigationHelpers, StackNavigator, TabBarBottom ,TabNavigator} from 'react-navigation'
+import {StackNavigator,TabNavigator} from 'react-navigation'
 import DiscoverView from '../component/discover/DiscoverView'
 import ConcernView from '../component/concern/ConcernView'
 import EditNewView from '../component/edit-new/EditNewView'
@@ -32,6 +33,7 @@ import FocusDetail from '../component/mine/FocusDetail'
 import OtherUser from '../component/other-user/OtherUser'
 import Search from "../component/search/search";
 import AllComments from "../component/passage/AllComments";
+import YunYi from "./YunYi";
 
 export class TabIcon extends Component{
     constructor(props){
@@ -89,12 +91,49 @@ const MainScreenNavi=TabNavigator({
     },
     Concern:{
         screen:ConcernView,
+        navigationOptions:({navigation,screenProps})=>{
+            return {
+                tabBarOnPress: ({jumpToIndex,scene})=>{
+                    if(store.getState().user.isLogin) {
+                        jumpToIndex(scene.index);
+                    }else{
+                        navigation.navigate('LoginCenter');
+                    }
+                }
+            }
+        }
     },
     EditNew:{
         screen:EditNewView,
+        navigationOptions:({navigation,screenProps})=>{
+            return {
+                tabBarOnPress: ({jumpToIndex,scene})=>{
+                    if(store.getState().user.isLogin) {
+                        let pro = new Promise((resolve, reject) => {
+                            screenProps.startEditNew(resolve);
+                        }).then((data) => {
+                            navigation.navigate('EditMain', {selected: true, imgs: data});
+                        });
+                    }else{
+                        navigation.navigate('LoginCenter');
+                    }
+                }
+            }
+        }
     },
     MessageCenter:{
         screen:MessageCenterView,
+        navigationOptions:({navigation,screenProps})=>{
+            return {
+                tabBarOnPress: ({jumpToIndex,scene})=>{
+                    if(store.getState().user.isLogin) {
+                        jumpToIndex(scene.index);
+                    }else{
+                        navigation.navigate('LoginCenter');
+                    }
+                }
+            }
+        }
     },
     Mine:{
         screen:MineView,
@@ -234,12 +273,16 @@ export default YunYiNavi=StackNavigator({
         headerStyle:{
             height:screenUtils.autoSize(55),
             backgroundColor:'#fff',
+            justifyContent:'center',
+            alignItems:'center'
         },
         headerBackTitle:'返回',
         headerTintColor:'#333',
         headerTitleStyle:{
             fontSize:screenUtils.autoFontSize(19),
-            alignSelf:'center'
+            flex:1,
+            //backgroundColor:'green',
+            textAlign:'center'
         },
     }
 });
