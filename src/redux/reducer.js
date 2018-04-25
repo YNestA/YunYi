@@ -7,8 +7,9 @@ import concernReducer from './ConcernReducer'
 import naviReducer from './NaviReducer'
 import userReducer from './UserReducer'
 import messageCenterReducer from "./MessageCenterReducer";
-import avaterNameSignReducer from "./AvaterNameSignReducer";
+import avatarNameSignReducer from "./AvatarNameSignReducer";
 import otherUserReducer from './OtherUserReducer'
+import mineViewArticleReducer from './MineViewArticleReducer'
 
 export default combineReducers({
     counter:counterReducer,
@@ -20,5 +21,6 @@ export default combineReducers({
     OtherUser:otherUserReducer,
     nav:naviReducer,
     user:userReducer,
-    userMessage:avaterNameSignReducer,
+    mineViewUserMessage:avatarNameSignReducer,
+    mineViewPassgeDetail:mineViewArticleReducer,
 });
