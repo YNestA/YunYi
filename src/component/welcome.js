@@ -32,7 +32,6 @@ class Welcome extends Component{
             alert(err);
             console.log(err);
         });
-
     }
 
     render(){

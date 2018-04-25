@@ -87,7 +87,9 @@ class DiscoverView extends Component{
                 <View style={styles.search}>
                     <Image style={styles.logo} source={require('../../img/yunyi.png')} />
                     <View style={{flex:1,justifyContent:'center'}}>
-                        <TouchableNativeFeedback onPresas={()=>{console.log('search')}} >
+                        <TouchableNativeFeedback onPress={()=>{
+                            this.props.navigation.navigate('Search');
+                        }} >
                             <View style={styles.searchBox}>
                                 <Image style={styles.searchIcon} source={require('../../img/common/y_search.png')}/>
                                 <Text style={styles.searchText}>搜索文章和用户</Text>
@@ -145,7 +147,8 @@ class DiscoverView extends Component{
                         <PassageList navigation={navigation} classify={'美食'}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'影视'}>
-                        <Text>{this.props.user.userInfo.username+':'+this.props.user.token}</Text>
+                        <Text>{JSON.stringify(this.props.user.userInfo)}</Text>
+                        <Text>{this.props.user.token}</Text>
                         <TouchableNativeFeedback
                             onPress={()=>{
                                 navigation.navigate('OtherUser');

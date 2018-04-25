@@ -4,7 +4,8 @@ const initialState={
     userInfo:{
         userID:'',
         username:'',
-        phoneNum:''
+        phoneNum:'',
+        headImg:''
     }
 };
 export default function passageReducer(state=initialState,action) {

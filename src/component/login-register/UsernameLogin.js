@@ -120,20 +120,23 @@ class UsernameLogin extends Component{
                 .then(responseData => {
                     //alert(JSON.stringify(responseData));
                     if (responseData.code == 10001) {
+                        let data=responseData.data,
+                            userInfo={
+                            username:data.nickname,
+                            userID:data.userUuid,
+                            phoneNum:data.phone,
+                            headImg:data.avatar
+                        };
                         myStorage.save({
                             key: 'user',
                             data: {
-                                userInfo: {
-                                    username: '',
-                                    phoneNum:'',
-                                    userID:'',
-                                },
+                                userInfo:userInfo ,
                                 token: responseData.data.token,
                                 isLogin: true,
 
                             }
                         });
-                        this.props.login({username: username}, responseData.data.token);
+                        this.props.login(userInfo, responseData.data.token);
                         showTip('登录成功',activeFunc);
                         this.props.navigation.navigate('Main');
                     }else if(responseData.code==10103){

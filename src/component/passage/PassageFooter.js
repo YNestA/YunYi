@@ -1,7 +1,10 @@
 import React,{Component} from 'react'
-import {View,Text,Image,StyleSheet,TextInput,TouchableOpacity} from 'react-native'
+import {View,Text,Image,StyleSheet,TextInput,TouchableOpacity,TouchableWithoutFeedback} from 'react-native'
 import {screenUtils} from '../../tools/MyTools'
 import {connect} from 'react-redux'
+import myFetch, {encodePostParams} from "../../tools/MyFetch";
+import {ip} from "../../settings";
+import Toast from "react-native-root-toast";
 
 const styles=StyleSheet.create({
     container:{
@@ -67,12 +70,48 @@ const styles=StyleSheet.create({
     }
 });
 
+function showTip(message,onHidden){
+    Toast.show(message,{
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        onHidden:onHidden
+    });
+}
 class PassageFooter extends Component{
     constructor(props){
         super(props);
         this.state={
-            inputFocused:false
-        }
+            inputFocused:false,
+            commentText:'',
+            committing:false,
+        };
+        this._changeThumb=this._changeThumb.bind(this);
+        this._commitComment=this._commitComment.bind(this);
+    }
+    _changeThumb(){
+        this.props.changeThumb(this.props.passage,this.props.user);
+    }
+    _commitComment(){
+        let {user,passage}=this.props;
+        this.setState({committing:true});
+        this.props.commitComment(this.state.commentText,user,passage,(success)=>{
+            if(success){
+                showTip('评论成功');
+                this.refs.textInput.blur();
+                this.setState({
+                    committing:false,
+                    inputFocused:true,
+                    commentText:''
+                });
+            }else{
+                showTip('评论失败');
+                this.setState({
+                    committing:false
+                });
+            }
+        });
     }
     render(){
         let passage=this.props.passage;
@@ -84,25 +123,30 @@ class PassageFooter extends Component{
                     ref={'textInput'}
                     multiline={true}
                     maxLength={250}
+                    value={this.state.commentText}
+                    onChangeText={(text)=>{this.setState({commentText:text})}}
                     onBlur={()=>{this.setState({inputFocused:false})}}
                     onFocus={()=>{this.setState({inputFocused:true})}}
                     underlineColorAndroid={'transparent'}
                 />
                 {   this.state.inputFocused?
                     <TouchableOpacity
-                        onPress={()=>{console.log('go author')}}
+                        disabled={this.state.committing}
+                        onPress={this._commitComment}
                     >
                         <View style={styles.sendView}><Text style={styles.sendText}>发送</Text></View>
                     </TouchableOpacity>
                     :
                     <View style={styles.infoContainer}>
-                        <TouchableOpacity>
+                        <TouchableOpacity activeOpacity={0.9} onPress={()=>{
+                            this.refs.textInput.focus();
+                        }}>
                             <View style={styles.infoBox}>
                                 <Image style={styles.infoImg} source={require('../../img/common/y_comment.png')}/>
                                 <Text style={styles.infoText}>{passage.commentCount>0?passage.commentCount:'评论'}</Text>
                             </View>
                         </TouchableOpacity>
-                        <TouchableOpacity>
+                        <TouchableWithoutFeedback activeOpacity={1} onPress={this._changeThumb}>
                             <View style={styles.infoBox}>
                                 {(passage.ifThumb)?
                                     <Image style={styles.infoImg}  source={require('../../img/common/thumb-fill.png')}/>
@@ -113,7 +157,7 @@ class PassageFooter extends Component{
                                     passage.thumbCount>0?passage.thumbCount:'点赞'
                                 }</Text>
                             </View>
-                        </TouchableOpacity>
+                        </TouchableWithoutFeedback>
                         <TouchableOpacity>
                             <View style={styles.infoBox}>
                                 <Image style={styles.infoImg} source={require('../../img/common/y_share.png')}/>
@@ -128,16 +172,80 @@ class PassageFooter extends Component{
 }
 
 let actions={
-
-}
+    changeThumb:function (passage,user) {
+        let url=passage.ifThumb?`http://${ip}:4441/api/article/like/cancel`:`http://${ip}:4441/api/article/like/add`;
+        myFetch(url,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'user_token':user.token,
+            },
+            body:encodePostParams({
+                passageUuid:passage.passageID
+            })
+        });
+        return {
+            type:'CHANGE_PASSAGE_THUMB',
+            payload:{
+                ifThumb:!passage.ifThumb,
+                thumbCount:passage.ifThumb?passage.thumbCount-1:passage.thumbCount+1
+            }
+        }
+    },
+    commitComment:function (commentText,user,passage,cb) {
+        return myFetch(`http://${ip}:4441/api/article/comment/insert/`,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'user_token':user.token,
+            },
+            body:encodePostParams({
+                content:commentText,
+                passageUuid:passage.passageID
+            })
+        }).then(response=>response.json())
+            .then(responseData=>{
+                alert(JSON.stringify(responseData));
+                if(responseData.code==10001){
+                    cb(true);
+                    return {
+                        type:'COMMIT_PASSAGE_COMMENT',
+                        payload:{
+                            commentCount:passage.commentCount+1,
+                            comments:[
+                                {
+                                    name:user.userInfo.username,
+                                    content:commentText,
+                                    time:new Date().getTime(),
+                                    userId:user.userInfo.userID,
+                                    commentId:responseData.data.commentId,
+                                    headImg:user.userInfo.headImg,
+                                    thumbCount:0,
+                                },
+                            ]
+                        }
+                    }
+                }else{
+                    cb(false);
+                }
+            }).catch(err=>{
+                alert(err);
+                cb(false);
+            })
+    }
+};
 
 function mapStateToProps(state) {
     return {
-        passage:state.passage
+        passage:state.passage,
+        user:state.user
     }
 }
 function mapDispatchToProps(dispatch) {
-    return {};
+    return {
+        changeThumb:(passage,user)=>{dispatch(actions.changeThumb(passage,user))},
+        commitComment:(commentText,user,passage,cb)=>{dispatch(actions.commitComment(commentText,user,passage,cb))}
+    };
 }
 
 export default PassageFooter=connect(mapStateToProps,mapDispatchToProps)(PassageFooter);

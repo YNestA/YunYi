@@ -233,14 +233,16 @@ let actions={
                 //responseData=JSON.parse(responseData);
                 //alert(JSON.stringify(responseData));
                 if(responseData.code==10001){
-                    let token=responseData.data.token,
+                    let data=responseData.data,
+                        token=data.token,
                         user={
                             isLogin:true,
                             token:token,
                             userInfo:{
-                                username:'',
-                                userID:'',
-                                phoneNum:phoneNum,
+                                username:data.nickname,
+                                userID:data.userUuid,
+                                phoneNum:data.phone,
+                                headImg:data.avatar
                             }
                         };
                     myStorage.save({

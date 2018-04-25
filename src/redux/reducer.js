@@ -9,6 +9,7 @@ import userReducer from './UserReducer'
 import messageCenterReducer from "./MessageCenterReducer";
 import avaterNameSignReducer from "./AvaterNameSignReducer";
 import otherUserReducer from './OtherUserReducer'
+import searchReducer from './SearchReducer'
 
 export default combineReducers({
     counter:counterReducer,
@@ -21,4 +22,5 @@ export default combineReducers({
     nav:naviReducer,
     user:userReducer,
     userMessage:avaterNameSignReducer,
+    search:searchReducer
 });

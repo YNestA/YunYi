@@ -7,7 +7,17 @@ import {screenUtils} from '../../tools/ScreenUtils'
 import NetworkError from '../../tools/NetworkError'
 import myFetch from '../../tools/MyFetch'
 import {ip} from "../../settings";
+import Toast from "react-native-root-toast";
 
+function showTip(message,onHidden){
+    Toast.show(message,{
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        onHidden:onHidden
+    });
+}
 class PassageList extends Component{
     constructor(props){
         super(props);
@@ -82,7 +92,7 @@ class PassageList extends Component{
                         renderItem={({item, index}) => {
                             return (<DiscoverPassage navigation={this.props.navigation} passage={item}/>);
                         }}
-                        onEndReachedThreshold={0.1}
+                        onEndReachedThreshold={0.2}
                         onEndReached={this._bottomRefresh}
                     /> : <Loading
                         containerStyle={{flex: 1, justifyContent: 'center'}}
@@ -94,93 +104,6 @@ class PassageList extends Component{
 
 }
 
-const tempData1=[{
-    author:{
-        authorID:'A20180322',
-        headImg:'http://pic1.178.com/avatars/02/18/cc/120_35179683.jpg?t=1518919628',
-        name:'周瑜'
-    },
-    title:'人人有书读，人人有功练',
-    coverImg:'../../img/hikari.jpg',
-    createTime:'2019-9-30 12:30',
-    thumbHeadImgs:[],
-    passageID:'47d801dbd39f476a8635bfa355633c4e',
-    thumbCount:250,
-    commentCount:250,
-    shareCount:250
-},{
-    author:{
-        authorID:'A20180322',
-        headImg:'../../img/asuka.jpg',
-        name:'中国古拳法掌门人'
-    },
-    createTime:'2019-9-30 12:30',
-    title:'人人有书读，人人有功练',
-    coverImg:'../../img/hikari.jpg',
-    thumbHeadImgs:[],
-    passageID:'47d801dbd39f476a8635bfa355633c4e',
-    thumbCount:250,
-    commentCount:250,
-    shareCount:250
-},{
-    author:{
-        authorID:'A20180322',
-        headImg:'../../img/asuka.jpg',
-        name:'中国古拳法掌门人'
-    },
-    createTime:'2019-9-30 12:30',
-    title:'人人有书读，人人有功练',
-    coverImg:'../../img/hikari.jpg',
-    thumbHeadImgs:[],
-    passageID:'47d801dbd39f476a8635bfa355633c4e',
-    thumbCount:250,
-    commentCount:250,
-    shareCount:250
-}];
-
-const tempData2=[{
-    author:{
-        authorID:'A20180322',
-        headImg:'../../img/asuka.jpg',
-        name:'周瑜'
-    },
-    title:'hahahhahahha',
-    coverImg:'../../img/hikari.jpg',
-    createTime:'2019-9-30 12:30',
-    thumbHeadImgs:[],
-    passageID:'47d801dbd39f476a8635bfa355633c4e',
-    thumbCount:250,
-    commentCount:250,
-    shareCount:250
-},{
-    author:{
-        authorID:'A20180322',
-        headImg:'../../img/asuka.jpg',
-        name:'中国古拳法掌门人'
-    },
-    createTime:'2019-9-30 12:30',
-    title:'人人有书读，人人有功练',
-    coverImg:'../../img/hikari.jpg',
-    thumbHeadImgs:[],
-    passageID:'47d801dbd39f476a8635bfa355633c4e',
-    thumbCount:250,
-    commentCount:250,
-    shareCount:250
-},{
-    author:{
-        authorID:'A20180322',
-        headImg:'../../img/asuka.jpg',
-        name:'中国古拳法掌门人'
-    },
-    createTime:'2019-9-30 12:30',
-    title:'人人有书读，人人有功练',
-    coverImg:'../../img/hikari.jpg',
-    thumbHeadImgs:[],
-    passageID:'47d801dbd39f476a8635bfa355633c4e',
-    thumbCount:250,
-    commentCount:250,
-    shareCount:250
-}];
 //redux
 let actions={
     setNetworkError:function (value) {
@@ -236,93 +159,94 @@ let actions={
             });
     },
     bottomRefresh:function (passageLists,classify,setLoading) {
-        return myFetch(`http://${ip}:4441/api/load/${passageLists.pageCount}/?classify=${classify}'`,{method:'GET',timeout:10000})
+        return myFetch(`http://${ip}:4441/api/articles/load/${passageLists[classify].pageCount}/?classify=${classify}`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
-                let data=responseData.data,
-                    newPassageLists=Object.assign({},passageLists);
-                newPassageLists[classify]={
-                    passages:passageLists.passages.concat(data.map((item)=>{
-                        return {
-                            author:{
-                                authorID:item.userUuid,
-                                headImg:item.avatar,
-                                name:item.nickname
-                            },
-                            createTime:item.createTime,
-                            title:item.title,
-                            coverImg:item.image,
-                            thumbHeadImgs:[item.image,item.image,item.image,item.image],
-                            passageID:item.passageUuid,
-                            thumbCount:item.likeNum,
-                            commentCount:item.commentNum,
-                            shareCount:item.shareNum
-                        };
-                    })),
-                    pageCount:0
-                };
-                setLoading(0);
-                return {
-                    type:'BOTTOM_REFRESH',
-                    payload:{
-                        networkError:false,
-                        passageLists:newPassageLists
-                    }
-                };
+                //alert(JSON.stringify(responseData));
+                if(responseData.code==10001) {
+                    let data = responseData.data,
+                        newPassageLists = Object.assign({}, passageLists);
+                    newPassageLists[classify] = {
+                        passages: passageLists[classify].passages.concat(data.cmsArticleList.map((item) => {
+                            return {
+                                author: {
+                                    authorID: item.userUuid,
+                                    headImg: item.avatar,
+                                    name: item.nickname
+                                },
+                                createTime: item.createTime,
+                                title: item.title,
+                                coverImg: item.image,
+                                thumbHeadImgs: [item.image, item.image, item.image, item.image],
+                                passageID: item.passageUuid,
+                                thumbCount: item.likeNum,
+                                commentCount: item.commentNum,
+                                shareCount: item.shareNum
+                            };
+                        })),
+                        pageCount: data.cursor
+                    };
+                    setLoading(0);
+                    return {
+                        type: 'BOTTOM_REFRESH',
+                        payload: {
+                            networkError: false,
+                            passageLists: newPassageLists
+                        }
+                    };
+                }else if(responseData.code=='10111'){
+                    setLoading(0);
+                    showTip('没有更多文章');
+                }
             }).catch((error)=>{
-                console.log(error);
+                alert(error);
                 setLoading(0);
-                return {
-                    type:'NETWORK_ERROR',
-                    payload: {
-                        networkError:true,
-                    }
-                };
+                showTip('网络好像有点问题~');
             });
     },
     topRefresh:function (passageLists,classify,setLoading) {
         return myFetch(`http://${ip}:4441/api/articles/refresh/?classify=${classify}`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
-                let data=responseData.data,
-                    newPassageLists=Object.assign({},passageLists);
-                newPassageLists[classify]={
-                    passages:data.map((item)=>{
-                        return {
-                            author:{
-                                authorID:item.userUuid,
-                                headImg:item.avatar,
-                                name:item.nickname
-                            },
-                            createTime:item.createTime,
-                            title:item.title,
-                            coverImg:item.image,
-                            thumbHeadImgs:[item.image,item.image,item.image,item.image],
-                            passageID:item.passageUuid,
-                            thumbCount:item.likeNum,
-                            commentCount:item.commentNum,
-                            shareCount:item.shareNum
-                        };
-                    }),
-                    pageCount:0
-                };
-                setLoading(0);
-                return {
-                    type:'TOP_REFRESH',
-                    payload:{
-                        networkError:false,
-                        passageLists:newPassageLists
-                    }
-                };
+                if(responseData.code=='10001') {
+                    let data = responseData.data,
+                        newPassageLists = Object.assign({}, passageLists);
+                    newPassageLists[classify] = {
+                        passages: data.map((item) => {
+                            return {
+                                author: {
+                                    authorID: item.userUuid,
+                                    headImg: item.avatar,
+                                    name: item.nickname
+                                },
+                                createTime: item.createTime,
+                                title: item.title,
+                                coverImg: item.image,
+                                thumbHeadImgs: [item.image, item.image, item.image, item.image],
+                                passageID: item.passageUuid,
+                                thumbCount: item.likeNum,
+                                commentCount: item.commentNum,
+                                shareCount: item.shareNum
+                            };
+                        }),
+                        pageCount: 0
+                    };
+                    setLoading(0);
+                    return {
+                        type: 'TOP_REFRESH',
+                        payload: {
+                            networkError: false,
+                            passageLists: newPassageLists
+                        }
+                    };
+                }else{
+                    showTip('网络好像有点问题~');
+                    setLoading(0);
+                }
             }).catch((error)=>{
                 console.log(error);
                 setLoading(0);
-                return {
-                    type:'NETWORK_ERROR',
-                    payload: {
-                        networkError:true,
-                    }
-                };
+                showTip('网络好像有点问题~');
             });
     }
 }

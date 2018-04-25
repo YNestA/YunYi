@@ -96,20 +96,27 @@ class Comment extends Component{
     constructor(props){
         super(props);
     }
+    _getTime(time){
+        let date=new Date(time);
+        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}`;
+    }
     render(){
         let comment=this.props.comment;
         return(
             <View style={styles.commentContainer}>
                 <View style={styles.commentLeft}>
-                    <TouchableWithoutFeedback>
+                    <TouchableWithoutFeedback onPress={()=>{
+                        this.props.navigation.navigate('OtherUser',{otherUserId:comment.userId});
+                    }}>
                         <View>
-                            <Image style={styles.headImg} source={require('../../img/user3.jpg')}/>
+                            <Image style={styles.headImg} source={{uri:comment.headerImg}}/>
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
                 <View style={styles.commentRight}>
                     <View style={styles.commentHeader}>
                         <Text numberOfLines={1} style={styles.commentName}>{comment.name}</Text>
+                        {/*
                         <TouchableOpacity>
                             <View style={styles.commentThumb}>
                                 { comment.everThumb?
@@ -120,9 +127,10 @@ class Comment extends Component{
                                 <Text style={[styles.commentThumbCount,comment.everThumb?{color:'#D4237A'}:{}]}>{comment.thumbCount}</Text>
                             </View>
                         </TouchableOpacity>
+                        */}
                     </View>
                     <Text style={styles.commentContent}>{comment.content}</Text>
-                    <Text style={styles.commentTime}>{comment.time}</Text>
+                    <Text style={styles.commentTime}>{this._getTime(comment.time)}</Text>
                 </View>
             </View>
         );
@@ -131,6 +139,7 @@ class Comment extends Component{
 class Comments extends Component{
     constructor(props){
         super(props);
+        this._renderFooter=this._renderFooter.bind(this);
     }
     _renderHeader(len){
         return (
@@ -144,7 +153,9 @@ class Comments extends Component{
         if(len>0) {
             return (
                 <View style={styles.footer}>
-                    <TouchableOpacity>
+                    <TouchableOpacity onPress={()=>{
+                        this.props.navigation.navigate('AllComments');
+                    }}>
                         <View><Text style={styles.footerText}>查看所有评论></Text></View>
                     </TouchableOpacity>
                 </View>

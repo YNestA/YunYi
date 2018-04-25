@@ -1,6 +1,9 @@
 import React,{Component} from 'react'
 import {View,WebView,Text,StyleSheet,Image,TouchableNativeFeedback} from 'react-native'
 import {screenUtils} from '../../tools/ScreenUtils'
+import {connect} from 'react-redux'
+import myFetch, {encodePostParams} from "../../tools/MyFetch";
+import {ip} from "../../settings";
 const styles={
     container:{
         flexDirection:'row',
@@ -37,11 +40,16 @@ const styles={
         fontSize:screenUtils.autoFontSize(14)
     }
 };
-export default class HeaderTitle extends Component{
+class HeaderTitle extends Component{
     constructor(props){
         super(props);
+        this._follow=this._follow.bind(this);
+    }
+    _follow(){
+        this.props.follow(this.props.author,this.props.user,this.props.navigation);
     }
     render(){
+        let {author}=this.props;
         return(
             <View style={styles.container}>
                 <TouchableNativeFeedback
@@ -51,14 +59,52 @@ export default class HeaderTitle extends Component{
                     }}
                 >
                     <View style={styles.authorContainer}>
-                        <Image style={styles.authorImg} source={{uri:this.props.author.headImg}}/>
-                        <Text style={styles.authorName} numberOfLines={1}>{this.props.author.name}</Text>
+                        <Image style={styles.authorImg} source={{uri:author.headImg}}/>
+                        <Text style={styles.authorName} numberOfLines={1}>{author.name}</Text>
                     </View>
                 </TouchableNativeFeedback>
-                <TouchableNativeFeedback>
-                    <View style={styles.concernContainer}><Text style={styles.concern}>关注</Text></View>
-                </TouchableNativeFeedback>
+                {   author.notFollow?
+                    <TouchableNativeFeedback onPress={this._follow}>
+                        <View style={styles.concernContainer}>
+                            <Text style={styles.concern}>关注</Text>
+                        </View>
+                    </TouchableNativeFeedback>:null
+                }
             </View>
         );
     }
 }
+let actions={
+    follow:function (author,user,navigation) {
+        myFetch(`http://${ip}:4441/api/user/relation/follow/`,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'user_token':user.token,
+            },
+            body:encodePostParams({
+                toUserUuid:author.authorID,
+                type:1
+            })
+        });
+        navigation.setParams({passage:{author:Object.assign({},author,{notFollow:false})}});
+        return {
+            type:'PASSAGE_FOLLOW_USER',
+            payload:{
+                author:Object.assign({},author,{notFollow:false})
+            }
+
+        }
+    }
+};
+function mapStateToProps(state) {
+    return{
+        user:state.user
+    }
+}
+function mapDispatchToProps(dispatch) {
+    return {
+        follow:(author,user,navigation)=>{dispatch(actions.follow(author,user,navigation))}
+    }
+}
+export default HeaderTitle=connect(mapStateToProps,mapDispatchToProps)(HeaderTitle);

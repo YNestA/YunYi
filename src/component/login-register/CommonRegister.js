@@ -122,7 +122,7 @@ class CommonRegister extends Component{
     render(){
         return(
             <View style={styles.container}>
-                <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+
                 <View style={styles.field}>
                     <Text style={styles.fieldText}>昵称</Text>
                     <TextInput
@@ -188,14 +188,16 @@ let actions={
         }).then(response=>response.json())
             .then(responseData=>{
                 if(responseData.code==10001){
-                    let token=responseData.data.token,
+                    let data=responseData.data,
+                        token=data.token,
                         user={
                             isLogin:true,
                             token:token,
                             userInfo:{
-                                username:username,
-                                userID:'',
-                                phoneNum:phoneNum,
+                                username:data.nickname,
+                                userID:data.userUuid,
+                                phoneNum:data.phone,
+                                headImg:data.avatar
                             }
                         };
                     myStorage.save({
