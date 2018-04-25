@@ -201,7 +201,7 @@ let actions={
                                     everThumb:false
                                 };
                             }) ,
-                            sections: JSON.parse(data.article.content)
+                            sections: data.article.content
                         }
                     };
                 }

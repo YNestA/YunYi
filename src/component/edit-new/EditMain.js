@@ -243,7 +243,7 @@ let actions={
             body:formData
         }).then(response=>response.json())
             .then(responseData=>{
-                alert(JSON.stringify(responseData));
+                //alert(JSON.stringify(responseData));
                 cb();
                 if(responseData.code==10001) {
                     navigation.navigate('EditPassageSetting');

@@ -7,8 +7,9 @@ import {ip} from "../../settings";
 const styles={
     container:{
         flexDirection:'row',
-        alignSelf:'center',
-        alignItems:'center'
+        justifyContent:'center',
+        alignItems:'center',
+        flex:1
     },
     authorContainer:{
         flexDirection:'row',
