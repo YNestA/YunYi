@@ -24,6 +24,5 @@ export default combineReducers({
     user:userReducer,
     mineViewUserMessage:avatarNameSignReducer,
     mineViewPassgeDetail:mineViewArticleReducer,
-    userMessage:avaterNameSignReducer,
     search:searchReducer
 });
