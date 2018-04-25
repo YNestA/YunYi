@@ -109,7 +109,7 @@ class Comment extends Component{
                         this.props.navigation.navigate('OtherUser',{otherUserId:comment.userId});
                     }}>
                         <View>
-                            <Image style={styles.headImg} source={{uri:comment.headerImg}}/>
+                            <Image style={styles.headImg} source={{uri:comment.headImg}}/>
                         </View>
                     </TouchableWithoutFeedback>
                 </View>

@@ -205,7 +205,7 @@ let actions={
             })
         }).then(response=>response.json())
             .then(responseData=>{
-                alert(JSON.stringify(responseData));
+                //alert(JSON.stringify(responseData));
                 if(responseData.code==10001){
                     cb(true);
                     return {
@@ -222,7 +222,7 @@ let actions={
                                     headImg:user.userInfo.headImg,
                                     thumbCount:0,
                                 },
-                            ]
+                            ].concat(passage.comments)
                         }
                     }
                 }else{

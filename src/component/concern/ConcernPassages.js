@@ -16,10 +16,11 @@ class ConcernPassages extends Component{
         this._renderFooter=this._renderFooter.bind(this);
         this._bottomRefresh=this._bottomRefresh.bind(this);
         this._topRefresh=this._topRefresh.bind(this);
+        this._renderHeader=this._renderHeader.bind(this);
     }
     _renderHeader(users){
         return (
-            <ConcernUsers users={users}/>
+            <ConcernUsers users={users} navigation={this.props.navigation}/>
         );
     }
     _topRefresh(){

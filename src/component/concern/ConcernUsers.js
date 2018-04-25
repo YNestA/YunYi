@@ -41,7 +41,7 @@ export default class ConcernUsers extends Component{
         super(props);
     }
     render(){
-        let {users,title}=this.props;
+        let {users,title,navigation}=this.props;
         if(users.length) {
             return (
                 <View style={styles.container}>
@@ -53,7 +53,9 @@ export default class ConcernUsers extends Component{
                     >
                         {
                             users.map((item, index) => {
-                                return <TouchableWithoutFeedback key={index}>
+                                return <TouchableWithoutFeedback onPress={()=>{
+                                    navigation.navigate('OtherUser',{otherUserId:item.userID});
+                                }} key={index}>
                                     <View style={styles.user}>
                                         <Image style={styles.userImg} source={require('../../img/user2.jpg')}/>
                                         <Text numberOfLines={1} style={styles.userName}>{item.name}</Text>

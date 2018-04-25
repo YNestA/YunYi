@@ -12,7 +12,7 @@ export default class SearchResult extends Component{
         let {result,navigation}=this.props;
         return (
             <View>
-                <SearchUsers users={result.users} title={'相关用户'}/>
+                <SearchUsers users={result.users} navigation={navigation} title={'相关用户'}/>
                 <SearchPassages/>
             </View>
         );

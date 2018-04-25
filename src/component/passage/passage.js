@@ -193,7 +193,7 @@ let actions={
                                 return {
                                     name:item.nickname,
                                     content:item.content,
-                                    time:item.createTime,
+                                    time:item.createTime.time,
                                     userId:item.userUuid,
                                     commentId:item.commentUuid,
                                     headImg:item.avatar,
