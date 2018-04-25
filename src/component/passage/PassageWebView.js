@@ -36,6 +36,7 @@ export default class PassageWebView extends Component{
         return(
             <View>
                 <AutoHeightWebView
+                    onLoadEnd={this.props.onLoadEnd}
                     source={{html}}
                 />
             </View>

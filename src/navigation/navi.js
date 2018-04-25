@@ -30,6 +30,9 @@ import AllSetting from "../component/mine/AllSetting";
 import OtherUser from '../component/other-user/OtherUser';
 import SignNameChangeDetail from '../component/mine/SignNameChangeDetail';
 import FocusDetail from '../component/mine/FocusDetail'
+import OtherUser from '../component/other-user/OtherUser'
+import Search from "../component/search/search";
+import AllComments from "../component/passage/AllComments";
 
 export class TabIcon extends Component{
     constructor(props){
@@ -38,21 +41,22 @@ export class TabIcon extends Component{
     render(){
         let {focused,focusedImg,notFocusedImg,labelTitle,tintColor}=this.props;
         return (
-            <View style={{
-            }}>
-                <Image
-                    source={focused?focusedImg:notFocusedImg}
-                    style={{
-                        width:screenUtils.autoSize(30),
-                        height:screenUtils.autoSize(30),
-                    }}
-                />
-                {labelTitle&&<Text style={{
-                    fontSize:screenUtils.autoFontSize(13),
-                    alignSelf:'center',
-                    color:tintColor,
-                }}>{labelTitle}</Text>}
-            </View>
+            <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('rgba(0,0,0,0.15)',true)}>
+                <View style={{}}>
+                    <Image
+                        source={focused?focusedImg:notFocusedImg}
+                        style={{
+                            width:screenUtils.autoSize(30),
+                            height:screenUtils.autoSize(30),
+                        }}
+                    />
+                    {labelTitle&&<Text style={{
+                        fontSize:screenUtils.autoFontSize(13),
+                        alignSelf:'center',
+                        color:tintColor,
+                    }}>{labelTitle}</Text>}
+                </View>
+            </TouchableNativeFeedback>
         );
     }
 }
@@ -111,7 +115,7 @@ const MainScreenNavi=TabNavigator({
         }
     }
 },{
-    initialRouteName:'Mine',
+    initialRouteName:'Discover',
     tabBarPosition: 'bottom',
     backBehavior:'none',
     swipeEnabled: false,
@@ -203,6 +207,12 @@ export default YunYiNavi=StackNavigator({
     OtherUser:{
         screen:OtherUser,
     },
+    Search:{
+        screen:Search
+    },
+    AllComments:{
+        screen:AllComments
+    },
     Detail:{
         screen:DetailView,
         navigationOptions:{
@@ -220,7 +230,7 @@ export default YunYiNavi=StackNavigator({
         screen:FocusDetail
     },
 },{
-    initialRouteName:'LoginCenter',
+    initialRouteName:'Welcome',
     navigationOptions:{
         headerStyle:{
             height:screenUtils.autoSize(55),

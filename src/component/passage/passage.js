@@ -58,7 +58,10 @@ class Passage extends Component{
     };
     constructor(props){
         super(props);
-        this.state = { viewRef: null };
+        this.state = {
+            viewRef: null,
+            webviewLoading:true
+        };
         this._buildPassageHtml=this._buildPassageHtml.bind(this);
         this._onBackHandler=this._onBackHandler.bind(this);
     }
@@ -73,8 +76,8 @@ class Passage extends Component{
     componentDidMount(){
         BackHandler.addEventListener('hardwareBackPress',this._onBackHandler);
         let {params}=this.props.navigation.state;
-        this.props.initPassage(params.passage.passageID,this.props.navigation);
-        this.props.getPassagesPush();
+        this.props.initPassage(params.passage.passageID,this.props.user,params.passage.author.authorID,this.props.navigation);
+        //this.props.getPassagesPush();
     }
     _buildPassageHtml(sections){
         return sections.map((item)=>{
@@ -95,7 +98,7 @@ class Passage extends Component{
             return (
                 <View style={styles.container}>
                     <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
-                    {(passage.loading)&&<Loading
+                    {(passage.loading||this.state.webviewLoading)&&<Loading
                         containerStyle={{
                             backgroundColor:'#fff',
                             position:'absolute',
@@ -112,7 +115,7 @@ class Passage extends Component{
                     }
                     <ScrollView>
                         { passage.passageID&&
-                            <View>
+                            <View style={{paddingBottom:screenUtils.autoSize(70)}}>
                                 <View style={[styles.passageContainer,!passage.isCoverBlur? styles.whiteBackground:{}]}>
                                     <Text style={styles.title}>
                                         {passage.title}
@@ -125,10 +128,11 @@ class Passage extends Component{
                                         <Text style={styles.passageRead}>阅读 {passage.readCount}</Text>
                                     </View>
                                     <PassageWebView
+                                        onLoadEnd={()=>{this.setState({webviewLoading:false})}}
                                         html={this._buildPassageHtml(passage.sections)}
                                     />
                                 </View>
-                                <Comments/>
+                                <Comments navigation={this.props.navigation}/>
                                 { passage.passagesPush.length>0?
                                     <PassagesPush passage={passage}/>:
                                     <View/>
@@ -136,18 +140,19 @@ class Passage extends Component{
                             </View>
                         }
                     </ScrollView>
-                    <PassageFooter/>
+                    <PassageFooter navigation={this.props.navigation}/>
                 </View>
             );
     }
 }
 
 let actions={
-    initPassage:function (passageID,navigation) {
-        return myFetch(`http://${ip}:4441/api/article/${passageID}`,{
+    initPassage:function (passageID,user,authorID,navigation) {
+        return myFetch(`http://${ip}:4441/api/article/${authorID}/${passageID}/`,{
                 method:'GET',
             headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'user_token':user.token
             },
             timeout:10000
         })
@@ -155,12 +160,13 @@ let actions={
             .then((responseData)=>{
                 //alert(JSON.stringify(responseData));
                 if(responseData.code==10001) {
-                    let data = responseData.data[0];
+                    let data = responseData.data;
                     navigation.setParams({passage:{
                         author:{
-                            authorID:'',
-                            headImg: data.avatar,
-                            name:data.nickname
+                            authorID:data.article.userUuid,
+                            headImg: data.article.avatar,
+                            name:data.article.nickname,
+                            notFollow:!data.isFollowed
                         }}
                     });
                     return {
@@ -169,31 +175,33 @@ let actions={
                             loading:false,
                             passageID: passageID,
                             author: {
-                                authorID: data.userUuid,
-                                headImg: data.avatar,
-                                name: data.nickname,
-                                isFollow:false,
+                                authorID: data.article.userUuid,
+                                headImg: data.article.avatar,
+                                name: data.article.nickname,
+                                notFollow:!data.isFollowed,
                             },
                             isCoverBlur: false,
-                            title: data.title,
-                            readCount: data.readnumber,
-                            coverImg: data.image,
-                            createTime: data.createTime,
-                            thumbCount:data.likeNum,
-                            commentCount:data.commentNum,
-                            shareCount:data.shareNum,
-                            comments: [
-                                /*
-                                {
-                                    name:'刘涛',
-                                    content:'我顶啊，楼主说的好啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-                                    time:'2018-5-30',
-                                    headImg:'',
-                                    thumbCount:43
-                                },
-                                */
-                            ],
-                            sections: JSON.parse(data.content)
+                            title: data.article.title,
+                            readCount: data.article.readnumber,
+                            coverImg: data.article.image,
+                            createTime: data.article.createTime.time,
+                            thumbCount:data.article.likeNum,
+                            commentCount:data.article.commentNum,
+                            shareCount:data.article.shareNum,
+                            ifThumb:!!data.articleIsLiked,
+                            comments: data.article.comments.map((item)=>{
+                                return {
+                                    name:item.nickname,
+                                    content:item.content,
+                                    time:item.createTime,
+                                    userId:item.userUuid,
+                                    commentId:item.commentUuid,
+                                    headImg:item.avatar,
+                                    thumbCount:item.likeNum,
+                                    everThumb:false
+                                };
+                            }) ,
+                            sections: JSON.parse(data.article.content)
                         }
                     };
                 }
@@ -253,12 +261,13 @@ let actions={
 
 function mapStateToProps(state) {
     return {
-        passage:state.passage
+        passage:state.passage,
+        user:state.user
     }
 }
 function mapDispatchToProps(dispatch) {
     return{
-        initPassage:(passageID,navigation)=>{dispatch(actions.initPassage(passageID,navigation))},
+        initPassage:(passageID,user,authorID,navigation)=>{dispatch(actions.initPassage(passageID,user,authorID,navigation))},
         getPassagesPush:()=>{dispatch(actions.getPassagesPush())},
         setLoading:(value)=>{dispatch(actions.setLoading(value))}
     };

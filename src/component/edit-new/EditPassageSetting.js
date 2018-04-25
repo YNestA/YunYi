@@ -167,7 +167,6 @@ let actions={
     },
     complete:function (passage,navigation,user,cb) {
         //alert(JSON.stringify(passage));
-        alert(JSON.stringify(passage));
         return myFetch(`http://${ip}:4441/api/article/insert`, {
             method: 'POST',
             headers: {

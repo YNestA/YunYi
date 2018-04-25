@@ -7,7 +7,9 @@ const styles=StyleSheet.create({
         backgroundColor:'#fff',
         paddingLeft:screenUtils.autoSize(20),
         paddingVertical:screenUtils.autoSize(20),
-        marginBottom:screenUtils.autoSize(20)
+        marginBottom:screenUtils.autoSize(20),
+        borderBottomWidth:1/screenUtils.pixelRatio,
+        borderColor:'#ccc'
     },
     header:{
         fontSize:screenUtils.autoFontSize(16),
@@ -39,11 +41,11 @@ export default class ConcernUsers extends Component{
         super(props);
     }
     render(){
-        let users=this.props.users;
+        let {users,title}=this.props;
         if(users.length) {
             return (
                 <View style={styles.container}>
-                    <Text style={styles.header}>推荐用户</Text>
+                    <Text style={styles.header}>{title?title:'推荐用户'}</Text>
                     <ScrollView
                         style={styles.users}
                         horizontal={true}
