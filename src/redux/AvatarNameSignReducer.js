@@ -1,7 +1,7 @@
 const initialState = {
     userId: 0,
-    nickName: '',
-    sex: 'man',
+    nickname: '',
+    sex: '',
     avatar: '',
     createTime: '0',
     phone: '',
@@ -9,8 +9,7 @@ const initialState = {
 export default function AvatarNameSignReducer(state = initialState, action) {
     switch (action.type) {
         case 'INITIAL_SIGN_NAME_AVATAR':
-            console.log('123123');
-            return Object.assign({}, state, action.payload.userMessage);
+            return Object.assign({}, state, action.payload.mineViewUserMessage);
         default:
             return state;
     }

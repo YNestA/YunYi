@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {View, Text, Image, StyleSheet,TouchableNativeFeedback} from 'react-native';
 import {screenUtils} from "../../tools/ScreenUtils";
 
-export class CircleWatchedFans extends Component {
+export class FollowAndFans extends Component {
     constructor(props) {
         super(props);
     }
@@ -15,6 +15,7 @@ export class CircleWatchedFans extends Component {
                 backgroundColor:'#fff',
             }}>
                 <TouchableNativeFeedback
+                    onPress={()=>{this.props.nav.navigate('FocusDetail')}}
                     background={TouchableNativeFeedback.Ripple("#0ff", false) }
                 >
                     <View style={[styles.cell, styles.borderShortLine]}>

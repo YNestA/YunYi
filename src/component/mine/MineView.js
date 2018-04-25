@@ -1,8 +1,8 @@
 import React, {Component} from 'react'
-import {View, ImageBackground} from 'react-native'
-import {CircleWatchedFans} from './circleWatchedFans'
+import {View} from 'react-native'
+import {FollowAndFans} from './FollowAndFans'
 import {MineArticle} from "./MineArticle";
-import AvaterNameSignChange from "./AvaterNameSignChange";
+import AvatarNameSignChange from "./AvatarNameSignChange";
 import {SettingShareSearch} from "./SettingShareSearch"
 
 export default class MineView extends Component {
@@ -16,9 +16,9 @@ export default class MineView extends Component {
         return (
             <View style={{flex: 1, backgroundColor: '#fff',}}>
                 <SettingShareSearch nav={navigation}/>
-                <AvaterNameSignChange/>
-                <CircleWatchedFans/>
-                <MineArticle/>
+                <AvatarNameSignChange nav={navigation}/>
+                <FollowAndFans nav={navigation}/>
+                <MineArticle nav={navigation}/>
             </View>
         );
     }

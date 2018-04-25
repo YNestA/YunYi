@@ -1,21 +1,19 @@
 import React, {Component} from 'react'
-import {View, Text, Image, StyleSheet,TouchableNativeFeedback} from 'react-native'
+import {View, Text, Image, StyleSheet, TouchableNativeFeedback} from 'react-native'
 import {connect} from "react-redux"
 import NetworkError from '../../tools/NetworkError'
-import myFetch from '../../tools/MyFetch'
 import {screenUtils} from '../../tools/ScreenUtils'
 import {ip} from "../../settings";
 
-class AvaterNameSignChange extends Component {
+class AvatarNameSignChange extends Component {
     constructor(props) {
         super(props);
-        //console.log("this.props.userMessage", this.props.userMessage);
     }
 
     componentDidMount() {
         //console.log(this.props.userMessageLogIn);
         let user = this.props.userMessageLogIn;
-        console.log(user.token);
+        console.log('token',user.token);
         this.props.initialAvasterSign(user);
     }
 
@@ -23,24 +21,36 @@ class AvaterNameSignChange extends Component {
         console.log("render props userMessage", this.props);
         //console.log(this.props.userMessageLogIn);
         console.log(this.props.userMessageLogIn.token);
+        let mineViewUserMessage = this.props.mineViewUserMessage;
+        let user=this.props.userMessageLogIn;
+        console.log('isLogin',user.isLogin);
+
+        if(!user.isLogin){
+            mineViewUserMessage.nickname='云忆用户';
+            mineViewUserMessage.signDetail='未登录';
+        }
         return (
             <TouchableNativeFeedback
-                onPress={()=>{this.props.nav.navigate('SignNameChangeDetail')}}
+                onPress={() => {
+                    !user.isLogin?this.props.nav.navigate('LoginCenter'):this.props.nav.navigate('SignNameChangeDetail',{user:mineViewUserMessage});
+                    //this.props.nav.navigate('SignNameChangeDetail',{user:mineViewUserMessage});
+                }}
             >
-                <View style={styles.avaterNameChange}>
-                    <View style={styles.avater}>
+                <View style={styles.avatarNameChange}>
+                    <View style={styles.avatar}>
                         <Image source={require('../../img/profilePic.jpg')} style={styles.cellFixed}/>
                     </View>
                     <View style={styles.profileNameAndSign}>
-                        <Text style={styles.userName}>{this.props.userMessage.userName}</Text>
+                        <Text style={styles.userName}>{this.props.mineViewUserMessage.nickname}</Text>
                         <Text style={styles.Sign}
-                              numberOfLines={1}>{this.props.userMessage.signDetail}</Text>
+                              numberOfLines={1}>{this.props.mineViewUserMessage.signDetail}</Text>
                     </View>
                     <View>
                         <Image source={require('../../img/profile-more.png')} style={styles.profileChange}/>
                     </View>
                 </View>
             </TouchableNativeFeedback>
+
         );
     }
 }
@@ -55,7 +65,7 @@ let actions = {
     //     }
     // },
     initialAvasterSign: function (user) {
-        return fetch('http://'+ip+':4441/user/basicinfo', {
+        return fetch('http://' + ip + ':4441/mine/basic-info', {
             method: 'GET',
             headers: {
                 'Accept': 'application/json',
@@ -64,28 +74,29 @@ let actions = {
             }
         }).then((response) => response.json())
             .then((responseJson) => {
-                console.log("this is respoenJson",responseJson);
+                //let imageUrl = JSON.parse(responseJson.data[0].image);
+                //console.log("this is respoenJson", responseJson);
+                console.log('avatarNameSignChange',responseJson.data);
                 return {
-                    type: 'INITIAL_SIGN_NAME_AVATER',
+                    type: 'INITIAL_SIGN_NAME_AVATAR',
                     payload: {
-                        userMessage: userMessageExample
+                        mineViewUserMessage: responseJson.data
                     }
                 }
             }).catch((error) => {
-                console.log('error',error);
+                console.log('error', error);
             })
     }
 }
 
 function mapStateToProps(state) {
     return {
-        userMessage: state.userMessage,
+        mineViewUserMessage: state.mineViewUserMessage,
         userMessageLogIn: state.user,
     }
 }
 
-function mapDispatchToProps(dispatch)
-{
+function mapDispatchToProps(dispatch) {
     return {
         initialAvasterSign: (user) => {
             dispatch(actions.initialAvasterSign(user))
@@ -93,24 +104,25 @@ function mapDispatchToProps(dispatch)
     }
 }
 
-export default AvaterNameSignChange = connect(mapStateToProps, mapDispatchToProps)(AvaterNameSignChange);
+export default AvatarNameSignChange = connect(mapStateToProps, mapDispatchToProps)(AvatarNameSignChange);
 
 const userMessageExample = {
-    avater: '../../img/profilePic.jpg',
-    userName: '安升强',
+    avatar: '../../img/profilePic.jpg',
+    nickname: '安升强',
     signDetail: '我是签名',
     sex: '男',
     iphoneNum: '15623425252',
+    token:'',
 }
 
 
 const styles = StyleSheet.create({
-    avaterNameChange: {
+    avatarNameChange: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
     },
-    avater: {
+    avatar: {
         marginLeft: screenUtils.autoSize(8),
     },
     userName: {
@@ -134,5 +146,5 @@ const styles = StyleSheet.create({
         height: screenUtils.autoSize(20),
         marginTop: screenUtils.autoSize(30),
         marginLeft: screenUtils.autoSize(10),
-    }
+    },
 });
