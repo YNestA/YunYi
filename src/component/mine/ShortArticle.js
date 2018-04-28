@@ -28,19 +28,19 @@ class ShortArticle extends Component {
             <View style={styles.articleItem}>
                 <View style={styles.articleTagAndName}>
                     <Text style={styles.articleTag}>{item.articleTag}</Text>
-                    <Text style={styles.articleName}>{item.articleName}</Text>
+                    <Text style={styles.articleName}>{item.title}</Text>
                 </View>
                 <Image
                     style={styles.imageFirst}
-                    source={require('../../img/common/slide11.jpg')}/>
+                    source={item.image?{uri:item.image}:require('../../img/common/slide11.jpg')}/>
                 <Text style={styles.chooseCircle}>其他</Text>
                 <View style={styles.bottomData}>
-                    <Text style={styles.pushDate}>2018-03-04</Text>
+                    <Text style={styles.pushDate}>{item.createTime}</Text>
                     <View style={styles.bottomIcon}>
                         <Image style={styles.imgCommon} source={require('../../img/common/eye_fill.png')}/>
-                        <Text style={styles.textCommon}>{item.watchedNum}</Text>
+                        <Text style={styles.textCommon}>{item.readnumber}</Text>
                         <Image style={styles.imgCommon} source={require('../../img/common/y_thumb.png')}/>
-                        <Text style={styles.textCommon}>{item.thumbUpNum}</Text>
+                        <Text style={styles.textCommon}>{item.likeNum}</Text>
                         <Image style={styles.imgCommon} source={require('../../img/common/y_comment.png')}/>
                         <Text style={styles.textCommon}>{item.commentNum}</Text>
                         <Image style={styles.imgCommon} source={require('../../img/common/y_share.png')}/>
@@ -130,7 +130,16 @@ let actions = {
             .then((responseJson) => {
                 console.log("this is respoenJson", responseJson);
                 let data={content:[]};
-                responseJson.data.map((item)=>{data.content.push(item)});
+                responseJson.data.map((item)=>{
+                    let date=new Date(item.createTime);
+                    let y=date.getFullYear();
+                    let m=date.getMonth();
+                    let d=date.getDay();
+                    item.createTime=y+'-'+m+'-'+d;
+                    let imageJson = JSON.parse(item.image);
+                    item.image = imageJson.url;
+                    data.content.push(item);
+                });
                 return {
                     type: 'MINE_VIEW_ARTICLE',
                     payload: {

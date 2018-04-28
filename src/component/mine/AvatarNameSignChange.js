@@ -13,7 +13,7 @@ class AvatarNameSignChange extends Component {
     componentDidMount() {
         //console.log(this.props.userMessageLogIn);
         let user = this.props.userMessageLogIn;
-        console.log('token',user.token);
+        console.log('props',this);
         this.props.initialAvasterSign(user);
     }
 
@@ -26,24 +26,23 @@ class AvatarNameSignChange extends Component {
         console.log('isLogin',user.isLogin);
 
         if(!user.isLogin){
-            mineViewUserMessage.nickname='云忆用户';
-            mineViewUserMessage.signDetail='未登录';
+            mineViewUserMessage.nickname='点我登陆';
         }
         return (
             <TouchableNativeFeedback
                 onPress={() => {
-                    !user.isLogin?this.props.nav.navigate('LoginCenter'):this.props.nav.navigate('SignNameChangeDetail',{user:mineViewUserMessage});
-                    //this.props.nav.navigate('SignNameChangeDetail',{user:mineViewUserMessage});
+                    //!user.isLogin?this.props.nav.navigate('LoginCenter'):this.props.nav.navigate('SignNameChangeDetail',{user:mineViewUserMessage});
+                    this.props.nav.navigate('SignNameChangeDetail');
                 }}
             >
                 <View style={styles.avatarNameChange}>
                     <View style={styles.avatar}>
-                        <Image source={require('../../img/profilePic.jpg')} style={styles.cellFixed}/>
+                        <Image source={mineViewUserMessage.avatar?{uri:mineViewUserMessage.avatar}:require('../../img/profilePic.jpg')} style={styles.avatarImage}/>
                     </View>
                     <View style={styles.profileNameAndSign}>
-                        <Text style={styles.userName}>{this.props.mineViewUserMessage.nickname}</Text>
+                        <Text style={styles.userName}>{mineViewUserMessage.nickname}</Text>
                         <Text style={styles.Sign}
-                              numberOfLines={1}>{this.props.mineViewUserMessage.signDetail}</Text>
+                              numberOfLines={1}>{mineViewUserMessage.motto}</Text>
                     </View>
                     <View>
                         <Image source={require('../../img/profile-more.png')} style={styles.profileChange}/>
@@ -87,7 +86,7 @@ let actions = {
                 console.log('error', error);
             })
     }
-}
+};
 
 function mapStateToProps(state) {
     return {
@@ -109,7 +108,7 @@ export default AvatarNameSignChange = connect(mapStateToProps, mapDispatchToProp
 const userMessageExample = {
     avatar: '../../img/profilePic.jpg',
     nickname: '安升强',
-    signDetail: '我是签名',
+    motto: '我是签名',
     sex: '男',
     iphoneNum: '15623425252',
     token:'',
@@ -123,7 +122,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     avatar: {
-        marginLeft: screenUtils.autoSize(8),
+        marginLeft: screenUtils.autoSize(13),
     },
     userName: {
         fontSize: screenUtils.autoSize(16),
@@ -132,10 +131,10 @@ const styles = StyleSheet.create({
     Sign: {
         fontSize: screenUtils.autoSize(12),
     },
-    cellFixed: {
-        height: screenUtils.autoSize(80),
-        width: screenUtils.autoSize(80),
-        borderRadius: screenUtils.autoSize(80),
+    avatarImage: {
+        height: screenUtils.autoSize(66),
+        width: screenUtils.autoSize(66),
+        borderRadius: screenUtils.autoSize(66),
     },
     profileNameAndSign: {
         marginLeft: screenUtils.autoSize(8),

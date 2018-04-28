@@ -1,31 +1,35 @@
 import React, {Component} from 'react'
-import {View, Text, Image, StyleSheet, ScrollView, TouchableNativeFeedback, StatusBar, Picker, TextInput, findNodeHandle, UIManager} from 'react-native'
+import {
+    View,
+    Text,
+    Image,
+    StyleSheet,
+    ScrollView,
+    TouchableNativeFeedback,
+    StatusBar,
+    Picker,
+    TextInput,
+    findNodeHandle,
+    UIManager
+} from 'react-native'
 import {connect} from "react-redux"
 import NetworkError from '../../tools/NetworkError'
 import myFetch from '../../tools/MyFetch'
 import {screenUtils} from '../../tools/ScreenUtils'
 import PopupDialog, {DialogTitle, SlideAnimation, DialogButton, ScaleAnimation} from 'react-native-popup-dialog'
 import ImagePicker from 'react-native-image-crop-picker'
+import {ip} from "../../settings";
+import Toast from 'react-native-root-toast';
 
-const slideAnimation = new SlideAnimation({
-    slideFrom: 'bottom',
-});
 
-let userM = {};
-
-export default class SignNameChangeDetail extends Component {
+class SignNameChangeDetail extends Component {
     constructor(props) {
         super(props);
         this._selectImg = this._selectImg.bind(this);
-        this._inputFocus = this._inputFocus.bind(this);
-        this._inputLayout = this._inputLayout.bind(this);
-        this._layout = this._layout.bind(this);
         this._sendImg = this._sendImg.bind(this);
-    }
-
-    componentDidMount() {
-        let userM = this.props.navigation.state.params.user;
-        console.log('userm',userM);
+        this._changeNickName = this._changeNickName.bind(this);
+        this._Toast = this._Toast.bind(this);
+        this.state = {text: ''}
     }
 
     static navigationOptions = () => {
@@ -36,39 +40,69 @@ export default class SignNameChangeDetail extends Component {
         };
     };
 
-    _layout(ref) {
-        const handle = findNodeHandle(ref);
-        return new Promise((resolve) => {
-            UIManager.measure(handle, (x, y, width, height, pageX, pageY) => {
-                resolve({x, y, width, height, pageX, pageY});
-            });
-        });
+    _changeNickName(nickName) {
+        let userBasic = this.props.userMessageLogIn;
+        let r = /^\d+$/;
+        nickName=nickName.replace(/^\s\s*/, '').replace(/\s\s*$/, '');
+        if(nickName==''){
+            this._Toast('不可以全空格或空');
+            return false;
+        }
+        if (!r.test(nickName)) {
+            this._Toast('修改成功');
+            fetch('http://' + ip + '', {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'user_token': userBasic.token,
+                },
+                body: JSON.stringify({
+                    nickNameChange:nickName,
+                })
+            })
+        } else {
+            this._Toast('修改失败：不能是纯数字');
+        }
     }
 
-    _sendImg(image){
+    _Toast(message) {
+        let toast = Toast.show(message, {
+            duration: Toast.durations.LONG,
+            position: Toast.positions.BOTTOM,
+            shadow: true,
+            animation: true,
+            hideOnPress: true,
+        });
+        setTimeout(function () {
+            Toast.hide(toast);
+        }, 2000);
+    }
+
+    _sendImg(image) {
         // 创建form表单
         let body = new FormData();
-        let userM = this.props.navigation.state.params.user;
-        console.log('image',image);
+        console.log('image', image);
+        console.log(this);
         // token和key都是通过七牛返回的参数
-        body.append('token',userM.token);
-        body.append('file',{
+        console.log(this.props.changeAvatar(image.path));
+        body.append('file', {
             // 设定上传的格式
-            type : 'image/jpeg',
+            type: 'image/jpeg',
             // 通过react-native-image-picker获取的图片地址
-            uri : uri,
-            name : key,
+            uri: image.path,
+            name: 'avatar',
         });
         // 开启XMLHttpRequest服务
         let xhr = new XMLHttpRequest();
         /** 上传到七牛云的地址 */
-        let url = Config.qiniu.upload;
+        let url = 'http://' + ip + ":4441/avatarchange";
         // 开启post上传
-        xhr.open('POST',url);
+        xhr.open('POST', url);
         // 如果正在上传,返回上传进度
-        if (xhr.upload){
-            xhr.upload.onprogress = (event)=>{
-                if (event.lengthComputable){
+        if (xhr.upload) {
+            xhr.upload.onprogress = (event) => {
+                if (event.lengthComputable) {
                     let perent = event.loaded / event.total.toFixed(2);
                     // 打印上传进度
                     console.log(perent);
@@ -77,28 +111,28 @@ export default class SignNameChangeDetail extends Component {
         }
 
         // 上传过成功的返回
-        xhr.onload = ()=>{
+        xhr.onload = () => {
             // console.log(xhr.status);
             // 状态码如果不等于200就代表错误
-            if (xhr.status !== 200){
+            if (xhr.status !== 200) {
                 alert('请求失败');
                 console.log(xhr.responseText);
                 return;
             }
-            if (!xhr.responseText){
+            if (!xhr.responseText) {
                 alert('请求失败');
                 console.log(xhr.responseText);
                 return;
             }
             // 服务器最后返回的数据
             let response;
-            try{
+            try {
                 // 将返回数据还原
                 response = JSON.parse(xhr.response);
                 console.log(response);
                 // ...通过返回数据做接下来的处理
-            }catch (e) {
-                console.log('error',e);
+            } catch (e) {
+                console.log('error', e);
             }
             // 发送请求
             xhr.send(body);
@@ -114,22 +148,8 @@ export default class SignNameChangeDetail extends Component {
         });
     };
 
-    _inputLayout(input) {
-        console.log('this is input ', input);
-        console.log(this._layout(this.refs.inputView));
-    }
-
-    _inputFocus() {
-        // let scroller = this.refs.inputScrollViewContainer;
-        // setTimeout(()=>{
-        //     let y = this.state.inputPositionY;//Dev_height为屏幕的高度
-        //     scroller.scrollTo({x:0, y:y, animated:true});
-        // },50);
-        console.log(this._layout(this.refs.inputView));
-    }
-
     render() {
-        let userM = this.props.navigation.state.params.user;
+        let userM = this.props.mineViewUserMessage;
         console.log(userM);
         return (
             <View>
@@ -143,10 +163,10 @@ export default class SignNameChangeDetail extends Component {
                             <Text style={styles.itemText}>头像</Text>
                         </View>
                         <View style={styles.detailChangeContainer}>
-                            <Image source={require('../../img/profilePic.jpg')} style={styles.avatar}/>
+                            <Image source={userM.avatar ? {uri: userM.avatar} : require('../../img/profilePic.jpg')}
+                                   style={styles.avatar}/>
                             <Image source={require('../../img/profile-more.png')} style={styles.itemChangeDetail}/>
                         </View>
-
                     </View>
                 </TouchableNativeFeedback>
                 <TouchableNativeFeedback
@@ -193,36 +213,79 @@ export default class SignNameChangeDetail extends Component {
                 </TouchableNativeFeedback>
 
                 <PopupDialog
-                    containerStyle={{position: 'relative', top: screenUtils.autoSize(5),}}
+                    containerStyle={{justifyContent: 'flex-start'}}
                     width={screenUtils.autoSize(300)}
                     height={screenUtils.autoSize(80)}
                     ref='changeUserName'
-                    dialogAnimation={new ScaleAnimation()}
                 >
-                    <ScrollView
-                        ref='inputScrollViewContainer'
-                        style={{flex: 1}}
+                    <View style={{padding: 10}}
                     >
-                        <View style={{padding: 10}}
-                              onLayout={this._inputLayout.bind(this)}
-                              ref='inputView'
+                        <TextInput
+                            style={{height: 40}}
+                            onChangeText={(textname) => this.state.text = textname}
+                            placeholder="不可以是纯数字哟～"/>
+                        <TouchableNativeFeedback
+                            onPress={() => {
+                                this._changeNickName(this.state.text)
+                            }}
                         >
-                            <TextInput
-                                style={{height: 40}}
-                                placeholder="Type here to translate!"
-                                onFocus={this._inputFocus.bind(this)}
-                            />
-                            <Text style={{padding: 10, fontSize: 42}}>
-
-                            </Text>
-                        </View>
-                    </ScrollView>
-
+                            <View>
+                                <Text>确定</Text>
+                            </View>
+                        </TouchableNativeFeedback>
+                    </View>
                 </PopupDialog>
             </View>
         );
     }
 }
+
+let actions = {
+    // setNetworkError:function (value) {
+    //     return {
+    //         type:'NETWORK_ERROR',
+    //         payload: {
+    //             networkError: value,
+    //         }
+    //     }
+    // },
+    changeAvatar: function (imagePath) {
+        return {
+            type: 'CHANGE_AVATAR',
+            payload: {
+                avatar: imagePath
+            }
+        }
+    },
+    changeNickName: function (nickname) {
+        return {
+            type: 'CHANGE_NICK_NAME',
+            payload: {
+                nickname: nickname,
+            }
+        }
+    }
+}
+
+function mapStateToProps(state) {
+    return {
+        mineViewUserMessage: state.mineViewUserMessage,
+        userMessageLogIn: state.user,
+    }
+}
+
+function mapDispatchToProps(dispatch) {
+    return {
+        changeAvatar: (imagePath) => {
+            dispatch(actions.changeAvatar(imagePath))
+        },
+        changeNickName: (nickNameInput) => {
+            dispatch(actions.changeNickName(nickNameInput))
+        },
+    }
+}
+
+export default SignNameChangeDetail = connect(mapStateToProps, mapDispatchToProps)(SignNameChangeDetail);
 
 const styles = StyleSheet.create({
     avatarChange: {
@@ -237,9 +300,9 @@ const styles = StyleSheet.create({
         marginLeft: screenUtils.autoSize(15),
     },
     avatar: {
-        width: screenUtils.autoSize(80),
-        height: screenUtils.autoSize(80),
-        borderRadius: screenUtils.autoSize(80),
+        width: screenUtils.autoSize(70),
+        height: screenUtils.autoSize(70),
+        borderRadius: screenUtils.autoSize(70),
     },
     itemChangeDetail: {
         marginLeft: screenUtils.autoSize(5),
