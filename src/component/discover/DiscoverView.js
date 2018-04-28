@@ -151,7 +151,7 @@ class DiscoverView extends Component{
                         <Text>{this.props.user.token}</Text>
                         <TouchableNativeFeedback
                             onPress={()=>{
-                                navigation.navigate('OtherUser');
+                                navigation.navigate('OtherUser',{otherUserId:'111'});
                             }}
                         >
                             <Text>退出</Text>

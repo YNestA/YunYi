@@ -163,6 +163,7 @@ class Edit extends Component{
         BackHandler.addEventListener('hardwareBackPress', this._backHandler);
     }
     componentWillUnmount(){
+        this.props.cleanEdit();
         BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     render(){
@@ -170,7 +171,7 @@ class Edit extends Component{
         return(
             <View style={{flex:1}}>
                 <ScrollView>
-                    <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                    <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                     <ImageBackground
                         style={styles.coverBackground}
                         source={{uri:passage.coverImg.path}}
@@ -202,6 +203,13 @@ class Edit extends Component{
 }
 
 let actions={
+    cleanEdit:function () {
+        return {
+            type:'CLEAN_EDIT',
+            payload:{
+            }
+        };
+    },
     startImg:function (imgs) {
         return {
             type:'START_IMG',
@@ -297,7 +305,8 @@ function mapDispatchToProps(dispatch) {
     return{
         startImg:(imgs)=>{dispatch(actions.startImg(imgs))},
 //        addTextSection:(index)=>{dispatch(actions.addTextSection(index))},
-        upload:(passage,user,cb,navigation)=>{dispatch(actions.upload(passage,user,cb,navigation))}
+        upload:(passage,user,cb,navigation)=>{dispatch(actions.upload(passage,user,cb,navigation))},
+        cleanEdit:()=>{dispatch(actions.cleanEdit())}
     }
 }
 

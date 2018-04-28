@@ -1,5 +1,5 @@
 import React,{Component} from 'react'
-import {View,Text,FlatList,StyleSheet,Image,TouchableWithoutFeedback} from 'react-native'
+import {View, Text, FlatList, StyleSheet, Image, TouchableWithoutFeedback, InteractionManager} from 'react-native'
 import {connect} from 'react-redux'
 import {screenUtils} from "../../tools/ScreenUtils";
 import myFetch from "../../tools/MyFetch";
@@ -156,8 +156,10 @@ class OtherUserPassages extends Component{
         );
     }
     componentDidMount(){
-        let {navigation}=this.props;
-        this.props.initOtherUser(navigation.state.params?navigation.state.params.otherUserId:'');
+        let {navigation,otherUsers,otherUserId}=this.props;
+        InteractionManager.runAfterInteractions(()=>{
+            this.props.initOtherUser(otherUsers[otherUserId]);
+        });
     }
     _renderFooter(){
         if(this.state.bottomRefreshing===1){
@@ -172,20 +174,21 @@ class OtherUserPassages extends Component{
         }
     }
     _bottomRefresh(e){
-        let {otherUser}=this.props,
-            {passages}=this.props.otherUser;
+        let {otherUsers,otherUserId}=this.props,
+            otherUser=otherUsers[otherUserId],
+            {passages}=otherUsers[otherUserId];
         if(passages.length<5){
             return;
         }
-        if(e.distanceFromEnd!=0&&this.state.bottomRefreshing==0){
+        if(e.distanceFromEnd>0&&this.state.bottomRefreshing==0){
             this.setState({bottomRefreshing:1});
-            this.props.loadMore(otherUser.userID,passages,()=>{
+            this.props.loadMore(otherUser,()=>{
                 this.setState({bottomRefreshing:0});
             });
         }
     }
     render(){
-        let {passages}=this.props.otherUser;
+        let {passages}=this.props.otherUsers[this.props.otherUserId];
         return (
             <FlatList
                 onScroll={this.props.onScroll}
@@ -207,106 +210,111 @@ class OtherUserPassages extends Component{
 }
 
 let actions={
-    initOtherUser:function (otherUserId) {
+    initOtherUser:function (otherUser) {
         return myFetch('http://www.baidu.com',{
             method:'GET',
         }).then(response=>response.text())
             .then(responseData=>{
+                let payload={};
+
+                payload[otherUser.userID]={
+                    userID:otherUser.userID,
+                    userInfo:{
+                        username:'令狐冲',
+                        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-7141_2018-04-18.jpg',
+                        motto:'公无渡河，公竟渡河',
+                        concernCount:32,
+                        fansCount:125,
+                    },
+                    relation:{
+                        isFollow:0,
+                    },
+                    passages:[
+                        {
+                            title:'中国古拳法心经',
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
+                            classify:PassageClassify[0],
+                            time:new Date().getTime(),
+                            readCount:12356,
+                            thumbCount:256,
+                            shareCount:555,
+                            commentCount:88
+                        },
+                        {
+                            title:'中国古拳法心经',
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
+                            classify:PassageClassify[0],
+                            time:new Date().getTime(),
+                            readCount:12356,
+                            thumbCount:256,
+                            shareCount:555,
+                            commentCount:88
+                        },
+                        {
+                            title:'中国古拳法心经',
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
+                            classify:PassageClassify[0],
+                            time:new Date().getTime(),
+                            readCount:12356,
+                            thumbCount:256,
+                            shareCount:555,
+                            commentCount:88
+                        },
+                        {
+                            title:'中国古拳法心经',
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
+                            classify:PassageClassify[0],
+                            time:new Date().getTime(),
+                            readCount:12356,
+                            thumbCount:256,
+                            shareCount:555,
+                            commentCount:88
+                        },
+                        {
+                            title:'中国古拳法心经',
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
+                            classify:PassageClassify[0],
+                            time:new Date().getTime(),
+                            readCount:12356,
+                            thumbCount:256,
+                            shareCount:555,
+                            commentCount:88
+                        },
+
+                    ],
+                };
                 return {
                    type:'OTHER_USER_INIT',
-                   payload:{
-                       userId:'aaa',
-                       userInfo:{
-                           username:'令狐冲',
-                           headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-7141_2018-04-18.jpg',
-                           motto:'公无渡河，公竟渡河',
-                           concernCount:32,
-                           fansCount:125,
-                       },
-                       passages:[
-                           {
-                               title:'中国古拳法心经',
-                               coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                               classify:PassageClassify[0],
-                               time:new Date().getTime(),
-                               readCount:12356,
-                               thumbCount:256,
-                               shareCount:555,
-                               commentCount:88
-                           },
-                           {
-                               title:'中国古拳法心经',
-                               coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                               classify:PassageClassify[0],
-                               time:new Date().getTime(),
-                               readCount:12356,
-                               thumbCount:256,
-                               shareCount:555,
-                               commentCount:88
-                           },
-                           {
-                               title:'中国古拳法心经',
-                               coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                               classify:PassageClassify[0],
-                               time:new Date().getTime(),
-                               readCount:12356,
-                               thumbCount:256,
-                               shareCount:555,
-                               commentCount:88
-                           },
-                           {
-                               title:'中国古拳法心经',
-                               coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                               classify:PassageClassify[0],
-                               time:new Date().getTime(),
-                               readCount:12356,
-                               thumbCount:256,
-                               shareCount:555,
-                               commentCount:88
-                           },
-                           {
-                               title:'中国古拳法心经',
-                               coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                               classify:PassageClassify[0],
-                               time:new Date().getTime(),
-                               readCount:12356,
-                               thumbCount:256,
-                               shareCount:555,
-                               commentCount:88
-                           },
-
-                       ],
-                       relation:{
-                           isFollow:0
-                       }
-                   }
+                   payload:payload
                 };
             }).catch(err=>{
                 alert(err)
             });
     },
-    loadMore:function (otherUserId,passages,cb) {
+    loadMore:function (otherUser,cb) {
         return myFetch('http://www.baidu.com',{
             method:'GET',
         }).then(response=>response.text())
             .then(responseData=>{
                 cb();
+                let payload={};
+                payload[otherUser.userID]=Object.assign({},otherUser,{
+                    passages:otherUser.passages.concat([
+                        {
+                            title:'中国古拳法心经',
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
+                            classify:PassageClassify[0],
+                            time:new Date().getTime(),
+                            readCount:12356,
+                            thumbCount:256,
+                            shareCount:555,
+                            commentCount:88
+                        },
+                    ])
+                });
                 return {
                     type:'OTHER_USER_LOAD_MORE',
-                    payload:{
-                        passages:passages.concat([
-                            {
-                                title:'中国古拳法心经',
-                                coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                                classify:PassageClassify[0],
-                                time:new Date().getTime(),
-                                readCount:12356,
-                                thumbCount:256,
-                                shareCount:555,
-                                commentCount:88
-                            },
-                        ])
-                    }
+                    payload:payload
                 };
             }).catch(err=>{
                 cb();
@@ -316,14 +324,14 @@ let actions={
 };
 function mapStateToProps(state) {
     return {
-        otherUser:state.OtherUser,
+        otherUsers:state.OtherUser,
         user:state.user
     }
 }
 function mapDispatchToProps(dispatch) {
     return {
-        initOtherUser:(otherUserId)=>{dispatch(actions.initOtherUser(otherUserId))},
-        loadMore:(otherUserId,passages,cb)=>{dispatch(actions.loadMore(otherUserId,passages,cb))}
+        initOtherUser:(otherUser)=>{dispatch(actions.initOtherUser(otherUser))},
+        loadMore:(otherUser,cb)=>{dispatch(actions.loadMore(otherUser,cb))}
     }
 }
 

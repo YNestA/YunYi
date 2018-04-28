@@ -105,7 +105,7 @@ class DiscoverPassage extends Component{
     }
     _openUser(){
         let navigation=this.props.navigation;
-        navigation.navigate('OtherUser');
+        navigation.navigate('OtherUser',{otherUserId:'123'});
     }
     render() {
         let passage=this.props.passage;

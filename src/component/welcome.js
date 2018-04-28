@@ -1,5 +1,6 @@
 import React,{Component} from 'react'
 import {connect} from 'react-redux'
+import {NavigationActions} from 'react-navigation'
 import {View, Text, StatusBar, BackHandler} from 'react-native'
 
 class Welcome extends Component{
@@ -21,7 +22,13 @@ class Welcome extends Component{
             if(ret) {
                 this.props.loadUser(ret.userInfo, ret.token);
                 setTimeout(() => {
-                    this.props.navigation.navigate('Main');
+                    let action=NavigationActions.reset({
+                        index:0,
+                        actions:[
+                            NavigationActions.navigate({routeName:'Main'})
+                        ]
+                    });
+                    this.props.navigation.dispatch(action);
                 }, 2000);
             }else{
                 setTimeout(() => {

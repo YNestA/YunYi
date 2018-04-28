@@ -91,10 +91,16 @@ class PassageFooter extends Component{
         this._commitComment=this._commitComment.bind(this);
     }
     _changeThumb(){
-        this.props.changeThumb(this.props.passage,this.props.user);
+        let {navigation,changeThumb,passages,passageID,user}=this.props;
+        if(user.isLogin){
+            changeThumb(passages[passageID],user);
+        }else{
+            navigation.navigate('LoginCenter');
+        }
     }
     _commitComment(){
-        let {user,passage}=this.props;
+        let {user,passages,passageID}=this.props,
+            passage=passages[passageID];
         this.setState({committing:true});
         this.props.commitComment(this.state.commentText,user,passage,(success)=>{
             if(success){
@@ -114,60 +120,74 @@ class PassageFooter extends Component{
         });
     }
     render(){
-        let passage=this.props.passage;
-        return(
-            <View style={styles.container}>
-                <TextInput
-                    style={styles.commentInput}
-                    placeholder={'写下你的感受...'}
-                    ref={'textInput'}
-                    multiline={true}
-                    maxLength={250}
-                    value={this.state.commentText}
-                    onChangeText={(text)=>{this.setState({commentText:text})}}
-                    onBlur={()=>{this.setState({inputFocused:false})}}
-                    onFocus={()=>{this.setState({inputFocused:true})}}
-                    underlineColorAndroid={'transparent'}
-                />
-                {   this.state.inputFocused?
-                    <TouchableOpacity
-                        disabled={this.state.committing}
-                        onPress={this._commitComment}
-                    >
-                        <View style={styles.sendView}><Text style={styles.sendText}>发送</Text></View>
-                    </TouchableOpacity>
-                    :
-                    <View style={styles.infoContainer}>
-                        <TouchableOpacity activeOpacity={0.9} onPress={()=>{
-                            this.refs.textInput.focus();
-                        }}>
-                            <View style={styles.infoBox}>
-                                <Image style={styles.infoImg} source={require('../../img/common/y_comment.png')}/>
-                                <Text style={styles.infoText}>{passage.commentCount>0?passage.commentCount:'评论'}</Text>
-                            </View>
+        let passages=this.props.passages,
+            passage=passages[this.props.passageID];
+        if (passage) {
+            return (
+                <View style={styles.container}>
+                    <TextInput
+                        style={styles.commentInput}
+                        placeholder={'写下你的感受...'}
+                        ref={'textInput'}
+                        multiline={true}
+                        maxLength={250}
+                        value={this.state.commentText}
+                        onChangeText={(text) => {
+                            this.setState({commentText: text})
+                        }}
+                        onBlur={() => {
+                            this.setState({inputFocused: false})
+                        }}
+                        onFocus={() => {
+                            this.setState({inputFocused: true})
+                        }}
+                        underlineColorAndroid={'transparent'}
+                    />
+                    {this.state.inputFocused ?
+                        <TouchableOpacity
+                            disabled={this.state.committing}
+                            onPress={this._commitComment}
+                        >
+                            <View style={styles.sendView}><Text style={styles.sendText}>发送</Text></View>
                         </TouchableOpacity>
-                        <TouchableWithoutFeedback activeOpacity={1} onPress={this._changeThumb}>
-                            <View style={styles.infoBox}>
-                                {(passage.ifThumb)?
-                                    <Image style={styles.infoImg}  source={require('../../img/common/thumb-fill.png')}/>
-                                    :
-                                    <Image style={styles.infoImg}  source={require('../../img/common/y_thumb.png')}/>
-                                }
-                                <Text style={[styles.infoText,(passage.ifThumb)?styles.thumbText:{}]}>{
-                                    passage.thumbCount>0?passage.thumbCount:'点赞'
-                                }</Text>
-                            </View>
-                        </TouchableWithoutFeedback>
-                        <TouchableOpacity>
-                            <View style={styles.infoBox}>
-                                <Image style={styles.infoImg} source={require('../../img/common/y_share.png')}/>
-                                <Text style={styles.infoText}>{passage.shareCount>0?passage.shareCount:'分享'}</Text>
-                            </View>
-                        </TouchableOpacity>
-                    </View>
-                }
-            </View>
-        )
+                        :
+                        <View style={styles.infoContainer}>
+                            <TouchableOpacity activeOpacity={0.9} onPress={() => {
+                                this.refs.textInput.focus();
+                            }}>
+                                <View style={styles.infoBox}>
+                                    <Image style={styles.infoImg} source={require('../../img/common/y_comment.png')}/>
+                                    <Text
+                                        style={styles.infoText}>{passage.commentCount > 0 ? passage.commentCount : '评论'}</Text>
+                                </View>
+                            </TouchableOpacity>
+                            <TouchableWithoutFeedback activeOpacity={1} onPress={this._changeThumb}>
+                                <View style={styles.infoBox}>
+                                    {(passage.ifThumb) ?
+                                        <Image style={styles.infoImg}
+                                               source={require('../../img/common/thumb-fill.png')}/>
+                                        :
+                                        <Image style={styles.infoImg} source={require('../../img/common/y_thumb.png')}/>
+                                    }
+                                    <Text style={[styles.infoText, (passage.ifThumb) ? styles.thumbText : {}]}>{
+                                        passage.thumbCount > 0 ? passage.thumbCount : '点赞'
+                                    }</Text>
+                                </View>
+                            </TouchableWithoutFeedback>
+                            <TouchableOpacity>
+                                <View style={styles.infoBox}>
+                                    <Image style={styles.infoImg} source={require('../../img/common/y_share.png')}/>
+                                    <Text
+                                        style={styles.infoText}>{passage.shareCount > 0 ? passage.shareCount : '分享'}</Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
+                    }
+                </View>
+            );
+        }else{
+            return <View/>;
+        }
     }
 }
 
@@ -184,12 +204,14 @@ let actions={
                 passageUuid:passage.passageID
             })
         });
+        let payload={};
+        payload[passage.passageID]=Object.assign({},passage,{
+            ifThumb:!passage.ifThumb,
+            thumbCount:passage.ifThumb?passage.thumbCount-1:passage.thumbCount+1
+        });
         return {
             type:'CHANGE_PASSAGE_THUMB',
-            payload:{
-                ifThumb:!passage.ifThumb,
-                thumbCount:passage.ifThumb?passage.thumbCount-1:passage.thumbCount+1
-            }
+            payload:payload
         }
     },
     commitComment:function (commentText,user,passage,cb) {
@@ -208,22 +230,24 @@ let actions={
                 //alert(JSON.stringify(responseData));
                 if(responseData.code==10001){
                     cb(true);
+                    let payload={};
+                    payload[passage.passageID]=Object.assign({},passage,{
+                        commentCount:passage.commentCount+1,
+                        comments:[
+                            {
+                                name:user.userInfo.username,
+                                content:commentText,
+                                time:new Date().getTime(),
+                                userId:user.userInfo.userID,
+                                commentId:responseData.data.commentId,
+                                headImg:user.userInfo.headImg,
+                                thumbCount:0,
+                            },
+                        ].concat(passage.comments)
+                    });
                     return {
                         type:'COMMIT_PASSAGE_COMMENT',
-                        payload:{
-                            commentCount:passage.commentCount+1,
-                            comments:[
-                                {
-                                    name:user.userInfo.username,
-                                    content:commentText,
-                                    time:new Date().getTime(),
-                                    userId:user.userInfo.userID,
-                                    commentId:responseData.data.commentId,
-                                    headImg:user.userInfo.headImg,
-                                    thumbCount:0,
-                                },
-                            ].concat(passage.comments)
-                        }
+                        payload:payload
                     }
                 }else{
                     cb(false);
@@ -237,7 +261,7 @@ let actions={
 
 function mapStateToProps(state) {
     return {
-        passage:state.passage,
+        passages:state.passage,
         user:state.user
     }
 }

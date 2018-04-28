@@ -47,7 +47,12 @@ class HeaderTitle extends Component{
         this._follow=this._follow.bind(this);
     }
     _follow(){
-        this.props.follow(this.props.author,this.props.user,this.props.navigation);
+        let {user,follow,author,navigation}=this.props;
+        if(user.isLogin){
+            follow(author,user,navigation);
+        }else{
+            navigation.navigate('LoginCenter');
+        }
     }
     render(){
         let {author}=this.props;

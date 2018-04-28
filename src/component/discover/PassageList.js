@@ -23,7 +23,8 @@ class PassageList extends Component{
         super(props);
         this.state={
             topRefreshing:0,
-            bottomRefreshing:0
+            bottomRefreshing:0,
+            noMore:false
         };
         this._initialPassages=this._initialPassages.bind(this);
         this._renderFooter=this._renderFooter.bind(this);
@@ -53,20 +54,17 @@ class PassageList extends Component{
     _topRefresh(){
         if(this.state.topRefreshing===0&&this.state.bottomRefreshing===0){
             this.setState({topRefreshing:1});
-            this.props.topRefresh(this.props.passageLists,this.props.classify,(value)=>{
-                this.setState({topRefreshing:value});
+            this.props.topRefresh(this.props.passageLists,this.props.classify,(state)=>{
+                this.setState(state);
             })
         }
     }
     _bottomRefresh(e){
-        if(e.distanceFromEnd!=0&&this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
+        if(e.distanceFromEnd!=0&&!this.state.noMore&&this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
             this.setState({bottomRefreshing:1});
-            this.props.bottomRefresh(this.props.passageLists,this.props.classify,(value)=>{
-                this.setState({bottomRefreshing:value});
+            this.props.bottomRefresh(this.props.passageLists,this.props.classify,(state)=>{
+                this.setState(state);
             });
-            //this.props.bottomRefresh(this.props.passageLists,this.props.classify,(value)=>{
-            //    this.setState({refreshing:value});
-            //});
         }
     }
     render() {
@@ -122,7 +120,7 @@ let actions={
                 let data=responseData.data,
                     newPassageLists=Object.assign({},passageLists);
                 newPassageLists[classify]={
-                    passages:data.map((item)=>{
+                    passages:data.articles.map((item)=>{
                         return {
                             author:{
                                 authorID:item.userUuid,
@@ -139,7 +137,7 @@ let actions={
                             shareCount:item.shareNum
                         };
                     }),
-                    pageCount:0
+                    pageCount:data.cursor
                 };
                 return{
                     type:'INITIAL_PASSAGES',
@@ -158,7 +156,7 @@ let actions={
                 };
             });
     },
-    bottomRefresh:function (passageLists,classify,setLoading) {
+    bottomRefresh:function (passageLists,classify,cb) {
         return myFetch(`http://${ip}:4441/api/articles/load/${passageLists[classify].pageCount}/?classify=${classify}`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
@@ -186,7 +184,7 @@ let actions={
                         })),
                         pageCount: data.cursor
                     };
-                    setLoading(0);
+                    cb({bottomRefreshing: 0});
                     return {
                         type: 'BOTTOM_REFRESH',
                         payload: {
@@ -195,16 +193,16 @@ let actions={
                         }
                     };
                 }else if(responseData.code=='10111'){
-                    setLoading(0);
+                    cb({bottomRefreshing: 0,noMore:true});
                     showTip('没有更多文章');
                 }
             }).catch((error)=>{
                 alert(error);
-                setLoading(0);
+                cb({bottomRefreshing: 0});
                 showTip('网络好像有点问题~');
             });
     },
-    topRefresh:function (passageLists,classify,setLoading) {
+    topRefresh:function (passageLists,classify,cb) {
         return myFetch(`http://${ip}:4441/api/articles/refresh/?classify=${classify}`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
@@ -212,7 +210,7 @@ let actions={
                     let data = responseData.data,
                         newPassageLists = Object.assign({}, passageLists);
                     newPassageLists[classify] = {
-                        passages: data.map((item) => {
+                        passages: data.articles.map((item) => {
                             return {
                                 author: {
                                     authorID: item.userUuid,
@@ -229,9 +227,9 @@ let actions={
                                 shareCount: item.shareNum
                             };
                         }),
-                        pageCount: 0
+                        pageCount: data.cursor
                     };
-                    setLoading(0);
+                    cb({topRefreshing:0,noMore:false});
                     return {
                         type: 'TOP_REFRESH',
                         payload: {
@@ -241,11 +239,11 @@ let actions={
                     };
                 }else{
                     showTip('网络好像有点问题~');
-                    setLoading(0);
+                    cb({topRefreshing:0,noMore:false});
                 }
             }).catch((error)=>{
-                console.log(error);
-                setLoading(0);
+                alert(error);
+                cb({topRefreshing:0,noMore:false});
                 showTip('网络好像有点问题~');
             });
     }

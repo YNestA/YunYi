@@ -1,4 +1,4 @@
-const initialState={
+export const initPassageData={
     passageID:null,
     loading:true,
     ifThumb:false,
@@ -10,6 +10,9 @@ const initialState={
     thumbCount:0,
     shareCount:0,
     isCoverBlur:false,
+};
+const initialState={
+
 };
 export default function passageReducer(state=initialState,action) {
     switch(action.type){

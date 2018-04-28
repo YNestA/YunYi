@@ -11,9 +11,9 @@ export default class SearchResult extends Component{
     render(){
         let {result,navigation}=this.props;
         return (
-            <View>
+            <View style={{paddingTop:screenUtils.autoSize(10)}}>
                 <SearchUsers users={result.users} navigation={navigation} title={'相关用户'}/>
-                <SearchPassages/>
+                <SearchPassages passages={result.passages} navigation={navigation}/>
             </View>
         );
     }

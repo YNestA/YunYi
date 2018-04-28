@@ -7,7 +7,9 @@ const initialState={
 
 export default function concernReducer(state=initialState,action) {
     switch (action.type){
-        case 'INIT_DATA':
+        case 'CONCERN_BOTTOM_REFRESH':
+        case 'CONCERN_TOP_REFRESH':
+        case 'INIT_CONCERN_DATA':
             return Object.assign({},state,action.payload);
         case 'NETWORK_ERROR':
             return Object.assign({},state,action.payload);

@@ -7,8 +7,6 @@ import {connect} from 'react-redux'
 
 const styles=StyleSheet.create({
     container:{
-        paddingTop:StatusBar.currentHeight,
-        backgroundColor:'#fff',
         flex:1
     }
 });
@@ -32,7 +30,7 @@ class Search extends Component{
     }
 
     render() {
-        let {search,onSearch}=this.props;
+        let {navigation,search,onSearch}=this.props;
         return (
             <View style={styles.container}>
                 <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
@@ -40,7 +38,7 @@ class Search extends Component{
                 <ScrollView>
                     {search.showHotWords ?
                         <HotWords hotWords={search.hotWords} onSearch={onSearch}/> :
-                        <SearchResult result={search.result}/>
+                        <SearchResult result={search.result} navigation={navigation}/>
                     }
                 </ScrollView>
             </View>
@@ -49,7 +47,6 @@ class Search extends Component{
 }
 let actions={
     onSearch:function (keyword) {
-        alert(keyword);
         return {
             type:'SEARCH',
             payload:{
@@ -92,6 +89,66 @@ let actions={
                         userID:'888',
                         headImg:''
                     }],
+                    passages:[
+                        {
+                            author:{
+                                name:'克林',
+                                headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            },
+                            passageID:'12212',
+                            time:new Date().getTime(),
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            title:'王子田刘涛',
+                            sections:[{text:'让晚风轻轻吹送了落霞'},{text:'我已习惯每个傍晚去想她'}],
+                            readCount:6584
+                        },
+                        {
+                            author:{
+                                name:'克林',
+                                headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            },
+                            passageID:'12212',
+                            time:new Date().getTime(),
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            title:'王子田刘涛王子田刘涛王子田刘涛王子田刘涛',
+                            sections:[{text:'让晚风轻轻吹送了落霞'},{text:'啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊我已习惯每个傍晚去想她'}],
+                            readCount:6584
+                        },
+                        {
+                            author:{
+                                name:'克林',
+                                headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            },
+                            passageID:'12212',
+                            time:new Date().getTime(),
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            title:'王子田刘涛',
+                            sections:[{text:'让晚风轻轻吹送了落霞'},{text:'我已习惯每个傍晚去想她'}],
+                            readCount:6584
+                        },{
+                            author:{
+                                name:'克林',
+                                headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            },
+                            passageID:'12212',
+                            time:new Date().getTime(),
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            title:'王子田刘涛',
+                            sections:[{text:'让晚风轻轻吹送了落霞'},{text:'我已习惯每个傍晚去想她'}],
+                            readCount:6584
+                        },{
+                            author:{
+                                name:'克林',
+                                headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            },
+                            passageID:'12212',
+                            time:new Date().getTime(),
+                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-9127_2018-04-26.jpg',
+                            title:'王子田刘涛',
+                            sections:[{text:'让晚风轻轻吹送了落霞'},{text:'我已习惯每个傍晚去想她'}],
+                            readCount:6584
+                        },
+                    ]
                 }
             }
         };

@@ -8,6 +8,9 @@ import {screenUtils} from "../../tools/ScreenUtils";
 import Cover from './cover'
 import Header from './header'
 import OtherUserPassages from './OtherUserPassages'
+import myFetch, {encodePostParams} from "../../tools/MyFetch";
+import {initOtherUserData} from '../../redux/OtherUserReducer'
+import {ip} from "../../settings";
 
 const styles=StyleSheet.create({
     userImg:{
@@ -100,19 +103,24 @@ class OtherUser extends Component{
         this._scroll=this._scroll.bind(this);
     }
     componentDidMount(){
+
     }
     _backHandler(){
         this.props.navigation.goBack(null);
         return true;
     }
     componentWillMount(){
+        let {params}=this.props.navigation.state;
+        this.otherUserId=params&&params.otherUserId;
+        this.otherUserId&&this.props.registerOtherUser(this.otherUserId);
         BackHandler.addEventListener('hardwareBackPress', this._backHandler);
     }
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     _renderCover(){
-        let {otherUser,navigation}=this.props;
+        let {otherUsers,navigation}=this.props,
+            otherUser=otherUsers[this.otherUserId];
         return(
             <Cover coverImg={otherUser.userInfo.headImg}>
                 <Image style={styles.userImg} source={{uri:otherUser.userInfo.headImg}}/>
@@ -147,39 +155,80 @@ class OtherUser extends Component{
         });
     }
     render(){
-        let {otherUser,navigation}=this.props;
-        return (
-            <View style={{flex:1}}>
-                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={this.state.headerOpacity<0.6?'light-content':'dark-content'}/>
-                <Header user={otherUser} navigation={navigation} opacity={this.state.headerOpacity}/>
-                <OtherUserPassages onScroll={this._scroll} navigation={navigation} cover={this._renderCover()}/>
-                <View style={styles.followFooter}>
-                    <TouchableOpacity>
-                        <View style={styles.footerItem}>
-                            <Image style={styles.followImg} source={require('../../img/common/addpeople.png')}/>
-                            <Text style={styles.followText}>关注</Text>
-                        </View>
-                    </TouchableOpacity>
+        let {otherUsers,navigation,user}=this.props,
+            otherUser=otherUsers[this.otherUserId];
+        if(otherUser) {
+            return (
+                <View style={{flex: 1}}>
+                    <StatusBar translucent={true} backgroundColor={'transparent'}
+                               barStyle={this.state.headerOpacity < 0.6 ? 'light-content' : 'dark-content'}/>
+                    <Header user={otherUser} navigation={navigation} opacity={this.state.headerOpacity}/>
+                    <OtherUserPassages onScroll={this._scroll} otherUserId={this.otherUserId} navigation={navigation}
+                                       cover={this._renderCover()}/>
+                    <View style={styles.followFooter}>
+                        <TouchableOpacity onPress={()=>{
+                            this.props.toggleFollow(otherUser,user);
+                        }}>
+                            <View style={styles.footerItem}>
+                                {otherUser.relation.isFollow?<Image style={styles.followImg} source={require('../../img/common/offline.png')}/>
+                                    :<Image style={styles.followImg} source={require('../../img/common/addpeople.png')}/>}
+                                <Text style={[styles.followText,otherUser.relation.isFollow?{color:'#d81e06'}:{}]}>{otherUser.relation.isFollow?'取消关注':'关注'}</Text>
+                            </View>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-        );
+            );
+        }else{
+            return <View/>;
+        }
     }
 }
 
 let actions={
-
+    registerOtherUser:function (otherUserId) {
+        let payload={};
+        payload[otherUserId]=Object.assign({},initOtherUserData,{userID:otherUserId});
+        return {
+            type:'REGISTER_OTHER_USER',
+            payload:payload
+        }
+    },
+    toggleFollow:function (otherUser,user) {
+        let url=otherUser.relation.isFollow?`http://${ip}:4441/api/user/relation/unfollow/`:`http://${ip}:4441/api/user/relation/follow/`;
+        url='http://www.baidu.com';
+        myFetch(url,{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'user_token':user.token,
+            },
+            body:encodePostParams({
+                toUserUuid:otherUser.userID,
+                type:1
+            })
+        });
+        let payload={};
+        payload[otherUser.userID]=Object.assign({},otherUser,{
+            relation:{isFollow:!otherUser.relation.isFollow}
+        });
+        return {
+            type:'OTHER_USER_TOGGLE_FOLLOW',
+            payload:payload
+        };
+    }
 };
 
 function mapStateToProps(state) {
     return {
         user:state.user,
-        otherUser:state.OtherUser,
+        otherUsers:state.OtherUser,
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return {
-
+        registerOtherUser:(otherUserId)=>{dispatch(actions.registerOtherUser(otherUserId))},
+        toggleFollow:(otherUser,user)=>{dispatch(actions.toggleFollow(otherUser,user))}
     }
 }
 

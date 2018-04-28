@@ -127,6 +127,10 @@ export default class ConcernPassage extends Component{
         let navigation=this.props.navigation;
         navigation.navigate('OtherUser');
     }
+    _getTime(time){
+        let date=new Date(time);
+        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+    }
     render() {
         let passage=this.props.passage;
         return (
@@ -134,7 +138,7 @@ export default class ConcernPassage extends Component{
                 <TouchableWithoutFeedback onPress={this._openUser}>
                     <View style={styles.authorContainer}>
                         <View style={styles.author}>
-                            <Image style={styles.authorHeadImg} source={require('../../img/asuka.jpg')}/>
+                            <Image style={styles.authorHeadImg} source={{uri:passage.author.headImg}}/>
                             <Text numberOfLines={1} style={styles.authorName}>{passage.author&&passage.author.name}</Text>
                         </View>
                         <Text style={styles.concernText}>{passage.author.concerned?'互相关注':'已关注'}</Text>
@@ -144,16 +148,12 @@ export default class ConcernPassage extends Component{
                     <View style={styles.passageContainer}>
                         <Text style={styles.passageTitle}>{passage.title}</Text>
                         <Text style={styles.passageText} numberOfLines={2}>{passage.text}</Text>
-                        <Image style={styles.coverImg} source={require('../../img/hikari.jpg')}/>
+                        <Image style={styles.coverImg} source={{uri:passage.coverImg}}/>
                         <View style={styles.otherInfo}>
                             <View style={{flexDirection:'row'}}>
                                 <View style={styles.thumbContainer}>
-                                    {passage.thumbHeadImgs&&[
-                                        require('../../img/user1.jpg'),
-                                        require('../../img/user2.jpg'),
-                                        require('../../img/user3.jpg'),
-                                        require('../../img/user1.jpg')
-                                    ].map((item,index)=><Image style={styles.thumbUserHeadImg} source={item} key={index}/>)}
+                                    {/*passage.thumbHeadImgs&&passage.thumbHeadImgs.map((item,index)=><Image style={styles.thumbUserHeadImg} source={{uri:item}} key={index}/>)*/}
+                                    <Text>{this._getTime(passage.createTime)}</Text>
                                 </View>
                                 <View style={styles.thumbCountContainer}>
                                     <Image style={styles.infoImg} source={require('../../img/common/y_thumb.png')}/>

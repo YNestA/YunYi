@@ -68,7 +68,7 @@ class Comment extends Component{
     }
     _getTime(time){
         let date=new Date(time);
-        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}`;
+        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     }
     render(){
         let comment=this.props.comment;
@@ -113,7 +113,7 @@ class AllComments extends Component{
     static navigationOptions=({navigation})=>{
         let {params}=navigation.state;
         return {
-            headerTitle:params?`评论${params.commentCount}条`:'',
+            headerTitle:params?`评论${params.passage.commentCount}条`:'',
             headerRight:<View/>
         }
     };
@@ -123,22 +123,27 @@ class AllComments extends Component{
             loading:true
         }
     }
+    componentWillMount(){
+        let {params}=this.props.navigation.state;
+        this.passageID=params&&params.passage.passageID;
+    }
     componentDidMount(){
-        let {passage,user,navigation}=this.props;
-        navigation.setParams({commentCount:passage.commentCount});
+        let {passages,user,navigation}=this.props,
+            passage=passages[this.passageID];
+        //navigation.setParams({commentCount:passage.commentCount});
         this.props.getAllComments(passage,user,()=>{
             this.setState({loading:false});
         });
     }
 
     render(){
-        let {passage}=this.props;
+        let {passages}=this.props,
+            passage=passages[this.passageID];
         if(this.state.loading){
             return <Loading containerStyle={{flex:1}}/>;
-        }else {
+        }else if(passage){
             return (
                 <View style={{flex: 1}}>
-                    <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                     {passage.allComments.length ?
                         <FlatList
                             style={{backgroundColor: '#fff'}}
@@ -155,14 +160,17 @@ class AllComments extends Component{
                         }}>暂无评论</Text></View>
                     }
                 </View>
-            );
+            )
+        }else{
+            return <View/>;
         }
+
     }
 }
 
 let action={
     getAllComments:function (passage,user,cb) {
-        return myFetch(`http://${ip}:4441/api/article/${passage.passageID}/comments/show/`,{
+        return myFetch(`http://${ip}:4441/api/article/comments/show/${passage.passageID}`,{
             method:'GET',
             headers:{
                 'Content-Type': 'application/x-www-form-urlencoded',
@@ -173,33 +181,35 @@ let action={
                 //alert(JSON.stringify(responseData));
                 if(responseData.code==10001) {
                     cb();
+                    let payload={};
+                    payload[passage.passageID]=Object.assign({},passage,{
+                        allComments: responseData.data.map((item)=>{
+                            return {
+                                name:item.nickname,
+                                content:item.content,
+                                time:item.createTime,
+                                userId:item.userUuid,
+                                commentId:item.commentUuid,
+                                headImg:item.avatar,
+                                thumbCount:item.likeNum,
+                                everThumb:false
+                            } ;
+                        }),
+                    });
                     return {
                         type: 'GET_PASSAGE_ALL_COMMENTS',
-                        payload: {
-                            allComments: responseData.data.map((item)=>{
-                               return {
-                                   name:item.nickname,
-                                   content:item.content,
-                                   time:item.createTime,
-                                   userId:item.userUuid,
-                                   commentId:item.commentUuid,
-                                   headImg:item.avatar,
-                                   thumbCount:item.likeNum,
-                                   everThumb:false
-                               } ;
-                            }),
-                        }
+                        payload: payload
                     };
                 }
             }).catch(err=>{
-                //alert(err);
+                alert(err);
             })
     }
 };
 function mapStateToProps(state) {
     return {
         user:state.user,
-        passage:state.passage
+        passages:state.passage
     }
 }
 function mapDispatchToProps(dispatch) {

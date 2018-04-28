@@ -7,6 +7,7 @@ import {
 import {screenUtils, myFetch, encodePostParams} from "../../tools/MyTools";
 import {connect} from "react-redux";
 import {ip} from "../../settings";
+import {NavigationActions} from "react-navigation";
 
 function showTip(message,hiddenCb) {
     Toast.show(message,{
@@ -169,7 +170,7 @@ class PhoneLoginRegister extends Component{
             fromRegister=params?params.fromRegister:false;
         return(
             <View style={styles.container}>
-                <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                 <View style={styles.field}>
                     <Text style={styles.fieldText}>手机号</Text>
                     <TextInput
@@ -250,7 +251,13 @@ let actions={
                         data:user
                     });
                     showTip('登录成功',cb);
-                    navigation.navigate('Main');
+                    let action=NavigationActions.reset({
+                        index:0,
+                        actions:[
+                            NavigationActions.navigate({routeName:'Main'})
+                        ]
+                    });
+                    navigation.dispatch(action);
                     return {
                         type:'LOGIN',
                         payload:user

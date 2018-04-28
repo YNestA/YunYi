@@ -4,7 +4,8 @@ import {screenUtils} from "../../tools/ScreenUtils";
 
 const styles=StyleSheet.create({
     container:{
-        paddingHorizontal:screenUtils.autoSize(8)
+        paddingHorizontal:screenUtils.autoSize(8),
+        backgroundColor:'#fff'
     },
     title:{
         fontSize:screenUtils.autoFontSize(20),

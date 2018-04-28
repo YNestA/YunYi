@@ -8,6 +8,7 @@ import {HeaderButton} from '../../navigation/navi'
 import {connect} from "react-redux";
 import Toast from 'react-native-root-toast'
 import {ip} from "../../settings";
+import {NavigationActions} from "react-navigation";
 
 const styles=StyleSheet.create({
     container:{
@@ -34,8 +35,9 @@ const styles=StyleSheet.create({
         padding:0,
         color:'#444',
         height:screenUtils.autoSize(60),
+        paddingVertical:screenUtils.autoSize(15),
         fontSize:screenUtils.autoFontSize(17),
-        lineHeight:screenUtils.autoSize(60)
+        lineHeight:screenUtils.autoSize(30)
     },
     loginBtn:{
         marginTop:screenUtils.autoSize(30),
@@ -138,7 +140,13 @@ class UsernameLogin extends Component{
                         });
                         this.props.login(userInfo, responseData.data.token);
                         showTip('登录成功',activeFunc);
-                        this.props.navigation.navigate('Main');
+                        let action=NavigationActions.reset({
+                            index:0,
+                            actions:[
+                                NavigationActions.navigate({routeName:'Main'})
+                            ]
+                        });
+                        this.props.navigation.dispatch(action);
                     }else if(responseData.code==10103){
                         showTip('用户不存在',activeFunc);
                     }else if(responseData.code==10107){
@@ -165,7 +173,7 @@ class UsernameLogin extends Component{
     render(){
         return(
             <View style={styles.container}>
-                <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                 <View style={styles.field}>
                     <Text style={styles.fieldText}>用户名</Text>
                     <TextInput
@@ -174,7 +182,7 @@ class UsernameLogin extends Component{
                         placeholder={'请输入昵称或手机号'}
                         maxLength={15}
                      //   keyboardType={'numeric'}
-                        caretHidden={true}
+                        //caretHidden={true}
                         onChangeText={(text)=>{
                             this.setState({username:text});
                         }}
@@ -187,7 +195,7 @@ class UsernameLogin extends Component{
                         style={styles.fieldInput}
                         placeholder={'请输入密码'}
                         maxLength={16}
-                        caretHidden={true}
+                        //caretHidden={true}
                         secureTextEntry={true}
                         onChangeText={(text)=>{
                             this.setState({password:text});

@@ -98,7 +98,7 @@ class Comment extends Component{
     }
     _getTime(time){
         let date=new Date(time);
-        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}`;
+        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     }
     render(){
         let comment=this.props.comment;
@@ -154,7 +154,7 @@ class Comments extends Component{
             return (
                 <View style={styles.footer}>
                     <TouchableOpacity onPress={()=>{
-                        this.props.navigation.navigate('AllComments');
+                        this.props.navigation.navigate('AllComments',{passage:this.props.passages[this.props.passageID]});
                     }}>
                         <View><Text style={styles.footerText}>查看所有评论></Text></View>
                     </TouchableOpacity>
@@ -167,7 +167,8 @@ class Comments extends Component{
         }
     }
     render(){
-        let passage=this.props.passage;
+        let passages=this.props.passages,
+            passage=passages[this.props.passageID];
         return(
             <FlatList
                 style={[styles.container,!passage.isCoverBlur?styles.whiteBackground:{}]}
@@ -188,7 +189,7 @@ let actions={
 };
 function mapStateToProps(state) {
     return{
-        passage:state.passage
+        passages:state.passage
     }
 }
 function mapDispatchToProps(dispatch) {

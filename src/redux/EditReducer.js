@@ -22,6 +22,9 @@ const initialState = {
 */
 export default function editReducer(state = initialState, action) {
     switch (action.type) {
+        case 'COMPLETE_EDIT':
+        case 'CLEAN_EDIT':
+            return initialState;
         case 'START_IMG':
             return Object.assign({}, state, action.payload);
         case 'CHANGE_TITLE':

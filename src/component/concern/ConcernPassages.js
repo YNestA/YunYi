@@ -1,16 +1,29 @@
 import React,{Component} from 'react'
-import {View,FlatList,Text,Image,ScrollView,TouchableWithoutFeedback} from 'react-native'
+import {View, FlatList, Text, Image, ScrollView, TouchableWithoutFeedback, InteractionManager} from 'react-native'
 import {screenUtils,myFetch,NetworkError,Loading} from '../../tools/MyTools'
 import {connect} from 'react-redux'
 import ConcernPassage from './ConcernPassage'
 import ConcernUsers from './ConcernUsers'
+import {ip} from "../../settings";
+import Toast from "react-native-root-toast";
 
+function showTip(message,onHidden){
+    Toast.show(message,{
+        position: Toast.positions.BOTTOM,
+        shadow: true,
+        animation: true,
+        hideOnPress: true,
+        onHidden:onHidden
+    });
+}
 class ConcernPassages extends Component{
     constructor(props){
         super(props);
         this.state={
+            firstLoading:true,
             topRefreshing:0,
-            bottomRefreshing:0
+            bottomRefreshing:0,
+            noMore:false
         };
         this._initialData=this._initialData.bind(this);
         this._renderFooter=this._renderFooter.bind(this);
@@ -24,26 +37,29 @@ class ConcernPassages extends Component{
         );
     }
     _topRefresh(){
-        let {passages}=this.props.concern;
-        console.log(this.state);
+        let {users}=this.props;
         if(this.state.topRefreshing===0&&this.state.bottomRefreshing===0){
             this.setState({topRefreshing:1});
-            this.props.topRefresh(passages,(value)=>{
-                this.setState({topRefreshing:value});
+            this.props.topRefresh(this.props.user,(state) => {
+                this.setState(state);
             })
         }
     }
-    _bottomRefresh(){
-        let {passages}=this.props.concern;
-        if(this.state.bottomRefreshing===0&&this.state.topRefreshing===0) {
+    _bottomRefresh(e){
+        let {user,concern}=this.props;
+
+        if(e.distanceFromEnd>0&&!this.state.noMore&&this.state.bottomRefreshing===0&&this.state.topRefreshing===0) {
+            //alert(e.distanceFromEnd);
             this.setState({bottomRefreshing: 1});
-            this.props.bottomRefresh(passages, (value) => {
-                this.setState({bottomRefreshing: value});
+            this.props.bottomRefresh(concern,user,(state) => {
+                this.setState(state);
             });
         }
     }
-    _initialData(){
-        this.props.initialData();
+    _initialData(user){
+        this.props.initialData(user,()=>{
+            this.setState({firstLoading:false});
+        });
     }
     _renderFooter(){
         if(this.state.bottomRefreshing===1){
@@ -58,23 +74,25 @@ class ConcernPassages extends Component{
         }
     }
     componentDidMount(){
-        this._initialData();
+        InteractionManager.runAfterInteractions(()=>{
+            this._initialData(this.props.user);
+        });
     }
     render() {
         let {users,passages,networkError}=this.props.concern;
         if (networkError) {
             return <NetworkError containerStyle={{flex:1}} reload={()=>{
                 this.props.setNetworkError(false);
-                this._initialData();
+                this._initialData(this.props.user);
             }}/>;
         }else{
 
             return(
-                passages.length?
+                !this.state.firstLoading?
                     <FlatList
                         refreshing={!!this.state.topRefreshing}
                         onRefresh={this._topRefresh}
-                        onEndReachedThreshold={0.05}
+                        onEndReachedThreshold={0.1}
                         onEndReached={this._bottomRefresh}
                         extraData={this.state}
                         data={passages}
@@ -93,96 +111,6 @@ class ConcernPassages extends Component{
     }
 }
 
-let tempData={
-    users:[{
-        name:'刘涛',
-        userID:'666',
-        headImg:''
-    },{
-        name:'安生抢',
-        userID:'777',
-        headImg:''
-    },{
-        name:'王子田',
-        userID:'888',
-        headImg:''
-    },{
-        name:'刘涛',
-        userID:'666',
-        headImg:''
-    },{
-        name:'安生抢',
-        userID:'777',
-        headImg:''
-    },{
-        name:'王子田',
-        userID:'888',
-        headImg:''
-    },{
-        name:'刘涛',
-        userID:'666',
-        headImg:''
-    },{
-        name:'安生抢',
-        userID:'777',
-        headImg:''
-    },{
-        name:'王子田',
-        userID:'888',
-        headImg:''
-    }],
-    passages:[
-        {
-            author:{
-                authorID:'A20180322',
-                headImg:'../../img/asuka.jpg',
-                name:'周瑜',
-                concerned:true,
-            },
-            title:'hahahhahahha',
-            text:'啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-            coverImg:'../../img/hikari.jpg',
-            createTime:'2019-9-30 12:30',
-            thumbHeadImgs:[],
-            passageID:'P20180322',
-            thumbCount:250,
-            commentCount:250,
-            shareCount:250
-        },{
-            author:{
-                authorID:'A20180322',
-                headImg:'../../img/asuka.jpg',
-                name:'中国古拳法掌门人',
-                concerned:false,
-            },
-            createTime:'2019-9-30 12:30',
-            title:'人人有书读，人人有功练',
-            text:'啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-            coverImg:'../../img/hikari.jpg',
-            thumbHeadImgs:[],
-            passageID:'P20180322',
-            thumbCount:250,
-            commentCount:250,
-            shareCount:250
-        },{
-            author:{
-                authorID:'A20180322',
-                headImg:'../../img/asuka.jpg',
-                name:'中国古拳法掌门人',
-                concerned:true
-            },
-            createTime:'2019-9-30 12:30',
-            title:'人人有书读，人人有功练',
-            text:'啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊啊',
-            coverImg:'../../img/hikari.jpg',
-            thumbHeadImgs:[],
-            passageID:'P20180322',
-            thumbCount:250,
-            commentCount:250,
-            shareCount:250
-        }
-    ]
-};
 let actions={
     setNetworkError:function (value) {
         return {
@@ -192,72 +120,179 @@ let actions={
             }
         }
     },
-    initialData:function () {
-        return myFetch('https://www.baidu.com',{method:'GET',timeout:10000})
-            .then((response)=>response.text)
+    initialData:function (user,cb) {
+        return myFetch(`http://${ip}:4441/api/articles/user/followed/`,{
+            method:'GET',
+            timeout:10000,
+            headers:{
+                'user_token':user.token
+            }
+        })
+            .then((response)=>response.json())
             .then(responseData=>{
-                return {
-                    type:'INIT_DATA',
-                    payload:{
-                        users:tempData.users,
-                        passages:tempData.passages,
-                        pageCount:0
-                    },
+                //alert(JSON.stringify(responseData));
+                let data=responseData.data;
+                if(responseData.code==10001){
+                    cb();
+                    return {
+                        type:'INIT_CONCERN_DATA',
+                        payload:{
+                            users:data.recommendedUser.map((item)=>{
+                                return {
+                                    name:item.nickname,
+                                    userID:item.userUuid,
+                                    headImg:item.avatar,
+                                }
+                            }),
+                            passages:data.articles.map((item)=>{
+                                return {
+                                    author:{
+                                        authorID:item.userUuid,
+                                        headImg:item.avatar,
+                                        name:item.nickname,
+                                        concerned:item.relationType==2
+                                    },
+                                    createTime:item.createTime,
+                                    title:item.title,
+                                    coverImg:item.image,
+                                    thumbHeadImgs:[item.image,item.image,item.image,item.image],
+                                    passageID:item.passageUuid,
+                                    thumbCount:item.likeNum,
+                                    commentCount:item.commentNum,
+                                    shareCount:item.shareNum
+                                };
+                            }),
+                            pageCount:data.cursor
+                        },
+                    }
+                }else{
+                    showTip('网络好像有点问题');
                 }
             }).catch((error)=>{
-                console.log(error);
-                return {
-                    type:'NETWORK_ERROR',
-                    payload: {
-                        networkError:true,
-                    }
-                };
+                alert(error);
+                showTip('网络好像有点问题');
             });
     },
-    topRefresh:function () {
-        return myFetch('https://www.baidu.com',{method:'GET',timeout:10000})
-            .then((response)=>response.text)
+    topRefresh:function (user,cb) {
+        return myFetch(`http://${ip}:4441/api/articles/user/followed/`,{
+            method:'GET',
+            timeout:10000,
+            headers:{
+                'user_token':user.token
+            }
+        })
+            .then((response)=>response.json())
             .then(responseData=>{
+                let data=responseData.data;
+                //alert(JSON.stringify(data));
+                cb({topRefreshing:0,noMore:false});
+                if(responseData.code==10001){
+                    return {
+                        type:'CONCERN_TOP_REFRESH',
+                        payload:{
 
-            }).catch((error)=>{
-                console.log(error);
-                return {
-                    type:'NETWORK_ERROR',
-                    payload: {
-                        networkError:true,
+                            passages:data.articles.map((item)=>{
+                                return {
+                                    author:{
+                                        authorID:item.userUuid,
+                                        headImg:item.avatar,
+                                        name:item.nickname,
+                                        concerned:item.relationType==2
+                                    },
+                                    createTime:item.createTime,
+                                    title:item.title,
+                                    coverImg:item.image,
+                                    thumbHeadImgs:[item.image,item.image,item.image,item.image],
+                                    passageID:item.passageUuid,
+                                    thumbCount:item.likeNum,
+                                    commentCount:item.commentNum,
+                                    shareCount:item.shareNum
+                                };
+                            }),
+                            users:data.recommendedUser.map((item)=>{
+                                return {
+                                    name:item.nickname,
+                                    userID:item.userUuid,
+                                    headImg:item.avatar
+                                }
+                            }),
+                            pageCount:data.cursor
+                        },
                     }
-                };
+                }else{
+                    showTip('网络好像有点问题');
+                }
+            }).catch((error)=>{
+                alert(error);
+                cb({topRefreshing:0});
+                showTip('网络好像有点问题');
             });
     },
-    bottomRefresh:function (passages) {
-        return myFetch('https://www.baidu.com',{method:'GET',timeout:10000})
-            .then((response)=>response.text)
+    bottomRefresh:function (concern,user,cb) {
+        return myFetch(`http://${ip}:4441/api/articles/user/followed/load/${concern.pageCount}/`,{
+            method:'GET',
+            headers:{
+                'user_token':user.token
+            },
+            timeout:10000
+        })
+            .then((response)=>response.json())
             .then(responseData=>{
+                //alert(JSON.stringify(responseData));
+                if(responseData.code==10001){
+                    let data=responseData.data;
+                    cb({bottomRefreshing: 0});
+                    return {
+                        type:'CONCERN_BOTTOM_REFRESH',
+                        payload:{
+                            passages:concern.passages.concat(data.articles.map((item)=>{
+                                return {
+                                    author:{
+                                        authorID:item.userUuid,
+                                        headImg:item.avatar,
+                                        name:item.nickname,
+                                        concerned:item.relationType==2
+                                    },
+                                    createTime:item.createTime,
+                                    title:item.title,
+                                    coverImg:item.image,
+                                    thumbHeadImgs:[item.image,item.image,item.image,item.image],
+                                    passageID:item.passageUuid,
+                                    thumbCount:item.likeNum,
+                                    commentCount:item.commentNum,
+                                    shareCount:item.shareNum
+                                };
+                            })),
+                            pageCount:data.cursor
+                        }
+                    };
+                }else if(responseData.code==10111){cb({bottomRefreshing: 0,noMore:true});
+                    showTip('没有更多文章');
 
+                }else{
+                    showTip('网络好像有点问题');
+                }
             }).catch((error)=>{
-                console.log(error);
-                return {
-                    type:'NETWORK_ERROR',
-                    payload: {
-                        networkError:true,
-                    }
-                };
+                alert.log(error);
+                cb({bottomRefreshing: 0});
+                showTip('网络好像有点问题');
             });
     }
 };
 
 function mapStateToProps(state) {
     return {
-        concern:state.concern
+        concern:state.concern,
+        user:state.user
     }
 }
 
 function mapDispatchToProps(dispatch) {
     return{
-        initialData:()=>{dispatch(actions.initialData())},
+        initialData:(user,cb)=>{dispatch(actions.initialData(user,cb))},
         setNetworkError:(value)=>{dispatch(actions.setNetworkError(value))},
-        topRefresh:()=>{dispatch(actions.topRefresh())},
-        bottomRefresh:(passages)=>{dispatch(actions.bottomRefresh(passages))}
+        topRefresh:(user,cb)=>{dispatch(actions.topRefresh(user,cb))},
+        bottomRefresh:(concern,user,cb)=>{dispatch(actions.bottomRefresh(concern,user,cb))}
     }
 }
 

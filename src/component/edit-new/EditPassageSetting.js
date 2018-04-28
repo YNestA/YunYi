@@ -104,7 +104,7 @@ class EditPassageSetting extends Component{
         let {passage}=this.props;
         return(
             <View style={styles.container}>
-                <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                 <View style={styles.settingContainer}>
                     <View style={styles.setting}>
                         <Text style={styles.settingText}>是否公开</Text>
@@ -184,7 +184,7 @@ let actions={
                     showTip('发布成功!');
                     navigation.navigate('Main', {}, NavigationActions.navigate({routeName: 'Mine'}));
                     return {
-                        type: 'COMPLETE',
+                        type: 'COMPLETE_EDIT',
                         payload: {
                             passageID: responseData.data.passageID,
                         }

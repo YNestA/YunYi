@@ -93,7 +93,7 @@ class MessageCenterConcern extends Component{
         let {concern}=this.props.messageCenter;
         return(
             <View style={styles.container}>
-                <StatusBar translucent={false} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
                 <MessageList
                     MessageComponent={ConcernMessage}
                     messages={concern}

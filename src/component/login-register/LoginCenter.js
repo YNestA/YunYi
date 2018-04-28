@@ -77,7 +77,7 @@ export default class LoginCenter extends Component{
         return (
             <ImageBackground style={{flex:1}} source={require('../../img/darling.jpg')}>
                 <View style={{flex:1}}>
-                    <StatusBar translucent={false} barStyle={'dark-content'}/>
+                    <StatusBar translucent={true} barStyle={'dark-content'}/>
                     <View style={styles.closeContainer}>
                          <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#ddd',true)} onPress={this._enterMain}>
                              <View style={styles.close}>

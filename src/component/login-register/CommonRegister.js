@@ -8,6 +8,7 @@ import Toast from "react-native-root-toast";
 import {encodePostParams, myFetch} from "../../tools/MyTools";
 import {connect} from "react-redux";
 import {ip} from "../../settings";
+import {NavigationActions} from "react-navigation";
 
 function showTip(message,hiddenCb) {
     Toast.show(message,{
@@ -205,7 +206,13 @@ let actions={
                         data:user
                     });
                     showTip('注册成功',cb);
-                    navigation.navigate('Main');
+                    let action=NavigationActions.reset({
+                        index:0,
+                        actions:[
+                            NavigationActions.navigate({routeName:'Main'})
+                        ]
+                    });
+                    navigation.dispatch(action);
                     return {
                         type:'LOGIN',
                         payload:user

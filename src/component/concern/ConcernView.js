@@ -40,9 +40,7 @@ class ConcernView extends Component{
     }
     render(){
         return(
-            <View style={{flex:1}}>
-                <ConcernPassages navigation={this.props.navigation}/>
-            </View>
+            <ConcernPassages navigation={this.props.navigation}/>
         );
     }
 }

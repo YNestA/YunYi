@@ -1,10 +1,12 @@
 import React,{Component} from 'react'
-import {View,StyleSheet,Image, Text, TextInput,TouchableOpacity} from 'react-native'
+import {View, StyleSheet, Image, Text, TextInput, TouchableOpacity, StatusBar} from 'react-native'
 import {screenUtils} from "../../tools/ScreenUtils";
 
 const styles=StyleSheet.create({
     container:{
-        height:screenUtils.autoSize(60),
+        height:screenUtils.autoSize(60)+StatusBar.currentHeight,
+        paddingTop:StatusBar.currentHeight,
+        backgroundColor:'#fff',
         flexDirection:'row',
         alignItems:'center',
         borderColor:'#ccc',
@@ -28,7 +30,7 @@ const styles=StyleSheet.create({
     searchImg:{
         position:'absolute',
         zIndex:10,
-        top:screenUtils.autoSize(15),
+        top:screenUtils.autoSize(15)+StatusBar.currentHeight,
         left:screenUtils.autoSize(20),
         width:screenUtils.autoSize(30),
         height:screenUtils.autoSize(30),
@@ -53,7 +55,9 @@ export default class SearchInput extends Component{
                     placeholder={'搜索用户和文章'}
 
                 />
-                <TouchableOpacity onPress={()=>{this.props.onSearch(this.state.keyword)}}>
+                <TouchableOpacity onPress={()=>{
+                    this.state.keyword.length&&this.props.onSearch(this.state.keyword);
+                }}>
                     <Text style={styles.searchText}>提交</Text>
                 </TouchableOpacity>
             </View>

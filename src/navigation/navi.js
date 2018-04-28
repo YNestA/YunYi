@@ -271,7 +271,8 @@ export default YunYiNavi=StackNavigator({
     initialRouteName:'Welcome',
     navigationOptions:{
         headerStyle:{
-            height:screenUtils.autoSize(55),
+            paddingTop:StatusBar.currentHeight,
+            height:screenUtils.autoSize(55)+StatusBar.currentHeight,
             backgroundColor:'#fff',
             justifyContent:'center',
             alignItems:'center'
