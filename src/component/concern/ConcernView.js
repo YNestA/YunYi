@@ -13,8 +13,8 @@ class ConcernView extends Component{
                     labelTitle={'关注'}
                     tintColor={tintColor}
                     focused={focused}
-                    focusedImg={require('../../img/navi/concern-light.png')}
-                    notFocusedImg={require('../../img/navi/concern-dark.png')}
+                    focusedImg={require('../../img/navi/关注-fill.png')}
+                    notFocusedImg={require('../../img/navi/关注.png')}
                 />;
             },
             headerLeft: <View/>,

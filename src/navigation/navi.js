@@ -25,8 +25,8 @@ import EditPassageSetting from "../component/edit-new/EditPassageSetting";
 import MessageCenterConcern from "../component/message-center/MessageCenterConcern";
 import MessageCenterLetter from "../component/message-center/MessageCenterLetter";
 import MessageCenterNotification from "../component/message-center/MessageCenterNotification";
-import MessageCenterShare from "../component/message-center/MessageCenterShare";
-import MessageCenterThumbComment from "../component/message-center/MessageCenterThumbComment";
+import MessageCenterComment from "../component/message-center/MessageCenterComment";
+import MessageCenterThumb from "../component/message-center/MessageCenterThumb";
 import AllSetting from "../component/mine/AllSetting";
 import SignNameChangeDetail from '../component/mine/SignNameChangeDetail';
 import FocusDetail from '../component/mine/FocusDetail'
@@ -143,8 +143,8 @@ const MainScreenNavi=TabNavigator({
                     labelTitle={'我的'}
                     tintColor={tintColor}
                     focused={focused}
-                    focusedImg={require('../img/navi/mine-light.png')}
-                    notFocusedImg={require('../img/navi/mine-dark.png')}
+                    focusedImg={require('../img/navi/我的-fill.png')}
+                    notFocusedImg={require('../img/navi/我的.png')}
                 />;
             },
             header:null,
@@ -236,11 +236,11 @@ export default YunYiNavi=StackNavigator({
     MessageCenterNotification:{
         screen:MessageCenterNotification
     },
-    MessageCenterShare:{
-        screen:MessageCenterShare
+    MessageCenterComment:{
+        screen:MessageCenterComment
     },
-    MessageCenterThumbComment:{
-        screen:MessageCenterThumbComment
+    MessageCenterThumb:{
+        screen:MessageCenterThumb
     },
     OtherUser:{
         screen:OtherUser,

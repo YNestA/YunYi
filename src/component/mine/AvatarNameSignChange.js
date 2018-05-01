@@ -13,7 +13,6 @@ class AvatarNameSignChange extends Component {
     componentDidMount() {
         //console.log(this.props.userMessageLogIn);
         let user = this.props.userMessageLogIn;
-        console.log('props',this);
         this.props.initialAvasterSign(user);
     }
 

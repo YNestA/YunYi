@@ -3,6 +3,7 @@ import {
     StyleSheet, View, Text, StatusBar, Image, ImageBackground, TouchableOpacity, TouchableNativeFeedback,
     TouchableWithoutFeedback, BackHandler
 } from 'react-native'
+import Swiper from 'react-native-swiper'
 import {screenUtils} from '../../tools/MyTools'
 
 const styles=StyleSheet.create({
@@ -10,6 +11,12 @@ const styles=StyleSheet.create({
         position:'absolute',
         top:screenUtils.autoSize(40),
         left:screenUtils.autoSize(10)
+    },
+    container:{
+        flex:1,
+        backgroundColor:'#fff',
+        paddingTop:screenUtils.autoSize(100),
+        paddingBottom:screenUtils.autoSize(150)
     },
     close:{
 
@@ -22,21 +29,28 @@ const styles=StyleSheet.create({
     loginList:{
         position:'absolute',
         height:screenUtils.autoSize(100),
-        marginBottom:screenUtils.autoSize(50),
+        marginBottom:screenUtils.autoSize(30),
         bottom:0,
         width:screenUtils.screenWidth,
         flexDirection:'row',
         justifyContent:'space-around'
     },
     login:{
+        width:screenUtils.autoSize(80),
+        alignItems:'center'
     },
     loginImg:{
-        width:screenUtils.autoSize(80),
-        height:screenUtils.autoSize(80)
+        width:screenUtils.autoSize(60),
+        height:screenUtils.autoSize(60)
+    },
+    swiperImg:{
+        width:'100%',
+        height:'100%'
     },
     loginText:{
-        fontSize:screenUtils.autoFontSize(17),
-        color:'#333',
+        width:screenUtils.autoSize(80),
+        fontSize:screenUtils.autoFontSize(16),
+        color:'#444',
         textAlign:'center'
     }
 });
@@ -75,8 +89,7 @@ export default class LoginCenter extends Component{
     }
     render(){
         return (
-            <ImageBackground style={{flex:1}} source={require('../../img/darling.jpg')}>
-                <View style={{flex:1}}>
+                <View style={styles.container}>
                     <StatusBar translucent={true} barStyle={'dark-content'}/>
                     <View style={styles.closeContainer}>
                          <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#ddd',true)} onPress={this._enterMain}>
@@ -85,12 +98,22 @@ export default class LoginCenter extends Component{
                              </View>
                          </TouchableNativeFeedback>
                     </View>
+                    <Swiper
+                        style={{
+
+                        }}
+                    >
+                        <Image style={styles.swiperImg} source={require('../../img/login-center/01.png')}/>
+                        <Image style={styles.swiperImg} source={require('../../img/login-center/02.png')}/>
+                        <Image style={styles.swiperImg} source={require('../../img/login-center/03.png')}/>
+                        <Image style={styles.swiperImg} source={require('../../img/login-center/04.png')}/>
+                    </Swiper>
                     <View style={styles.loginList}>
                         <TouchableWithoutFeedback  onPress={()=> {
                             this.props.navigation.navigate('UsernameLogin');
                         }}>
                             <View style={styles.login}>
-                                <Image style={styles.loginImg} source={require('../../img/navi/mine-light.png')}/>
+                                <Image style={styles.loginImg} source={require('../../img/login-center/password-login.png')}/>
                                 <Text style={styles.loginText}>账号登录</Text>
                             </View>
                         </TouchableWithoutFeedback>
@@ -98,19 +121,18 @@ export default class LoginCenter extends Component{
                             this.props.navigation.navigate('PhoneLoginRegister');
                         }}>
                             <View style={styles.login}>
-                                <Image style={styles.loginImg} source={require('../../img/common/mobilephone_fill.png')}/>
+                                <Image style={styles.loginImg} source={require('../../img/login-center/phone-login.png')}/>
                                 <Text style={styles.loginText}>手机登录</Text>
                             </View>
                         </TouchableWithoutFeedback>
                         <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#ddd',true)}  onPress={this._enterMain}>
                             <View style={styles.login}>
-                                <Image style={styles.loginImg} source={require('../../img/common/eye_fill.png')}/>
+                                <Image style={styles.loginImg} source={require('../../img/login-center/direct-enter.png')}/>
                                 <Text style={styles.loginText}>随便看看</Text>
                             </View>
                         </TouchableNativeFeedback>
                     </View>
                 </View>
-            </ImageBackground>
         );
     }
 }

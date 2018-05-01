@@ -40,7 +40,7 @@ class MessageList extends Component{
         if(messages.content.length<10){
             return;
         }
-        if(e.distanceFromEnd!=0&&this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
+        if(e.distanceFromEnd>0&&this.state.bottomRefreshing===0&&this.state.topRefreshing===0){
             this.setState({bottomRefreshing:1});
             this.props.getMore(messages,user,()=>{
                 this.setState({bottomRefreshing:0});
@@ -75,7 +75,7 @@ class MessageList extends Component{
         }
     }
     render(){
-        let {messages,MessageComponent}=this.props;
+        let {messages,MessageComponent,user,navigation}=this.props;
         if(this.state.firstLoading){
             return <Loading containerStyle={{flex: 1}}/>;
         }else{
@@ -90,84 +90,137 @@ class MessageList extends Component{
                     data={messages.content}
                     extraData={this.state}
                     renderItem={({item}) => {
-                        return <MessageComponent message={item}/>;
+                        return <MessageComponent navigation={navigation} message={item} user={user}/>;
                     }}
                 />
             );
         }
     }
 }
-let tempData1=[{
-    user:{
-        userID:'',
-        headImg:'',
-        username:'安生抢'
-    },
-    time:'04-09'
-}, {
-    user:{
-        userID:'',
-        headImg:'',
-        username:'王子田'
-    },
-    time:'04-09',
-},{
-    user:{
-        userID:'',
-        headImg:'',
-        username:'张艺龄'
-    },
-    time:'04-09'
-},{
-    user:{
-        userID:'',
-        headImg:'',
-        username:'安生抢'
-    },
-    time:'04-09'
-}, {
-    user:{
-        userID:'',
-        headImg:'',
-        username:'王子田'
-    },
-    time:'04-09',
-},{
-    user:{
-        userID:'',
-        headImg:'',
-        username:'安生抢'
-    },
-    time:'04-09'
-}, {
-    user:{
-        userID:'',
-        headImg:'',
-        username:'王子田'
-    },
-    time:'04-09',
-},{
-    user:{
-        userID:'',
-        headImg:'',
-        username:'张艺龄'
-    },
-    time:'04-09'
-},{
-    user:{
-        userID:'',
-        headImg:'',
-        username:'安生抢'
-    },
-    time:'04-09'
-}, {
-    user:{
-        userID:'',
-        headImg:'',
-        username:'王子田'
-    },
-    time:'04-09',
-},];
+
+let tempData = {
+    concern: [{
+        user: {
+            userID: '',
+            headImg: '',
+            username: '安生抢'
+        },
+        time: '04-09'
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '王子田'
+        },
+        time: '04-09',
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '张艺龄'
+        },
+        time: '04-09'
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '安生抢'
+        },
+        time: '04-09'
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '王子田'
+        },
+        time: '04-09',
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '安生抢'
+        },
+        time: '04-09'
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '王子田'
+        },
+        time: '04-09',
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '张艺龄'
+        },
+        time: '04-09'
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '安生抢'
+        },
+        time: '04-09'
+    }, {
+        user: {
+            userID: '',
+            headImg: '',
+            username: '王子田'
+        },
+        time: '04-09',
+    },],
+    thumb:[{
+        userID:'1221',
+        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-6044_2018-04-26.jpg',
+        coverImg:'https://w3.hoopchina.com.cn/f9/11/75/f911758081f2aa164e7e830660dc5a72001.jpg',
+        name:'王子田',
+        time:new Date().getTime(),
+        passageID:'212312312',
+    },{
+        userID:'1221',
+        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-6044_2018-04-26.jpg',
+        coverImg:'https://w3.hoopchina.com.cn/f9/11/75/f911758081f2aa164e7e830660dc5a72001.jpg',
+        name:'王子田',
+        time:new Date().getTime(),
+        passageID:'212312312',
+    },{
+        userID:'1221',
+        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-6044_2018-04-26.jpg',
+        coverImg:'https://w3.hoopchina.com.cn/f9/11/75/f911758081f2aa164e7e830660dc5a72001.jpg',
+        name:'王子田',
+        time:new Date().getTime(),
+        passageID:'212312312',
+    },{
+        userID:'1221',
+        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-6044_2018-04-26.jpg',
+        coverImg:'https://w3.hoopchina.com.cn/f9/11/75/f911758081f2aa164e7e830660dc5a72001.jpg',
+        name:'王子田',
+        time:new Date().getTime(),
+        passageID:'212312312',
+    },{
+        userID:'1221',
+        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-6044_2018-04-26.jpg',
+        coverImg:'https://w3.hoopchina.com.cn/f9/11/75/f911758081f2aa164e7e830660dc5a72001.jpg',
+        name:'王子田',
+        time:new Date().getTime(),
+        passageID:'212312312',
+    },{
+        userID:'1221',
+        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-6044_2018-04-26.jpg',
+        coverImg:'https://w3.hoopchina.com.cn/f9/11/75/f911758081f2aa164e7e830660dc5a72001.jpg',
+        name:'王子田',
+        time:new Date().getTime(),
+        passageID:'212312312',
+    },{
+        userID:'1221',
+        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-6044_2018-04-26.jpg',
+        coverImg:'https://w3.hoopchina.com.cn/f9/11/75/f911758081f2aa164e7e830660dc5a72001.jpg',
+        name:'王子田',
+        time:new Date().getTime(),
+        passageID:'212312312',
+    },]
+};
 
 
 let actions={
@@ -187,7 +240,7 @@ let actions={
         }).then(response=>response.text())
             .then(responseData=>{
                 cb();
-                payload[messages.type].content=tempData1;
+                payload[messages.type].content=tempData[messages.type];
                 payload[messages.type].notRead=0;
                 return {
                     type:'GET_LASTEST',
@@ -215,7 +268,7 @@ let actions={
         }).then(response=>response.text())
             .then(responseData=>{
                 cb();
-                payload[messages.type].content=payload[messages.type].content.concat(tempData1);
+                payload[messages.type].content=payload[messages.type].content.concat(tempData[messages.type]);
                 payload[messages.type].notRead=0;
                 return {
                     type:'GET_MORE',

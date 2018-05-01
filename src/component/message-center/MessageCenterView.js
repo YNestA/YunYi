@@ -19,8 +19,8 @@ class MessageCenterView extends Component{
                     labelTitle={'消息'}
                     tintColor={tintColor}
                     focused={focused}
-                    focusedImg={require('../../img/navi/message-light.png')}
-                    notFocusedImg={require('../../img/navi/message-dark.png')}
+                    focusedImg={require('../../img/navi/消息-fill.png')}
+                    notFocusedImg={require('../../img/navi/消息.png')}
                 />;
             },
                 headerLeft:<View/>,

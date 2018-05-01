@@ -13,19 +13,20 @@ const styles=StyleSheet.create({
         backgroundColor:'#f2f2f2'
     },
     logo:{
-        width:screenUtils.autoSize(70),
-        height:screenUtils.autoSize(60),
+        width:screenUtils.autoSize(80),
+        height:screenUtils.autoSize(40),
+        marginVertical:screenUtils.autoSize(10),
         marginLeft:screenUtils.autoSize(10),
         marginRight:screenUtils.autoSize(10)
     },
     search:{
         flexDirection:'row',
-        backgroundColor:'#3f81c1',
+        backgroundColor:'#39f',
         paddingTop:StatusBar.currentHeight
     },
     searchBox:{
         backgroundColor:'#fff',
-        height:screenUtils.autoSize(30),
+        height:screenUtils.autoSize(35),
         marginRight:screenUtils.autoSize(8),
         borderRadius:screenUtils.autoSize(8),
         flexDirection:'row',
@@ -38,7 +39,7 @@ const styles=StyleSheet.create({
         marginRight:screenUtils.autoSize(5)
     },
     searchText:{
-        fontSize:screenUtils.autoFontSize(15),
+        fontSize:screenUtils.autoFontSize(16),
         color:'#888'
     },
     tabView:{
@@ -53,8 +54,8 @@ class DiscoverView extends Component{
             tintColor={tintColor}
             labelTitle={'发现'}
             focused={focused}
-            focusedImg={require('../../img/navi/discover-light.png')}
-            notFocusedImg={require('../../img/navi/discover-dark.png')}
+            focusedImg={require('../../img/navi/发现-fill.png')}
+            notFocusedImg={require('../../img/navi/发现.png')}
             />;
         },
         header:null,
@@ -85,7 +86,7 @@ class DiscoverView extends Component{
             <View style={styles.container}>
                 <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <View style={styles.search}>
-                    <Image style={styles.logo} source={require('../../img/yunyi.png')} />
+                    <Image style={styles.logo} source={require('../../img/云忆文字logo.png')} />
                     <View style={{flex:1,justifyContent:'center'}}>
                         <TouchableNativeFeedback onPress={()=>{
                             this.props.navigation.navigate('Search');
@@ -102,10 +103,10 @@ class DiscoverView extends Component{
                     tabBarTextStyle={{
                         fontSize:screenUtils.autoSize(16),
                     }}
-                    tabBarUnderlineStyle={{backgroundColor:'#3f81c1'}}
+                    tabBarUnderlineStyle={{backgroundColor:'#39f'}}
                     tabBarBackgroundColor={'#fefefe'}
                     tabBarInactiveTextColor={'#666'}
-                    tabBarActiveTextColor={'#3f81c1'}
+                    tabBarActiveTextColor={'#39f'}
                     renderTabBar={()=><ScrollableTabBar
                         style={{
                             height:screenUtils.autoSize(45),

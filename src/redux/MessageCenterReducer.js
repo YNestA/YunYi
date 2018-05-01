@@ -1,20 +1,20 @@
 const initialState={
-    messageTypes:['concern','thumbComment','share','notification','letter'],
+    messageTypes:['concern','thumb','comment','notification','letter'],
     concern:{
         type:'concern',
         name:'关注',
         notRead:100,
         content:[]
     },
-    thumbComment:{
-        type:'thumbComment',
-        name:'点赞与评论',
+    thumb:{
+        type:'thumb',
+        name:'点赞',
         notRead:19,
         content:[]
     },
-    share:{
-        type:'share',
-        name:'分享',
+    comment:{
+        type:'comment',
+        name:'评论',
         notRead:0,
         content:[]
     },

@@ -4,9 +4,9 @@ import {
 } from 'react-native'
 import {connect} from 'react-redux'
 
-export default class MessageCenterShare extends Component{
+export default class MessageCenterComment extends Component{
     static navigationOptions={
-        headerTitle:'分享消息',
+        headerTitle:'评论',
         headerRight:<View/>
     };
     constructor(props){

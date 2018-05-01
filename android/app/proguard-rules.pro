@@ -68,3 +68,7 @@
 -dontwarn java.nio.file.*
 -dontwarn org.codehaus.mojo.animal_sniffer.IgnoreJRERequirement
 -dontwarn okio.**
+
+
+-keep class android.text {* ;}
+-dontwarn android.text.*

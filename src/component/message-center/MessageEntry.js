@@ -61,8 +61,8 @@ class MessageEntry extends Component{
     }
     messageIcons={
         concern:require('../../img/message-center/mesage_concern.png'),
-        thumbComment:require('../../img/message-center/message_thumb.png'),
-        share:require('../../img/message-center/message_share.png'),
+        thumb:require('../../img/message-center/message_thumb.png'),
+        comment:require('../../img/message-center/message_share.png'),
         notification:require('../../img/message-center/message_notification.png'),
         letter:require('../../img/message-center/message_letter.png')
     };
