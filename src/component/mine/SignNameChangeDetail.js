@@ -206,7 +206,9 @@ class SignNameChangeDetail extends Component {
                         </View>
                     </View>
                 </TouchableNativeFeedback>
-                <TouchableNativeFeedback>
+                <TouchableNativeFeedback onPress={()=>{
+                    this.props.logout(this.props.userMessageLogIn,this.props.navigation);
+                }}>
                     <View style={styles.signOutBotton}>
                         <Text style={styles.LogOut}>退出账号</Text>
                     </View>
@@ -257,6 +259,35 @@ let actions = {
             }
         }
     },
+    logout:function (user,navigation) {
+        return myFetch(`http://${ip}:4441/api/signout/`,{
+            method:'POST',
+            headers:{
+                'user_token':user.token,
+            }
+        }).then(response=>response.json())
+            .then(responseData=>{
+                if(responseData.code==10001){
+                    myStorage.remove({
+                        key:'user'
+                    });
+                    navigation.navigate('LoginCenter',{firstEnter:true});
+                    return {
+                        type: 'LOGOUT',
+                        payload: {
+                            isLogin:false,
+                            token:'',
+                            userInfo:{
+                                userID:'',
+                                username:'',
+                                phoneNum:'',
+                                headImg:''
+                            }
+                        }
+                    }
+                }
+            });
+    },
     changeNickName: function (nickname) {
         return {
             type: 'CHANGE_NICK_NAME',
@@ -282,6 +313,7 @@ function mapDispatchToProps(dispatch) {
         changeNickName: (nickNameInput) => {
             dispatch(actions.changeNickName(nickNameInput))
         },
+        logout:(user,navigation)=>{dispatch(actions.logout(user,navigation))}
     }
 }
 

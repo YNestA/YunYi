@@ -4,6 +4,8 @@ import SearchInput from './SearchInput'
 import HotWords from './HotWords'
 import SearchResult from './SearchResult'
 import {connect} from 'react-redux'
+import myFetch from "../../tools/MyFetch";
+import {ip} from "../../settings";
 
 const styles=StyleSheet.create({
     container:{
@@ -47,6 +49,50 @@ class Search extends Component{
 }
 let actions={
     onSearch:function (keyword) {
+        return myFetch(`http://${ip}:4441/api/search/all/${keyword}`,{
+            method:'GET'
+        }).then((response)=>response.json())
+            .then((responseData)=>{
+                //alert(JSON.stringify(responseData));
+                if(responseData.code==10001){
+                    let data=responseData.data;
+                    return {
+                        type:'SEARCH',
+                        payload:{
+                            showHotWords:false,
+                            result:{
+                                users:data.users.map((item)=>{
+                                    return {
+                                        name:item.nickname,
+                                        userID:item.userUuid,
+                                        headImg:item.avatar
+                                    }
+                                }),
+                                passages:data.articles.map((item)=>{
+                                    return  {
+                                        author:{
+                                            name:item.nickname,
+                                            authorID:item.userUuid,
+                                            headImg: item.avatar
+                                        },
+                                        passageID:item.passageUuid,
+                                        time:item.createTime,
+                                        coverImg:item.image,
+                                        title:item.title,
+                                        sections:JSON.parse(item.content).map((item)=>{
+                                            return {
+                                                text:item.text
+                                            }
+                                        }),
+                                        readCount:item.readnumber
+                                    };
+                                })
+                            }
+                        }
+                    }
+                }
+            });
+        /*
         return {
             type:'SEARCH',
             payload:{
@@ -152,6 +198,7 @@ let actions={
                 }
             }
         };
+        */
     }
 };
 function mapStateToProps(state) {

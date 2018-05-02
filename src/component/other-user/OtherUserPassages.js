@@ -5,6 +5,7 @@ import {screenUtils} from "../../tools/ScreenUtils";
 import myFetch from "../../tools/MyFetch";
 import PassageClassify from '../../redux/PassageClassify'
 import Loading from '../../tools/loading'
+import {ip} from "../../settings";
 
 const passageStyle=StyleSheet.create({
     container:{
@@ -19,7 +20,7 @@ const passageStyle=StyleSheet.create({
     },
     passageCover:{
         width:'100%',
-        height:screenUtils.autoSize(300),
+        height:screenUtils.autoSize(230),
         backgroundColor:'#fff'
     },
     passageCoverImg:{
@@ -71,9 +72,11 @@ class OtherUserPassage extends Component{
         return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDay()} ${date.getHours()}:${date.getMinutes()}`;
     }
     render(){
-        let {passage}=this.props;
+        let {passage,navigation}=this.props;
         return (
-            <TouchableWithoutFeedback>
+            <TouchableWithoutFeedback onPress={()=>{
+                navigation.navigate('Passage',{passage:passage});
+            }}>
                 <View style={passageStyle.container}>
                     <Text numberOfLines={1} style={passageStyle.title}>{passage.title}</Text>
                     <View style={passageStyle.passageCover}>
@@ -151,14 +154,14 @@ class OtherUserPassages extends Component{
                     <View style={styles.verLine}/>
                     <Text style={styles.titleText}>全部文章</Text>
                 </View>
-                {len==0?<Text style={styles.emptyText}>空空如也~</Text>:null}
+                {len==0?<Text style={styles.emptyText}>{''}</Text>:null}
             </View>
         );
     }
     componentDidMount(){
-        let {navigation,otherUsers,otherUserId}=this.props;
+        let {navigation,otherUsers,otherUserId,user}=this.props;
         InteractionManager.runAfterInteractions(()=>{
-            this.props.initOtherUser(otherUsers[otherUserId]);
+            this.props.initOtherUser(otherUsers[otherUserId],user);
         });
     }
     _renderFooter(){
@@ -188,7 +191,8 @@ class OtherUserPassages extends Component{
         }
     }
     render(){
-        let {passages}=this.props.otherUsers[this.props.otherUserId];
+        let {passages}=this.props.otherUsers[this.props.otherUserId],
+            {navigation}=this.props;
         return (
             <FlatList
                 onScroll={this.props.onScroll}
@@ -197,12 +201,12 @@ class OtherUserPassages extends Component{
                 }}
                 ListHeaderComponent={this._renderHeader(passages.length)}
                 ListFooterComponent={this._renderFooter}
-                onEndReachedThreshold={0.1}
-                onEndReached={this._bottomRefresh}
+                //onEndReachedThreshold={0.1}
+                //onEndReached={this._bottomRefresh}
                 extraData={this.state}
                 data={passages}
                 renderItem={({index,item})=>{
-                    return <OtherUserPassage passage={item}/>
+                    return <OtherUserPassage passage={item} navigation={navigation}/>
                 }}
             />
         );
@@ -210,83 +214,53 @@ class OtherUserPassages extends Component{
 }
 
 let actions={
-    initOtherUser:function (otherUser) {
-        return myFetch('http://www.baidu.com',{
+    initOtherUser:function (otherUser,user) {
+        return myFetch(`http://${ip}:4441/api/user/intro/${otherUser.userID}/`,{
             method:'GET',
-        }).then(response=>response.text())
+            headers:{
+                'user_token':user.token
+            }
+        }).then(response=>response.json())
             .then(responseData=>{
-                let payload={};
-
-                payload[otherUser.userID]={
-                    userID:otherUser.userID,
-                    userInfo:{
-                        username:'令狐冲',
-                        headImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-7141_2018-04-18.jpg',
-                        motto:'公无渡河，公竟渡河',
-                        concernCount:32,
-                        fansCount:125,
-                    },
-                    relation:{
-                        isFollow:0,
-                    },
-                    passages:[
-                        {
-                            title:'中国古拳法心经',
-                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                            classify:PassageClassify[0],
-                            time:new Date().getTime(),
-                            readCount:12356,
-                            thumbCount:256,
-                            shareCount:555,
-                            commentCount:88
+                if(responseData.code==10001) {
+                    let data=responseData.data,
+                        payload = {};
+                    payload[otherUser.userID] = {
+                        userID: otherUser.userID,
+                        userInfo: {
+                            username: data.userIntro.nickname,
+                            headImg: data.userIntro.avatar,  //绝对
+                            motto: data.userIntro.signature,
+                            concernCount: data.followedPeople,
+                            fansCount: data.followers,
                         },
-                        {
-                            title:'中国古拳法心经',
-                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                            classify:PassageClassify[0],
-                            time:new Date().getTime(),
-                            readCount:12356,
-                            thumbCount:256,
-                            shareCount:555,
-                            commentCount:88
+                        relation: {
+                            isFollow:!!data.isFollowed,
                         },
-                        {
-                            title:'中国古拳法心经',
-                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                            classify:PassageClassify[0],
-                            time:new Date().getTime(),
-                            readCount:12356,
-                            thumbCount:256,
-                            shareCount:555,
-                            commentCount:88
-                        },
-                        {
-                            title:'中国古拳法心经',
-                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                            classify:PassageClassify[0],
-                            time:new Date().getTime(),
-                            readCount:12356,
-                            thumbCount:256,
-                            shareCount:555,
-                            commentCount:88
-                        },
-                        {
-                            title:'中国古拳法心经',
-                            coverImg:'https://www.hupucdn.com/uploads/hupu/focus/focus-large-3290_2018-04-18.jpg',
-                            classify:PassageClassify[0],
-                            time:new Date().getTime(),
-                            readCount:12356,
-                            thumbCount:256,
-                            shareCount:555,
-                            commentCount:88
-                        },
-
-                    ],
-                };
-                return {
-                   type:'OTHER_USER_INIT',
-                   payload:payload
-                };
+                        passages: data.articles.map((item)=>{
+                            return {
+                                passageID:item.passageUuid,
+                                author:{
+                                    authorID:otherUser.userID,
+                                    name:data.userIntro.nickname,
+                                    headImg:data.userIntro.avatar
+                                },
+                                title:item.title,
+                                coverImg:item.image,
+                                classify:PassageClassify[0],
+                                time:item.createTime.time,
+                                readCount:item.readnumber,
+                                thumbCount:item.likeNum,
+                                shareCount:item.shareNum,
+                                commentCount:item.commentNum
+                            };
+                        })
+                    };
+                    return {
+                        type: 'OTHER_USER_INIT',
+                        payload: payload
+                    };
+                }
             }).catch(err=>{
                 alert(err)
             });
@@ -330,7 +304,7 @@ function mapStateToProps(state) {
 }
 function mapDispatchToProps(dispatch) {
     return {
-        initOtherUser:(otherUser)=>{dispatch(actions.initOtherUser(otherUser))},
+        initOtherUser:(otherUser,user)=>{dispatch(actions.initOtherUser(otherUser,user))},
         loadMore:(otherUser,cb)=>{dispatch(actions.loadMore(otherUser,cb))}
     }
 }

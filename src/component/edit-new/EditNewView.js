@@ -8,8 +8,8 @@ class EditNewView extends Component{
         return {
             tabBarIcon:({focused, tintColor}) => {
                 return <Image
-                    source={require('../../img/navi/加.png')}
-                    style={{width:screenUtils.autoSize(60),height:screenUtils.autoSize(60)}}/>;
+                    source={require('../../img/navi/edit-new.png')}
+                    style={{width:screenUtils.autoSize(70),height:screenUtils.autoSize(70)}}/>;
             },
             headerTitle:'创作',
             tabBarLabel:'创作',

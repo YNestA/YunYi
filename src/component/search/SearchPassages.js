@@ -80,7 +80,9 @@ class SearchPassage extends Component{
     render(){
         let {passage,navigation}=this.props;
         return (
-            <TouchableOpacity activeOpacity={0.9}>
+            <TouchableOpacity activeOpacity={0.9} onPress={()=>{
+                navigation.navigate('Passage',{passage:passage});
+            }}>
                 <View style={styles.container}>
                     <View style={styles.passageHeader}>
                         <View style={styles.passageAuthor}>

@@ -195,7 +195,6 @@ let actions={
     },
     toggleFollow:function (otherUser,user) {
         let url=otherUser.relation.isFollow?`http://${ip}:4441/api/user/relation/unfollow/`:`http://${ip}:4441/api/user/relation/follow/`;
-        url='http://www.baidu.com';
         myFetch(url,{
             method:'POST',
             headers:{
