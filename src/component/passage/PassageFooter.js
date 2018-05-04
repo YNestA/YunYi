@@ -99,25 +99,29 @@ class PassageFooter extends Component{
         }
     }
     _commitComment(){
-        let {user,passages,passageID}=this.props,
+        let {user,passages,passageID,navigation}=this.props,
             passage=passages[passageID];
-        this.setState({committing:true});
-        this.props.commitComment(this.state.commentText,user,passage,(success)=>{
-            if(success){
-                showTip('评论成功');
-                this.refs.textInput.blur();
-                this.setState({
-                    committing:false,
-                    inputFocused:true,
-                    commentText:''
-                });
-            }else{
-                showTip('评论失败');
-                this.setState({
-                    committing:false
-                });
-            }
-        });
+        if(user.isLogin) {
+            this.setState({committing: true});
+            this.props.commitComment(this.state.commentText, user, passage, (success) => {
+                if (success) {
+                    showTip('评论成功');
+                    this.refs.textInput.blur();
+                    this.setState({
+                        committing: false,
+                        inputFocused: true,
+                        commentText: ''
+                    });
+                } else {
+                    showTip('评论失败');
+                    this.setState({
+                        committing: false
+                    });
+                }
+            });
+        }else{
+            navigation.navigate('LoginCenter');
+        }
     }
     render(){
         let passages=this.props.passages,

@@ -115,15 +115,20 @@ class SearchPassage extends Component{
 export default class SearchPassages extends Component{
     constructor(props){
         super(props);
+        this._renderHeader=this._renderHeader.bind(this);
     }
     _renderHeader(){
-        return (
-            <Text style={{
-                fontSize:screenUtils.autoFontSize(16),
-                color:'#444',
-                marginVertical:screenUtils.autoSize(10)
-            }}>相关文章</Text>
-        );
+        if(this.props.passages.length) {
+            return (
+                <Text style={{
+                    fontSize: screenUtils.autoFontSize(16),
+                    color: '#444',
+                    marginVertical: screenUtils.autoSize(10)
+                }}>相关文章</Text>
+            );
+        }else{
+            return <View/>;
+        }
     }
     render(){
         let {passages,navigation}=this.props;

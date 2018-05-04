@@ -167,7 +167,11 @@ class OtherUser extends Component{
                                        cover={this._renderCover()}/>
                     <View style={styles.followFooter}>
                         <TouchableOpacity onPress={()=>{
-                            this.props.toggleFollow(otherUser,user);
+                            if(user.isLogin) {
+                                this.props.toggleFollow(otherUser, user);
+                            }else{
+                                navigation.navigate('LoginCenter');
+                            }
                         }}>
                             <View style={styles.footerItem}>
                                 {otherUser.relation.isFollow?<Image style={styles.followImg} source={require('../../img/common/offline.png')}/>

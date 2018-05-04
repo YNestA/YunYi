@@ -6,6 +6,7 @@ import {screenUtils} from '../../tools/ScreenUtils'
 import PassageList from './PassageList'
 import {HomeSwiper} from './HomeSwiper'
 import {TabIcon} from '../../navigation/navi'
+import {initMWS} from "../../ws/ws";
 
 const styles=StyleSheet.create({
     container:{
@@ -54,8 +55,8 @@ class DiscoverView extends Component{
             tintColor={tintColor}
             labelTitle={'发现'}
             focused={focused}
-            focusedImg={require('../../img/navi/发现-fill.png')}
-            notFocusedImg={require('../../img/navi/发现.png')}
+            focusedImg={require('../../img/navi/discover-fill2.png')}
+            notFocusedImg={require('../../img/navi/discover2.png')}
             />;
         },
         header:null,
@@ -75,6 +76,8 @@ class DiscoverView extends Component{
         return true;
     }
     componentWillMount(){
+        initMWS();
+        console.log(ws);
         BackHandler.addEventListener('hardwareBackPress', this._backHandler);
     }
     componentWillUnmount(){

@@ -16,7 +16,7 @@ global.myStorage=new Stroage({
     enableCache:true,
 });
 
-export let store=createStore(reducer,applyMiddleware(reduxPromise),applyMiddleware(reactNavigationMiddleware));
+global.store=createStore(reducer,applyMiddleware(reduxPromise),applyMiddleware(reactNavigationMiddleware));
 export default class App extends Component {
     render() {
         return (

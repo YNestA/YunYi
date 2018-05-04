@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-import {store} from '../../App'
 import {
     View, Image, Text, StyleSheet, TouchableNativeFeedback, TouchableOpacity, BackHandler,
     StatusBar
@@ -137,20 +136,6 @@ const MainScreenNavi=TabNavigator({
     },
     Mine:{
         screen:MineView,
-        navigationOptions:{
-            tabBarIcon:({focused, tintColor}) => {
-                return <TabIcon
-                    labelTitle={'我的'}
-                    tintColor={tintColor}
-                    focused={focused}
-                    focusedImg={require('../img/navi/我的-fill.png')}
-                    notFocusedImg={require('../img/navi/我的.png')}
-                />;
-            },
-            header:null,
-            headerTitle:'我的',
-            tabBarLabel:'我的'
-        }
     }
 },{
     initialRouteName:'Discover',
@@ -185,6 +170,7 @@ const MainScreenNavi=TabNavigator({
         }
     }
 });
+
 
 export default YunYiNavi=StackNavigator({
     Main:{

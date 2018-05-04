@@ -11,24 +11,21 @@ const styles=StyleSheet.create({
     }
 });
 class MessageCenterView extends Component{
-    static navigationOptions=({navigation})=>{
-        let {params}=navigation.state;
-        return {
-            tabBarIcon:({focused, tintColor}) => {
-                return <TabIcon
-                    labelTitle={'消息'}
-                    tintColor={tintColor}
-                    focused={focused}
-                    focusedImg={require('../../img/navi/消息-fill.png')}
-                    notFocusedImg={require('../../img/navi/消息.png')}
-                />;
-            },
-                headerLeft:<View/>,
-            headerRight:<View/>,
-            headerTitle:'消息',
-            tabBarLabel:'消息',
-            tabBarOnPress:params?params.tabBarOnPress:null
-        }
+    static navigationOptions = {
+        tabBarIcon: ({focused, tintColor}) => {
+            return <TabIcon
+                labelTitle={'消息'}
+                tintColor={tintColor}
+                focused={focused}
+                focusedImg={require('../../img/navi/message-fill2.png')}
+                notFocusedImg={require('../../img/navi/message2.png')}
+            />;
+        },
+        headerLeft: <View/>,
+        headerRight: <View/>,
+        headerTitle: '消息',
+        tabBarLabel: '消息',
+
     };
     componentWillMount(){
     }
