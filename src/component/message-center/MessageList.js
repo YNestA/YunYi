@@ -6,6 +6,7 @@ import {connect} from 'react-redux'
 import Loading from "../../tools/loading";
 import myFetch, {encodePostParams} from "../../tools/MyFetch"
 import {screenUtils} from "../../tools/ScreenUtils";
+import {ip} from "../../settings";
 
 class MessageList extends Component{
     constructor(props){
@@ -81,8 +82,8 @@ class MessageList extends Component{
         }else{
             return (
                 <FlatList
-                    refreshing={!!this.state.topRefreshing}
-                    onRefresh={this._topRefresh}
+                    //refreshing={!!this.state.topRefreshing}
+                    //onRefresh={this._topRefresh}
                     onEndReachedThreshold={0.1}
                     onEndReached={this._bottomRefresh}
                     ListHeaderComponent={this._renderHeader}
@@ -222,33 +223,84 @@ let tempData = {
     },]
 };
 
+const messageNames={
+    concern:'follow',
+    thumb:'like',
+    comment:'comment'
+};
 
 let actions={
     getLastest:function (messages,user,cb) {
         let payload={
         };
         payload[messages.type]=Object.assign({},messages);
-        return myFetch('http://www.baidu.com',{
+        return myFetch(`http://${ip}:4441/api/user/notify/query`,{
             method:'POST',
             headers:{
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'user_token':user.token
             },
             body:encodePostParams({
-                type:messages.type
+                type:messageNames[messages.type],
+                cursor:0,
             })
-        }).then(response=>response.text())
+        }).then(response=>response.json())
             .then(responseData=>{
-                cb();
-                payload[messages.type].content=tempData[messages.type];
-                payload[messages.type].notRead=0;
-                return {
-                    type:'GET_LASTEST',
-                    payload:payload
+                if(responseData.code==10001) {
+                    let data=responseData.data,
+                        content=[];
+                    cb();
+                    switch (messages.type){
+                        case 'concern':
+                            content=data.notifyList.map((item)=>{
+                                return {
+                                    user:{
+                                        userID:item.userUuid,
+                                        headImg:item.avatar,
+                                        username:item.nickname,
+                                    },
+                                    time:item.createTime
+                                };
+                            });
+                            break;
+                        case 'thumb':
+                            content=data.notifyList.map((item)=>{
+                                return {
+                                    userID:item.userUuid,
+                                    headImg:item.avatar,
+                                    coverImg:item.image,
+                                    name:item.nickname,
+                                    time:item.createTime,
+                                    passageID:item.targetUuid,
+                                };
+                            });
+                            break;
+                        case 'comment':
+                            content=data.notifyList.map((item)=>{
+                                return {
+                                    userID:item.userUuid,
+                                    headImg:item.avatar,
+                                    coverImg:item.image,
+                                    name:item.nickname,
+                                    time:item.createTime,
+                                    passageID:item.targetUuid,
+                                    content:item.content
+                                };
+                            });
+                            break;
+                    }
+                    payload[messages.type]=Object.assign({},messages,{
+                        content:content,
+                        notRead:0,
+                        cursor:data.cursor
+                    });
+                    return {
+                        type: 'GET_LASTEST',
+                        payload: payload
+                    }
                 }
             })
             .catch(err=>{
-                alert(err);
                 cb();
             });
     },
@@ -256,28 +308,74 @@ let actions={
         let payload={
         };
         payload[messages.type]=Object.assign({},messages);
-        return myFetch('http://www.baidu.com',{
+        return myFetch(`http://${ip}:4441/api/user/notify/query`,{
             method:'POST',
             headers:{
                 'Content-Type': 'application/x-www-form-urlencoded',
                 'user_token':user.token
             },
             body:encodePostParams({
-                type:messages.type
+                type:messageNames[messages.type],
+                cursor:messages.cursor,
             })
-        }).then(response=>response.text())
+        }).then(response=>response.json())
             .then(responseData=>{
-                cb();
-                payload[messages.type].content=payload[messages.type].content.concat(tempData[messages.type]);
-                payload[messages.type].notRead=0;
-                return {
-                    type:'GET_MORE',
-                    payload:payload
+                if(responseData.code==10001) {
+                    let data = responseData.data,
+                        content = [];
+                    cb();
+                    switch (messages.type) {
+                        case 'concern':
+                            content =messages.content.concat(data.notifyList.map((item) => {
+                                return {
+                                    user: {
+                                        userID: item.userUuid,
+                                        headImg: item.avatar,
+                                        username: item.nickname,
+                                    },
+                                    time: item.createTime
+                                };
+                            }));
+                            break;
+                        case 'thumb':
+                            content=data.notifyList.map((item)=>{
+                                return {
+                                    userID:item.userUuid,
+                                    headImg:item.avatar,
+                                    coverImg:item.image,
+                                    name:item.nickname,
+                                    time:item.createTime,
+                                    passageID:item.targetUuid,
+                                };
+                            });
+                            break;
+                        case 'comment':
+                            content=data.notifyList.map((item)=>{
+                                return {
+                                    userID:item.userUuid,
+                                    headImg:item.avatar,
+                                    coverImg:item.image,
+                                    name:item.nickname,
+                                    time:item.createTime,
+                                    passageID:item.targetUuid,
+                                    content:item.content
+                                };
+                            });
+                            break;
+                    }
+                    payload[messages.type] = Object.assign({}, messages, {
+                        content: content,
+                        notRead: 0,
+                        cursor: data.cursor
+                    });
+                    return {
+                        type: 'GET_MORE',
+                        payload: payload
+                    }
                 }
             })
             .catch(err=>{
                 cb();
-                alert(err);
             });
     }
 };

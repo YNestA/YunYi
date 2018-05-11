@@ -37,19 +37,19 @@ class Welcome extends Component{
                 }, 3000);
             }
         }).catch(err=>{
-            alert(err);
             console.log(err);
         });
     }
 
     render(){
         return(
-
             <View style={{flex:1,backgroundColor:'#000',justifyContent:'center'}}>
                 <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <Image style={{
-                    width:screenUtils.screenWidth,
-                    height:screenUtils.screenHeight,
+                    //width:screenUtils.screenWidth,
+                    //height:screenUtils.screenHeight,
+                    flex:1,
+                    width:screenUtils.screenWidth
                 }} source={require('../img/welcome2.png')}/>
             </View>
         );

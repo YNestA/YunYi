@@ -64,14 +64,14 @@ const styles=StyleSheet.create({
         lineHeight:screenUtils.autoSize(20),
         textAlign:'center'
     },
-    loginBtn:{
+    nextBtn:{
         marginTop:screenUtils.autoSize(10),
         height:screenUtils.autoSize(50),
         backgroundColor:'#5fa1e1',
         marginHorizontal:screenUtils.autoSize(25),
         borderRadius:screenUtils.autoSize(10)
     },
-    loginText:{
+    nextText:{
         color:'#fff',
         fontSize:screenUtils.autoFontSize(20),
         lineHeight:screenUtils.autoSize(50),
@@ -79,10 +79,10 @@ const styles=StyleSheet.create({
     }
 });
 
-class PhoneLoginRegister extends Component{
+export default class ForgetPassword extends Component{
     static navigationOptions=({navigation})=>{
         return {
-            headerTitle:'手机号登录/注册',
+            headerTitle:'重置密码',
             headerRight:<View/>
         };
     };
@@ -94,9 +94,9 @@ class PhoneLoginRegister extends Component{
             hideOnPress: true,
         });
     }
-    _loginRegister(){
-        let {phoneNum,checkCode}=this.state
-;        if(!this.state.sending){
+    _checkPhone(){
+        let {phoneNum,checkCode}=this.state;
+        if(!this.state.sending){
             this.setState({sending:true});
             if(phoneNum.length==0){
                 showTip('请输入手机号',()=>{
@@ -111,8 +111,27 @@ class PhoneLoginRegister extends Component{
                     this.setState({sending:false});
                 });
             }else {
-                this.props.phoneLoginRegister(phoneNum,checkCode,this.props.navigation,()=>{
-                    this.setState({sending:false});
+                myFetch(`http://${ip}:4441/api/password/forget`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: encodePostParams({
+                        phone: phoneNum,
+                        messageCode: checkCode
+                    })
+                }).then(response => response.json())
+                    .then(responseData => {
+                        if (responseData.code = 10001) {
+                            Keyboard.dismiss();
+                            this.props.navigation.navigate('ResetPassword', {phoneNum: phoneNum});
+                        } else {
+                            this.setState({sending:false});
+                            showTip('验证失败');
+                        }
+                    }).catch(err => {
+                        this.setState({sending:false});
+                        showTip('验证失败');
                 });
             }
         }
@@ -149,7 +168,7 @@ class PhoneLoginRegister extends Component{
             checkCode:'',
             sending:false,
         };
-        this._loginRegister=this._loginRegister.bind(this);
+        this._checkPhone=this._checkPhone.bind(this);
         this._getCheckCode=this._getCheckCode.bind(this);
         this._showTip=this._showTip.bind(this);
         this._backHandler=this._backHandler.bind(this);
@@ -166,8 +185,6 @@ class PhoneLoginRegister extends Component{
         BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     render(){
-        let params=this.props.navigation.state.params,
-            fromRegister=params?params.fromRegister:false;
         return(
             <View style={styles.container}>
                 <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
@@ -208,77 +225,11 @@ class PhoneLoginRegister extends Component{
                         </View>
                     </TouchableWithoutFeedback>
                 </View>
-                <Text style={styles.tip}>新用户验证手机即可完成注册</Text>
-                <TouchableOpacity disabled={this.state.sending} activeOpacity={0.8} onPress={this._loginRegister}>
-                    <View style={styles.loginBtn}><Text style={styles.loginText}>{fromRegister?'下一步':'登录'}</Text></View>
+                <Text style={styles.tip}>验证手机号后方可重置密码</Text>
+                <TouchableOpacity disabled={this.state.sending} activeOpacity={0.8} onPress={this._checkPhone}>
+                    <View style={styles.nextBtn}><Text style={styles.nextText}>下一步</Text></View>
                 </TouchableOpacity>
             </View>
         );
     }
 }
-
-let actions={
-    phoneLoginRegister:function (phoneNum,checkCode,navigation,cb) {
-        return myFetch(`http://${ip}:4441/api/sms/login`,{
-            method:'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: encodePostParams({
-                phone: phoneNum,
-                messageCode: checkCode
-            })
-        }).then(response=>response.json())
-            .then(responseData=>{
-                if(responseData.code==10001){
-                    let data=responseData.data,
-                        token=data.token,
-                        user={
-                            isLogin:true,
-                            token:token,
-                            userInfo:{
-                                username:data.nickname,
-                                userID:data.userUuid,
-                                phoneNum:data.phone,
-                                headImg:data.avatar
-                            }
-                        };
-                    myStorage.save({
-                        key:'user',
-                        data:user
-                    });
-                    showTip('登录成功',cb);
-                    Keyboard.dismiss();
-                    let action=NavigationActions.reset({
-                        index:0,
-                        actions:[
-                            NavigationActions.navigate({routeName:'Main'})
-                        ]
-                    });
-                    navigation.dispatch(action);
-                    return {
-                        type:'LOGIN',
-                        payload:user
-                    };
-                }else if (responseData.code==10103){
-                    navigation.navigate('CommonRegister',{phoneNum:phoneNum});
-                }else{
-                    showTip('验证失败',cb);
-                }
-            }).catch(err=>{
-                alert(err);
-                showTip('验证失败',cb);
-            })
-
-    }
-};
-function mapStateToProps(state) {
-    return {user:state.user};
-}
-function mapDispatchToProps(dispatch) {
-    return {
-        phoneLoginRegister:(phoneNum,checkCode,navigation,cb)=>{dispatch(actions.phoneLoginRegister(phoneNum,checkCode,navigation,cb))}
-    }
-}
-
-export default PhoneLoginRegister=connect(mapStateToProps,mapDispatchToProps)(PhoneLoginRegister);

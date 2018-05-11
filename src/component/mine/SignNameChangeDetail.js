@@ -20,6 +20,8 @@ import PopupDialog, {DialogTitle, SlideAnimation, DialogButton, ScaleAnimation} 
 import ImagePicker from 'react-native-image-crop-picker'
 import {ip} from "../../settings";
 import Toast from 'react-native-root-toast';
+import {getFormData} from "../../tools/MyTools";
+import UploadTip from "../edit-new/UploadTip"
 
 
 class SignNameChangeDetail extends Component {
@@ -35,8 +37,7 @@ class SignNameChangeDetail extends Component {
     static navigationOptions = () => {
         return {
             headerTitle: '账号设置',
-            headerStyle: {marginTop: StatusBar.currentHeight},
-            headerTitleStyle: {},
+            headerRight:<View/>
         };
     };
 
@@ -79,64 +80,35 @@ class SignNameChangeDetail extends Component {
         }, 2000);
     }
 
-    _sendImg(image) {
-        // 创建form表单
-        let body = new FormData();
-        console.log('image', image);
-        console.log(this);
-        // token和key都是通过七牛返回的参数
-        console.log(this.props.changeAvatar(image.path));
-        body.append('file', {
-            // 设定上传的格式
-            type: 'image/jpeg',
-            // 通过react-native-image-picker获取的图片地址
-            uri: image.path,
-            name: 'avatar',
-        });
-        // 开启XMLHttpRequest服务
-        let xhr = new XMLHttpRequest();
-        /** 上传到七牛云的地址 */
-        let url = 'http://' + ip + ":4441/avatarchange";
-        // 开启post上传
-        xhr.open('POST', url);
-        // 如果正在上传,返回上传进度
-        if (xhr.upload) {
-            xhr.upload.onprogress = (event) => {
-                if (event.lengthComputable) {
-                    let perent = event.loaded / event.total.toFixed(2);
-                    // 打印上传进度
-                    console.log(perent);
+    _sendImg(image){
+        let user=this.props.userMessageLogIn;
+        this.refs.uploadTip.show();
+        myFetch(`http://${ip}:4441/mine/img/upload-avatar`,{
+            method:'POST',
+            headers:{
+                'Content-Type':'multipart/form-data',
+                'user_token':user.token
+            },
+            body:getFormData({
+                avatar: {
+                    uri: image.path,
+                    type: 'multipart/form-data',
+                    name: image.path.slice(image.path.lastIndexOf('\/')+1, image.path.length)
                 }
-            }
-        }
-
-        // 上传过成功的返回
-        xhr.onload = () => {
-            // console.log(xhr.status);
-            // 状态码如果不等于200就代表错误
-            if (xhr.status !== 200) {
-                alert('请求失败');
-                console.log(xhr.responseText);
-                return;
-            }
-            if (!xhr.responseText) {
-                alert('请求失败');
-                console.log(xhr.responseText);
-                return;
-            }
-            // 服务器最后返回的数据
-            let response;
-            try {
-                // 将返回数据还原
-                response = JSON.parse(xhr.response);
-                console.log(response);
-                // ...通过返回数据做接下来的处理
-            } catch (e) {
-                console.log('error', e);
-            }
-            // 发送请求
-            xhr.send(body);
-        }
+            })
+        }).then(response=>response.json())
+            .then(responseData=>{
+                this.refs.uploadTip.dismiss();
+                if(responseData.code==10001){
+                    this._Toast('上传成功');
+                    this.props.changeAvatar(responseData.data);
+                }else{
+                    this._Toast('上传失败');
+                }
+            }).catch((err)=>{
+                this.refs.uploadTip.dismiss();
+                this._Toast('上传失败');
+            });
     }
 
     _selectImg() {
@@ -149,16 +121,17 @@ class SignNameChangeDetail extends Component {
     };
 
     render() {
-        let userM = this.props.mineViewUserMessage;
-        console.log(userM);
+        let userM = this.props.mineViewUserMessage,
+            user=this.props.userMessageLogIn;
         return (
             <View>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <TouchableNativeFeedback
                     onPress={() => {
                         this._selectImg()
                     }}
                 >
-                    <View style={[styles.avatarChange, {marginTop: screenUtils.autoSize(40)}]}>
+                    <View style={[styles.avatarChange]}>
                         <View>
                             <Text style={styles.itemText}>头像</Text>
                         </View>
@@ -171,7 +144,7 @@ class SignNameChangeDetail extends Component {
                 </TouchableNativeFeedback>
                 <TouchableNativeFeedback
                     onPress={() => {
-                        this.refs.changeUserName.show()
+                        //this.refs.changeUserName.show()
                     }}
                 >
                     <View style={styles.avatarChange}>
@@ -179,7 +152,7 @@ class SignNameChangeDetail extends Component {
                             <Text style={styles.itemText}>昵称</Text>
                         </View>
                         <View style={styles.detailChangeContainer}>
-                            <Text style={styles.detailContent}>{userM.nickname}</Text>
+                            <Text style={styles.detailContent}>{user.userInfo.username}</Text>
                             <Image source={require('../../img/profile-more.png')} style={styles.itemChangeDetail}/>
                         </View>
                     </View>
@@ -228,7 +201,7 @@ class SignNameChangeDetail extends Component {
                             placeholder="不可以是纯数字哟～"/>
                         <TouchableNativeFeedback
                             onPress={() => {
-                                this._changeNickName(this.state.text)
+                                //this._changeNickName(this.state.text)
                             }}
                         >
                             <View>
@@ -237,6 +210,7 @@ class SignNameChangeDetail extends Component {
                         </TouchableNativeFeedback>
                     </View>
                 </PopupDialog>
+                <UploadTip ref={'uploadTip'}/>
             </View>
         );
     }
@@ -260,33 +234,29 @@ let actions = {
         }
     },
     logout:function (user,navigation) {
-        return myFetch(`http://${ip}:4441/api/signout/`,{
+        myFetch(`http://${ip}:4441/api/signout/`,{
             method:'POST',
             headers:{
                 'user_token':user.token,
             }
-        }).then(response=>response.json())
-            .then(responseData=>{
-                if(responseData.code==10001){
-                    myStorage.remove({
-                        key:'user'
-                    });
-                    navigation.navigate('LoginCenter',{firstEnter:true});
-                    return {
-                        type: 'LOGOUT',
-                        payload: {
-                            isLogin:false,
-                            token:'',
-                            userInfo:{
-                                userID:'',
-                                username:'',
-                                phoneNum:'',
-                                headImg:''
-                            }
-                        }
-                    }
+        });
+        myStorage.remove({
+            key:'user'
+        });
+        navigation.navigate('LoginCenter',{firstEnter:true});
+        return {
+            type: 'LOGOUT',
+            payload: {
+                isLogin:false,
+                token:'',
+                userInfo:{
+                    userID:'',
+                    username:'',
+                    phoneNum:'',
+                    headImg:''
                 }
-            });
+            }
+        }
     },
     changeNickName: function (nickname) {
         return {
@@ -350,13 +320,13 @@ const styles = StyleSheet.create({
         paddingTop: screenUtils.autoSize(10),
     },
     detailContent: {
-        fontSize: screenUtils.autoSize(14),
+        fontSize: screenUtils.autoSize(15),
     },
     signOutBotton: {
         flexDirection: 'row',
-        paddingBottom: screenUtils.autoSize(5),
-        paddingTop: screenUtils.autoSize(5),
+        paddingVertical:screenUtils.autoSize(15),
         backgroundColor: '#fff',
+        fontSize:screenUtils.autoFontSize(25),
         marginTop: screenUtils.autoSize(50),
     },
     LogOut: {

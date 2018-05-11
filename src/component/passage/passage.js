@@ -106,7 +106,6 @@ class Passage extends Component{
         let {passages}=this.props,
             passage=passages[this.passageID];
         if(passage) {
-            console.log(passage);
             return (
                 <View style={styles.container}>
                     <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
@@ -159,7 +158,7 @@ class Passage extends Component{
             );
         }else{
             return (<View style={{flex:1}}>
-                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <Loading
                     containerStyle={{
                         backgroundColor: '#fff',
@@ -245,7 +244,6 @@ let actions={
                     };
                 }
             }).catch((error)=> {
-                alert(error);
                 console.log(error);
             });
     },

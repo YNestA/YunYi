@@ -205,7 +205,8 @@ let actions={
                 'user_token':user.token,
             },
             body:encodePostParams({
-                passageUuid:passage.passageID
+                passageUuid:passage.passageID,
+                authorUuid:passage.author.authorID
             })
         });
         let payload={};
@@ -227,7 +228,8 @@ let actions={
             },
             body:encodePostParams({
                 content:commentText,
-                passageUuid:passage.passageID
+                passageUuid:passage.passageID,
+                authorUuid:passage.author.authorID
             })
         }).then(response=>response.json())
             .then(responseData=>{

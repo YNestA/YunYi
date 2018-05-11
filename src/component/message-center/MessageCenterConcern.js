@@ -21,9 +21,9 @@ const styles=StyleSheet.create({
         paddingVertical:screenUtils.autoSize(10)
     },
     userImg:{
-        width:screenUtils.autoSize(50),
-        height:screenUtils.autoSize(50),
-        borderRadius:screenUtils.autoSize(25)
+        width:screenUtils.autoSize(60),
+        height:screenUtils.autoSize(60),
+        borderRadius:screenUtils.autoSize(30)
     },
     messageRight:{
         flex:1,
@@ -49,16 +49,22 @@ class ConcernMessage extends Component{
     constructor(props){
         super(props);
     }
+    _getTime(time){
+        let date=new Date(time);
+        return `${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+    }
     render(){
-        let {message}=this.props;
+        let {message,navigation}=this.props;
         return(
-            <TouchableOpacity activeOpacity={0.8} onPress={()=>{console.log(1)}}>
+            <TouchableOpacity activeOpacity={0.8} onPress={()=>{
+                navigation.navigate('OtherUser',{otherUserId:message.user.userID});
+            }}>
                 <View style={styles.concernMessage}>
-                    <Image style={styles.userImg} source={require('../../img/user3.jpg')}/>
+                    <Image style={styles.userImg} source={{uri:message.user.headImg}}/>
                     <View style={styles.messageRight}>
                         <Text style={styles.concernUsername}>{message.user.username}</Text>
                         <Text style={styles.concernContent}>关注了你</Text>
-                        <Text style={styles.concernTime}>{message.time}</Text>
+                        <Text style={styles.concernTime}>{this._getTime(message.time)}</Text>
                     </View>
                 </View>
             </TouchableOpacity>
@@ -93,8 +99,9 @@ class MessageCenterConcern extends Component{
         let {concern}=this.props.messageCenter;
         return(
             <View style={styles.container}>
-                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <MessageList
+                    navigation={this.props.navigation}
                     MessageComponent={ConcernMessage}
                     messages={concern}
                 />

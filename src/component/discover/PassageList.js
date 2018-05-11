@@ -113,7 +113,7 @@ let actions={
         }
     },
     initialPassages:function (passageLists,classify) {
-        return myFetch(`http://${ip}:4441/api/articles/refresh/?classify=${classify}`,{method:'GET',timeout:10000})
+        return myFetch(`http://${ip}:4441/api/articles/${classify}/refresh/`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
                 //alert(JSON.stringify(responseData));
@@ -130,7 +130,9 @@ let actions={
                             createTime:item.createTime,
                             title:item.title,
                             coverImg:item.image,
-                            thumbHeadImgs:[item.image,item.image,item.image,item.image],
+                            thumbHeadImgs: item.likeUsers.map((item)=>{
+                                return item.avatar;
+                            }),
                             passageID:item.passageUuid,
                             thumbCount:item.likeNum,
                             commentCount:item.commentNum,
@@ -147,7 +149,6 @@ let actions={
                     }
                 };
             }).catch((error)=>{
-                alert(error);
                 return {
                     type:'NETWORK_ERROR',
                     payload: {
@@ -157,7 +158,7 @@ let actions={
             });
     },
     bottomRefresh:function (passageLists,classify,cb) {
-        return myFetch(`http://${ip}:4441/api/articles/load/${passageLists[classify].pageCount}/?classify=${classify}`,{method:'GET',timeout:10000})
+        return myFetch(`http://${ip}:4441/api/articles/${classify}/load/${passageLists[classify].pageCount}/`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
                 //alert(JSON.stringify(responseData));
@@ -175,7 +176,9 @@ let actions={
                                 createTime: item.createTime,
                                 title: item.title,
                                 coverImg: item.image,
-                                thumbHeadImgs: [item.image, item.image, item.image, item.image],
+                                thumbHeadImgs: item.likeUsers.map((item)=>{
+                                    return item.avatar;
+                                }),
                                 passageID: item.passageUuid,
                                 thumbCount: item.likeNum,
                                 commentCount: item.commentNum,
@@ -196,14 +199,14 @@ let actions={
                     cb({bottomRefreshing: 0,noMore:true});
                     showTip('没有更多文章');
                 }
-            }).catch((error)=>{
+            }).catch((error)=>{0
                 alert(error);
                 cb({bottomRefreshing: 0});
                 showTip('网络好像有点问题~');
             });
     },
     topRefresh:function (passageLists,classify,cb) {
-        return myFetch(`http://${ip}:4441/api/articles/refresh/?classify=${classify}`,{method:'GET',timeout:10000})
+        return myFetch(`http://${ip}:4441/api/articles/${classify}/refresh/`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
                 if(responseData.code=='10001') {
@@ -220,7 +223,9 @@ let actions={
                                 createTime: item.createTime,
                                 title: item.title,
                                 coverImg: item.image,
-                                thumbHeadImgs: [item.image, item.image, item.image, item.image],
+                                thumbHeadImgs: item.likeUsers.map((item)=>{
+                                    return item.avatar;
+                                }),
                                 passageID: item.passageUuid,
                                 thumbCount: item.likeNum,
                                 commentCount: item.commentNum,
@@ -242,7 +247,6 @@ let actions={
                     cb({topRefreshing:0,noMore:false});
                 }
             }).catch((error)=>{
-                alert(error);
                 cb({topRefreshing:0,noMore:false});
                 showTip('网络好像有点问题~');
             });

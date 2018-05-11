@@ -11,18 +11,13 @@ class AvatarNameSignChange extends Component {
     }
 
     componentDidMount() {
-        //console.log(this.props.userMessageLogIn);
         let user = this.props.userMessageLogIn;
         this.props.initialAvasterSign(user);
     }
 
     render() {
-        console.log("render props userMessage", this.props);
-        //console.log(this.props.userMessageLogIn);
-        console.log(this.props.userMessageLogIn.token);
         let mineViewUserMessage = this.props.mineViewUserMessage;
         let user=this.props.userMessageLogIn;
-        console.log('isLogin',user.isLogin);
 
         if(!user.isLogin){
             mineViewUserMessage.nickname='点我登陆';
@@ -41,7 +36,7 @@ class AvatarNameSignChange extends Component {
                     <View style={styles.profileNameAndSign}>
                         <Text style={styles.userName}>{mineViewUserMessage.nickname}</Text>
                         <Text style={styles.Sign}
-                              numberOfLines={1}>{mineViewUserMessage.motto}</Text>
+                              numberOfLines={1}>{mineViewUserMessage.signature}</Text>
                     </View>
                     <View>
                         <Image source={require('../../img/profile-more.png')} style={styles.profileChange}/>
@@ -54,14 +49,7 @@ class AvatarNameSignChange extends Component {
 }
 
 let actions = {
-    // setNetworkError:function (value) {
-    //     return {
-    //         type:'NETWORK_ERROR',
-    //         payload: {
-    //             networkError: value,
-    //         }
-    //     }
-    // },
+
     initialAvasterSign: function (user) {
         return fetch('http://' + ip + ':4441/mine/basic-info', {
             method: 'GET',
@@ -72,9 +60,7 @@ let actions = {
             }
         }).then((response) => response.json())
             .then((responseJson) => {
-                //let imageUrl = JSON.parse(responseJson.data[0].image);
-                //console.log("this is respoenJson", responseJson);
-                console.log('avatarNameSignChange',responseJson.data);
+                //alert(JSON.stringify(responseJson.data));
                 return {
                     type: 'INITIAL_SIGN_NAME_AVATAR',
                     payload: {
@@ -82,6 +68,7 @@ let actions = {
                     }
                 }
             }).catch((error) => {
+                alert(error);
                 console.log('error', error);
             })
     }
@@ -103,15 +90,6 @@ function mapDispatchToProps(dispatch) {
 }
 
 export default AvatarNameSignChange = connect(mapStateToProps, mapDispatchToProps)(AvatarNameSignChange);
-
-const userMessageExample = {
-    avatar: '../../img/profilePic.jpg',
-    nickname: '安升强',
-    motto: '我是签名',
-    sex: '男',
-    iphoneNum: '15623425252',
-    token:'',
-}
 
 
 const styles = StyleSheet.create({
@@ -140,9 +118,8 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     profileChange: {
-        width: screenUtils.autoSize(20),
-        height: screenUtils.autoSize(20),
-        marginTop: screenUtils.autoSize(30),
-        marginLeft: screenUtils.autoSize(10),
+        width: screenUtils.autoSize(30),
+        height: screenUtils.autoSize(30),
+        marginRight: screenUtils.autoSize(10),
     },
 });

@@ -127,14 +127,18 @@ class OtherUser extends Component{
                 <Text numberOfLines={1} style={styles.username}>{otherUser.userInfo.username}</Text>
                 <Text numberOfLines={2} style={styles.motto}>{otherUser.userInfo.motto}</Text>
                 <View style={styles.followFans}>
-                    <TouchableOpacity activeOpacity={0.6}>
+                    <TouchableOpacity activeOpacity={0.6} onPress={()=>{
+                        navigation.navigate('Follow',{userID:otherUser.userID});
+                    }}>
                         <View style={styles.followFansItem}>
                             <Text style={styles.followFansCount}>{otherUser.userInfo.concernCount}</Text>
                             <Text style={styles.followFansText}>关注</Text>
                         </View>
                     </TouchableOpacity>
                     <View style={styles.verLine}/>
-                    <TouchableOpacity activeOpacity={0.6}>
+                    <TouchableOpacity activeOpacity={0.6} onPress={()=>{
+                        navigation.navigate('Fans',{userID:otherUser.userID});
+                    }}>
                         <View style={styles.followFansItem}>
                             <Text style={styles.followFansCount}>{otherUser.userInfo.fansCount}</Text>
                             <Text style={styles.followFansText}>粉丝</Text>

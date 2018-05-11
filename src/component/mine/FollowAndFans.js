@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
+import {connect} from 'react-redux'
 import {View, Text, Image, StyleSheet,TouchableNativeFeedback} from 'react-native';
 import {screenUtils} from "../../tools/ScreenUtils";
 
-export class FollowAndFans extends Component {
+class FollowAndFans extends Component {
     constructor(props) {
         super(props);
     }
@@ -11,24 +12,25 @@ export class FollowAndFans extends Component {
         return (
             <View style={{
                 flexDirection: 'row',
-                paddingTop: screenUtils.autoSize(20),
+                paddingTop: screenUtils.autoSize(10),
                 backgroundColor:'#fff',
             }}>
                 <TouchableNativeFeedback
-                    onPress={()=>{this.props.nav.navigate('FocusDetail')}}
+                    onPress={()=>{this.props.nav.navigate('Follow',{userID:this.props.user.userInfo.userID})}}
                     background={TouchableNativeFeedback.Ripple("#0ff", false) }
                 >
                     <View style={[styles.cell, styles.borderShortLine]}>
-                        <Text style={styles.textCenter}>0</Text>
+                        <Text style={styles.textCenter}>{this.props.mineViewUserMessage.followedPeople}</Text>
                         <Text style={styles.textCenter}>关注</Text>
                     </View>
                 </TouchableNativeFeedback>
 
                 <TouchableNativeFeedback
+                    onPress={()=>{this.props.nav.navigate('Fans',{userID:this.props.user.userInfo.userID})}}
                     background={TouchableNativeFeedback.Ripple("#0ff", false) }
                 >
                     <View style={styles.cell}>
-                        <Text style={styles.textCenter}>0</Text>
+                        <Text style={styles.textCenter}>{this.props.mineViewUserMessage.followers}</Text>
                         <Text style={styles.textCenter}>粉丝</Text>
                     </View>
                 </TouchableNativeFeedback>
@@ -43,7 +45,7 @@ const styles = StyleSheet.create({
         height: screenUtils.autoSize(40),
     },
     textCenter: {
-        fontSize: screenUtils.autoSize(12),
+        fontSize: screenUtils.autoSize(15),
         textAlign: 'center',
     },
     borderShortLine: {
@@ -53,3 +55,12 @@ const styles = StyleSheet.create({
         borderColor: '#ccc',
     }
 });
+
+function mapStateToProps(state) {
+    return {
+        user:state.user,
+        mineViewUserMessage: state.mineViewUserMessage,
+    }
+}
+
+export default FollowAndFans=connect(mapStateToProps)(FollowAndFans);

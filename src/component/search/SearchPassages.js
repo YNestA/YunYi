@@ -135,7 +135,7 @@ export default class SearchPassages extends Component{
         return (
             <FlatList
                 style={{
-                    paddingTop:screenUtils.autoSize(10),
+                    marginTop:screenUtils.autoSize(10),
                     backgroundColor:'#fff',
                     paddingHorizontal:screenUtils.autoSize(15)
                 }}

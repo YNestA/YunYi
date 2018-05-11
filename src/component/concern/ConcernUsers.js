@@ -57,7 +57,7 @@ export default class ConcernUsers extends Component{
                                     navigation.navigate('OtherUser',{otherUserId:item.userID});
                                 }} key={index}>
                                     <View style={styles.user}>
-                                        <Image style={styles.userImg} source={require('../../img/user2.jpg')}/>
+                                        <Image style={styles.userImg} source={{uri:item.headImg}}/>
                                         <Text numberOfLines={1} style={styles.userName}>{item.name}</Text>
                                     </View>
                                 </TouchableWithoutFeedback>

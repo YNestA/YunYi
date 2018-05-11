@@ -1,5 +1,6 @@
 import React,{Component} from 'react'
-import {View,Text,StyleSheet,TouchableNativeFeedback} from 'react-native'
+import {View,Text,StyleSheet,Image,TouchableNativeFeedback} from 'react-native'
+import {screenUtils} from "./ScreenUtils";
 
 export default class NetworkError extends Component{
     constructor(props){
@@ -12,9 +13,13 @@ export default class NetworkError extends Component{
                 alignSelf:'center',
                 ...this.props.containerStyle
             }}>
-                <Text>好像没有网络</Text>
+                <Image style={{width:screenUtils.autoSize(250),height:screenUtils.autoSize(150)}} source={require('../img/common/network-error.png')}/>
                 <TouchableNativeFeedback onPress={this.props.reload}>
-                    <Text>重新加载</Text>
+                    <Text style={{
+                        fontSize:screenUtils.autoFontSize(20),
+                        color:'#777',
+                        textAlign:'center'
+                    }}>重新加载</Text>
                 </TouchableNativeFeedback>
             </View>
         );

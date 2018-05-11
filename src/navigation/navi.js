@@ -20,6 +20,8 @@ import LoginCenter from '../component/login-register/LoginCenter'
 import PhoneLoginRegister from '../component/login-register/PhoneLoginRegister'
 import CommonRegister from "../component/login-register/CommonRegister"
 import UsernameLogin from "../component/login-register/UsernameLogin";
+import ForgetPassword from "../component/login-register/ForgetPassword"
+import ResetPassword from "../component/login-register/ResetPassword"
 import EditPassageSetting from "../component/edit-new/EditPassageSetting";
 import MessageCenterConcern from "../component/message-center/MessageCenterConcern";
 import MessageCenterLetter from "../component/message-center/MessageCenterLetter";
@@ -32,6 +34,8 @@ import FocusDetail from '../component/mine/FocusDetail'
 import OtherUser from '../component/other-user/OtherUser'
 import Search from "../component/search/search";
 import AllComments from "../component/passage/AllComments";
+import Fans from '../component/follow-fans/fans'
+import Follow from '../component/follow-fans/follow'
 import YunYi from "./YunYi";
 
 export class TabIcon extends Component{
@@ -39,7 +43,7 @@ export class TabIcon extends Component{
         super(props);
     }
     render(){
-        let {focused,focusedImg,notFocusedImg,labelTitle,tintColor}=this.props;
+        let {focused,focusedImg,showRedPoint,notFocusedImg,labelTitle,tintColor}=this.props;
         return (
             <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('rgba(0,0,0,0.15)',true)}>
                 <View style={{}}>
@@ -50,6 +54,15 @@ export class TabIcon extends Component{
                             height:screenUtils.autoSize(30),
                         }}
                     />
+                    {showRedPoint&&<View style={{
+                        width:screenUtils.autoSize(10),
+                        height:screenUtils.autoSize(10),
+                        borderRadius:screenUtils.autoSize(5),
+                        position:'absolute',
+                        zIndex:5,
+                        backgroundColor:'#e8222d',
+                        top:0,right:0
+                    }}/>}
                     {labelTitle&&<Text style={{
                         fontSize:screenUtils.autoFontSize(13),
                         alignSelf:'center',
@@ -136,6 +149,17 @@ const MainScreenNavi=TabNavigator({
     },
     Mine:{
         screen:MineView,
+        navigationOptions:({navigation,screenProps})=>{
+            return {
+                tabBarOnPress: ({jumpToIndex,scene})=>{
+                    if(store.getState().user.isLogin) {
+                        jumpToIndex(scene.index);
+                    }else{
+                        navigation.navigate('LoginCenter');
+                    }
+                }
+            }
+        }
     }
 },{
     initialRouteName:'Discover',
@@ -253,6 +277,18 @@ export default YunYiNavi=StackNavigator({
     FocusDetail:{
         screen:FocusDetail
     },
+    Fans:{
+        screen:Fans,
+    },
+    Follow:{
+        screen:Follow,
+    },
+    ForgetPassword:{
+        screen:ForgetPassword
+    },
+    ResetPassword:{
+        screen:ResetPassword
+    }
 },{
     initialRouteName:'Welcome',
     navigationOptions:{

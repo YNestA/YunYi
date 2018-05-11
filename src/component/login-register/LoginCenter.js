@@ -90,7 +90,7 @@ export default class LoginCenter extends Component{
     render(){
         return (
                 <View style={styles.container}>
-                    <StatusBar translucent={true} barStyle={'dark-content'}/>
+                    <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                     <View style={styles.closeContainer}>
                          <TouchableNativeFeedback background={TouchableNativeFeedback.Ripple('#ddd',true)} onPress={this._enterMain}>
                              <View style={styles.close}>

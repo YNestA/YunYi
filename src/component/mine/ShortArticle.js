@@ -4,30 +4,41 @@ import {screenUtils} from "../../tools/ScreenUtils";
 import {ip} from "../../settings";
 import {connect} from "react-redux";
 import myFetch from '../../tools/MyFetch'
+import navi from "../../navigation/navi";
 
 class ShortArticle extends Component {
     constructor(props) {
         super(props);
+        this._onPressArticleItem=this._onPressArticleItem.bind(this);
     }
 
-    _onPressArticleItem() {
-        let navigation = this.props.navigation;
-        console.log(navigation);
+    _onPressArticleItem(item) {
+        let navigation = this.props.nav,
+            user=this.props.userMessageLogIn;
+        navigation.navigate('Passage',{
+            passage:{
+                passageID:item.passageUuid,
+                author:{
+                    authorID:user.userInfo.userID,
+                    headImg:user.userInfo.headImg,
+                    name:user.userInfo.username,
+                }
+            }
+        });
     }
 
     componentDidMount() {
-        console.log("shortArticle", this.props);
         let user = this.props.userMessageLogIn;
         this.props.initialMineViewArticle(user);
     }
 
     _renderItem = ({item}) => (
         <TouchableWithoutFeedback
-            onPress={this._onPressArticleItem}
+            onPress={()=>{this._onPressArticleItem(item)}}
         >
             <View style={styles.articleItem}>
                 <View style={styles.articleTagAndName}>
-                    <Text style={styles.articleTag}>{item.articleTag}</Text>
+                    {/*<Text style={styles.articleTag}>{item.articleTag}</Text>*/}
                     <Text style={styles.articleName}>{item.title}</Text>
                 </View>
                 <Image
@@ -53,7 +64,6 @@ class ShortArticle extends Component {
 
     render() {
         let data = this.props.mineViewPassgeDetail.content;
-        console.log('data', typeof(data));
         let user = this.props.userMessageLogIn;
         let nav = this.props.nav;
         return (
@@ -78,76 +88,37 @@ class ShortArticle extends Component {
     }
 }
 
-const templateItemData = {
-    content: [{
-        articleName: '这是文章标题',
-        articleTag: '私密',
-        articleImg: '../../img/common/slide11.jpg',
-        watchedNum: '234',
-        thumbUpNum: '235',
-        commentNum: '236',
-        shareNum: '237',
-    }, {
-        articleName: '这是文章标题',
-        articleTag: '私密',
-        articleImg: '../../img/common/slide11.jpg',
-        watchedNum: '234',
-        thumbUpNum: '235',
-        commentNum: '236',
-        shareNum: '237',
-    }, {
-        articleName: '这是文章标题',
-        articleTag: '私密',
-        articleImg: '../../img/common/slide11.jpg',
-        watchedNum: '234',
-        thumbUpNum: '235',
-        commentNum: '236',
-        shareNum: '237',
-    }, {
-        articleName: '这是文章标题',
-        articleTag: '公开',
-        articleImg: '../../img/common/slide11.jpg',
-        watchedNum: '234',
-        thumbUpNum: '235',
-        commentNum: '236',
-        shareNum: '237',
-    }]
-};
 
 //redux
 
 
 let actions = {
     initialMineViewArticle: function (user) {
-        return fetch('http://'+ip+':4441/mine/refresh-article/5', {
+        return fetch('http://'+ip+':4441/mine/refresh-article/9999', {
             method: 'GET',
             headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
                 'user_token': user.token
             }
         }).then((response) => response.json())
             .then((responseJson) => {
-                console.log("this is respoenJson", responseJson);
-                let data={content:[]};
-                responseJson.data.map((item)=>{
-                    let date=new Date(item.createTime);
-                    let y=date.getFullYear();
-                    let m=date.getMonth();
-                    let d=date.getDay();
-                    item.createTime=y+'-'+m+'-'+d;
-                    let imageJson = JSON.parse(item.image);
-                    item.image = imageJson.url;
-                    data.content.push(item);
-                });
-                return {
-                    type: 'MINE_VIEW_ARTICLE',
-                    payload: {
-                        passageMineViewDetail: data
+                if(responseJson.code==10001) {
+                    let data = {content: []};
+                    responseJson.data.map((item) => {
+                        let date = new Date(item.createTime);
+                        let y = date.getFullYear();
+                        let m = date.getMonth();
+                        let d = date.getDay();
+                        item.createTime = y + '-' + m + '-' + d;
+                        data.content.push(item);
+                    });
+                    return {
+                        type: 'MINE_VIEW_ARTICLE',
+                        payload: {
+                            passageMineViewDetail: data
+                        }
                     }
                 }
             }).catch((error) => {
-                console.log('error', error);
             })
     }
 }
@@ -257,4 +228,4 @@ const styles = StyleSheet.create({
         fontSize:screenUtils.autoSize(18),
         color:'#fff',
     }
-})
+});

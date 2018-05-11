@@ -12,11 +12,14 @@ import {
 
 const mapStateToProps = state => ({
     nav: state.nav,
+    messageCenter:state.MessageCenter
 });
 
 export const reactNavigationMiddleware = createReactNavigationReduxMiddleware(
     "Welcome",
-    state => state.nav,
+    state => {
+        return {nav:state.nav,messageCenter:state.MessageCenter}}
+
 );
 const addListener = createReduxBoundAddListener("Welcome");
 
@@ -30,16 +33,24 @@ class YunYi extends Component{
         this.refs.selectDialog.show(resolve);
     }
     render() {
+        let {messageCenter}=this.props,
+            notReadCount=messageCenter.messageTypes.reduce((sum,item)=>{
+                return sum+messageCenter[item].notRead
+            },0);
         return (
             <View style={{
                 flex:1,
             }}>
-                <YunYiNavi screenProps={{startEditNew:this._startEditNew}}
-                           navigation={addNavigationHelpers({
-                               dispatch: this.props.dispatch,
-                               state: this.props.nav,
-                               addListener,
-                           })}
+                <YunYiNavi
+                    screenProps={{
+                        startEditNew:this._startEditNew,
+                        notReadCount:notReadCount
+                    }}
+                    navigation={addNavigationHelpers({
+                        dispatch: this.props.dispatch,
+                        state: this.props.nav,
+                        addListener,
+                    })}
                 />
                 <SelectDialog
                     ref='selectDialog'

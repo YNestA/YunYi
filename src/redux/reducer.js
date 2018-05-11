@@ -11,6 +11,8 @@ import avatarNameSignReducer from "./AvatarNameSignReducer";
 import otherUserReducer from './OtherUserReducer'
 import mineViewArticleReducer from './MineViewArticleReducer'
 import searchReducer from './SearchReducer'
+import followReducer from "./FollowReducer";
+import fansReducer from "./FansReducer";
 
 export default combineReducers({
     counter:counterReducer,
@@ -24,5 +26,7 @@ export default combineReducers({
     user:userReducer,
     mineViewUserMessage:avatarNameSignReducer,
     mineViewPassgeDetail:mineViewArticleReducer,
-    search:searchReducer
+    search:searchReducer,
+    follow:followReducer,
+    fans:fansReducer
 });

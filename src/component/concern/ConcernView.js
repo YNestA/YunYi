@@ -17,15 +17,7 @@ class ConcernView extends Component{
             />;
         },
         headerLeft: <View/>,
-        headerRight: <TouchableWithoutFeedback>
-            <View>
-                <Image style={{
-                    width: screenUtils.autoSize(30),
-                    height: screenUtils.autoSize(30),
-                    marginHorizontal: screenUtils.autoSize(15),
-                }} source={require('../../img/common/more.png')}/>
-            </View>
-        </TouchableWithoutFeedback>,
+        headerRight: <View/>,
         headerTitle: '关注',
             tabBarLabel: '关注',
     };
@@ -38,7 +30,10 @@ class ConcernView extends Component{
     }
     render(){
         return(
-            <ConcernPassages navigation={this.props.navigation}/>
+            <View style={{flex:1}}>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
+                <ConcernPassages navigation={this.props.navigation}/>
+            </View>
         );
     }
 }

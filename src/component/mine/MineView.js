@@ -1,10 +1,11 @@
 import React, {Component} from 'react'
-import {View} from 'react-native'
+import {View,StatusBar} from 'react-native'
 import {TabIcon} from '../../navigation/navi'
-import {FollowAndFans} from './FollowAndFans'
+import FollowAndFans from './FollowAndFans'
 import {MineArticle} from "./MineArticle";
 import AvatarNameSignChange from "./AvatarNameSignChange";
 import {SettingShareSearch} from "./SettingShareSearch"
+import {screenUtils} from "../../tools/ScreenUtils";
 
 export default class MineView extends Component {
     static navigationOptions={
@@ -29,8 +30,15 @@ export default class MineView extends Component {
     render() {
         let navigation = this.props.navigation
         return (
-            <View style={{flex: 1, backgroundColor: '#fff',}}>
-                <SettingShareSearch nav={navigation}/>
+            <View style={
+                {
+                    flex: 1,
+                    paddingTop:StatusBar.currentHeight+screenUtils.autoSize(20),
+                    backgroundColor: '#fff'
+                }
+            }>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
+                {/*<SettingShareSearch nav={navigation}/>*/}
                 <AvatarNameSignChange nav={navigation}/>
                 <FollowAndFans nav={navigation}/>
                 <MineArticle nav={navigation}/>

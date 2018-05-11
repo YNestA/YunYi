@@ -124,8 +124,8 @@ export default class ConcernPassage extends Component{
         navigation.navigate('Passage',{passage:this.props.passage});
     }
     _openUser(){
-        let navigation=this.props.navigation;
-        navigation.navigate('OtherUser');
+        let {navigation,passage}=this.props;
+        navigation.navigate('OtherUser',{otherUserId:passage.author.authorID});
     }
     _getTime(time){
         let date=new Date(time);

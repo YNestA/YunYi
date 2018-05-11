@@ -1,6 +1,6 @@
 import React,{Component} from 'react'
 import {
-    View, Text, TextInput, StyleSheet, StatusBar, TouchableWithoutFeedback, TouchableOpacity,
+    View, Text, TextInput, StyleSheet, StatusBar,Keyboard, TouchableWithoutFeedback, TouchableOpacity,
     BackHandler
 } from 'react-native'
 import {screenUtils} from "../../tools/ScreenUtils";
@@ -89,7 +89,7 @@ class CommonRegister extends Component{
         BackHandler.addEventListener('hardwareBackPress', this._backHandler);
     }
     componentWillUnmount(){
-        console.log('remove');
+        Keyboard.dismiss();
         BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
     }
     _commonRegister(){
@@ -109,6 +109,10 @@ class CommonRegister extends Component{
                 showTip('密码不能为空',()=>{
                     this.setState({sending:false});
                 });
+            }else if(password.length<6){
+                showTip('密码太短',()=>{
+                    this.setState({sending:false});
+                });
             }else if(password!=password2){
                 showTip('两次密码不一致',()=>{
                     this.setState({sending:false});
@@ -123,7 +127,7 @@ class CommonRegister extends Component{
     render(){
         return(
             <View style={styles.container}>
-
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <View style={styles.field}>
                     <Text style={styles.fieldText}>昵称</Text>
                     <TextInput
@@ -206,6 +210,7 @@ let actions={
                         data:user
                     });
                     showTip('注册成功',cb);
+                    Keyboard.dismiss();
                     let action=NavigationActions.reset({
                         index:0,
                         actions:[

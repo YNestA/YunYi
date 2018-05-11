@@ -169,11 +169,11 @@ let actions={
                     showTip('网络好像有点问题');
                 }
             }).catch((error)=>{
-                alert(error);
                 showTip('网络好像有点问题');
             });
     },
     topRefresh:function (user,cb) {
+
         return myFetch(`http://${ip}:4441/api/articles/user/followed/`,{
             method:'GET',
             timeout:10000,
@@ -184,7 +184,7 @@ let actions={
             .then((response)=>response.json())
             .then(responseData=>{
                 let data=responseData.data;
-                //alert(JSON.stringify(data));
+
                 cb({topRefreshing:0,noMore:false});
                 if(responseData.code==10001){
                     return {
@@ -202,7 +202,6 @@ let actions={
                                     createTime:item.createTime,
                                     title:item.title,
                                     coverImg:item.image,
-                                    thumbHeadImgs:[item.image,item.image,item.image,item.image],
                                     passageID:item.passageUuid,
                                     thumbCount:item.likeNum,
                                     commentCount:item.commentNum,
@@ -223,7 +222,6 @@ let actions={
                     showTip('网络好像有点问题');
                 }
             }).catch((error)=>{
-                alert(error);
                 cb({topRefreshing:0});
                 showTip('网络好像有点问题');
             });
@@ -256,7 +254,6 @@ let actions={
                                     createTime:item.createTime,
                                     title:item.title,
                                     coverImg:item.image,
-                                    thumbHeadImgs:[item.image,item.image,item.image,item.image],
                                     passageID:item.passageUuid,
                                     thumbCount:item.likeNum,
                                     commentCount:item.commentNum,
@@ -273,7 +270,6 @@ let actions={
                     showTip('网络好像有点问题');
                 }
             }).catch((error)=>{
-                alert.log(error);
                 cb({bottomRefreshing: 0});
                 showTip('网络好像有点问题');
             });

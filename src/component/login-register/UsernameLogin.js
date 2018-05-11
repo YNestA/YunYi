@@ -51,6 +51,15 @@ const styles=StyleSheet.create({
         fontSize:screenUtils.autoFontSize(20),
         lineHeight:screenUtils.autoSize(50),
         textAlign:'center'
+    },
+    forgetBtn:{
+        paddingVertical:screenUtils.autoSize(10),
+        marginHorizontal:screenUtils.autoSize(25)
+    },
+    forgetText:{
+        fontSize:screenUtils.autoFontSize(15),
+        color:'#888',
+        textAlign:'right'
     }
 });
 function showTip(message,onHidden){
@@ -152,12 +161,9 @@ class UsernameLogin extends Component{
                     }else if(responseData.code==10107){
                         showTip('密码错误',activeFunc);
                     }
-                    console.log(responseData);
                     activeFunc();
                 })
                 .catch((error) => {
-                    alert(error);
-                    console.log(error);
                     activeFunc();
                 });
         };
@@ -173,7 +179,7 @@ class UsernameLogin extends Component{
     render(){
         return(
             <View style={styles.container}>
-                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <View style={styles.field}>
                     <Text style={styles.fieldText}>用户名</Text>
                     <TextInput
@@ -204,6 +210,11 @@ class UsernameLogin extends Component{
                 </View>
                 <TouchableOpacity disabled={this.state.disabled} activeOpacity={0.8} onPress={this._login}>
                     <View style={styles.loginBtn}><Text style={styles.loginText}>登录</Text></View>
+                </TouchableOpacity>
+                <TouchableOpacity activeOpacity={0.8} onPress={()=>{
+                    this.props.navigation.navigate('ForgetPassword');
+                }}>
+                    <View style={styles.forgetBtn}><Text style={styles.forgetText}>忘记密码?</Text></View>
                 </TouchableOpacity>
             </View>
         );

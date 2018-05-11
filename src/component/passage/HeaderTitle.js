@@ -55,13 +55,13 @@ class HeaderTitle extends Component{
         }
     }
     render(){
-        let {author}=this.props;
+        let {author,user}=this.props;
         return(
             <View style={styles.container}>
                 <TouchableNativeFeedback
                     background={TouchableNativeFeedback.Ripple('#ddd',true)}
                     onPress={()=>{
-                        this.props.navigation.navigate('OtherUser');
+                        this.props.navigation.navigate('OtherUser',{otherUserId:author.authorID});
                     }}
                 >
                     <View style={styles.authorContainer}>
@@ -69,7 +69,7 @@ class HeaderTitle extends Component{
                         <Text style={styles.authorName} numberOfLines={1}>{author.name}</Text>
                     </View>
                 </TouchableNativeFeedback>
-                {   author.notFollow?
+                {   (user.userInfo.userID!=author.authorID&&author.notFollow)?
                     <TouchableNativeFeedback onPress={this._follow}>
                         <View style={styles.concernContainer}>
                             <Text style={styles.concern}>关注</Text>

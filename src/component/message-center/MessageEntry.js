@@ -46,7 +46,7 @@ const styles=StyleSheet.create({
         textAlign:'center',
         fontSize:screenUtils.autoFontSize(11),
         lineHeight:screenUtils.autoSize(16),
-        borderRadius:screenUtils.autoSize(8),
+        borderRadius:screenUtils.autoSize(9),
         backgroundColor:'#e8222d',
         position:'absolute',
         right:screenUtils.autoSize(3),

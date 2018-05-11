@@ -4,7 +4,7 @@ import ScrollableTabView,{ScrollableTabBar,DefaultTabBar} from 'react-native-scr
 import {connect} from 'react-redux'
 import {screenUtils} from '../../tools/ScreenUtils'
 import PassageList from './PassageList'
-import {HomeSwiper} from './HomeSwiper'
+import HomeSwiper from './HomeSwiper'
 import {TabIcon} from '../../navigation/navi'
 import {initMWS} from "../../ws/ws";
 
@@ -124,33 +124,34 @@ class DiscoverView extends Component{
                     }
                 >
                     <View style={styles.tabView} tabLabel={'热点'}>
-                        <PassageList navigation={navigation} frontView={<HomeSwiper/>} classify={'热点'}/>
+                        <PassageList navigation={navigation} frontView={<HomeSwiper navigation={navigation}/>} classify={-1}/>
                     </View>
                     <View  style={styles.tabView} tabLabel={'摄影'}>
-                        <PassageList navigation={navigation} classify={'摄影'}/>
+                        <PassageList navigation={navigation} classify={1}/>
                     </View>
                     <View  style={styles.tabView} tabLabel={'美文'}>
-                        <PassageList navigation={navigation} classify={'美文'}/>
+                        <PassageList navigation={navigation} classify={2}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'旅行'}>
-                        <PassageList navigation={navigation} classify={'旅行'}/>
+                        <PassageList navigation={navigation} classify={3}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'情感'}>
-                        <PassageList navigation={navigation} classify={'情感'}/>
+                        <PassageList navigation={navigation} classify={4}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'诗词'}>
-                        <PassageList navigation={navigation} classify={'诗词'}/>
+                        <PassageList navigation={navigation} classify={5}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'生活'}>
-                        <PassageList navigation={navigation} classify={'生活'}/>
+                        <PassageList navigation={navigation} classify={6}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'女神'}>
-                        <PassageList navigation={navigation} classify={'女神'}/>
+                        <PassageList navigation={navigation} classify={7}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'美食'}>
-                        <PassageList navigation={navigation} classify={'美食'}/>
+                        <PassageList navigation={navigation} classify={8}/>
                     </View>
                     <View style={styles.tabView} tabLabel={'影视'}>
+                        {/*
                         <Text>{JSON.stringify(this.props.user.userInfo)}</Text>
                         <Text>{this.props.user.token}</Text>
                         <TouchableNativeFeedback
@@ -158,15 +159,30 @@ class DiscoverView extends Component{
                                 navigation.navigate('OtherUser',{otherUserId:'111'});
                             }}
                         >
-                            <Text>退出</Text>
+                            <Text>用户</Text>
+                        </TouchableNativeFeedback>
+                        <TouchableNativeFeedback
+                            onPress={()=>{
+                                navigation.navigate('Follow',{userID:this.props.user.userInfo.userID});
+                            }}
+                        >
+                            <Text>关注</Text>
                         </TouchableNativeFeedback>
                         <TouchableNativeFeedback
                             onPress={()=>{
                                 navigation.navigate('LoginCenter');
                             }}
                         >
-                            <Text>Go!</Text>
+                            <Text>登录中心!</Text>
                         </TouchableNativeFeedback>
+                        <TouchableNativeFeedback
+                            onPress={()=>{
+                                navigation.navigate('Fans',{userID:this.props.user.userInfo.userID});
+                            }}
+                        >
+                            <Text>粉丝</Text>
+                        </TouchableNativeFeedback>
+
                         <TouchableNativeFeedback
                             onPress={()=>{
                                 //navigation.navigate('Passage');
@@ -176,6 +192,11 @@ class DiscoverView extends Component{
                             <Text>+1</Text>
                         </TouchableNativeFeedback>
                         <Text>{this.props.count}</Text>
+                        */}
+                        <PassageList navigation={navigation} classify={9}/>
+                    </View>
+                    <View style={styles.tabView} tabLabel={'其他'}>
+                        <PassageList navigation={navigation} classify={0}/>
                     </View>
                 </ScrollableTabView>
 

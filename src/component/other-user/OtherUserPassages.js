@@ -248,7 +248,7 @@ let actions={
                                 title:item.title,
                                 coverImg:item.image,
                                 classify:PassageClassify[0],
-                                time:item.createTime.time,
+                                time:item.createTime,
                                 readCount:item.readnumber,
                                 thumbCount:item.likeNum,
                                 shareCount:item.shareNum,

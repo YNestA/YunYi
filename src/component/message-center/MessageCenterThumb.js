@@ -16,10 +16,10 @@ const styles=StyleSheet.create({
         paddingRight:screenUtils.autoSize(15)
     },
     headImg:{
-        width:screenUtils.autoSize(50),
-        height:screenUtils.autoSize(50),
+        width:screenUtils.autoSize(60),
+        height:screenUtils.autoSize(60),
         marginTop:screenUtils.autoSize(10),
-        borderRadius:screenUtils.autoSize(25)
+        borderRadius:screenUtils.autoSize(30)
     },
     thumbCenter:{
         flex:1,
@@ -51,7 +51,7 @@ class ThumbMessage extends Component{
     }
     _getTime(time){
         let date=new Date(time);
-        return `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`;
+        return `${date.getMonth()+1}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
     }
     render(){
         let {message,navigation,user}=this.props,
@@ -114,7 +114,7 @@ class MessageCenterThumb extends Component{
                 flex:1,
                 backgroundColor:'#fff'
             }}>
-                <StatusBar translucent={true} backgroundColor={'#fff'} barStyle={'dark-content'}/>
+                <StatusBar translucent={true} backgroundColor={'transparent'} barStyle={'dark-content'}/>
                 <MessageList
                     MessageComponent={ThumbMessage}
                     navigation={navigation}

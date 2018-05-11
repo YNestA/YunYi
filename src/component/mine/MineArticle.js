@@ -13,14 +13,22 @@ export class MineArticle extends Component {
         let nav=this.props.nav;
         return (
             <ScrollableTabView
-                tabBarActiveTextColor='#9B30FF'
+                tabBarTextStyle={{
+                    fontSize:screenUtils.autoSize(16),
+                }}
+                tabBarUnderlineStyle={{backgroundColor:'#39f'}}
+                tabBarBackgroundColor={'#fefefe'}
+                tabBarInactiveTextColor={'#666'}
+                tabBarActiveTextColor={'#39f'}
                 renderTabBar={() => <ScrollableTabBar/>}>
                 <View tabLabel={'全部文章'}>
                     <ShortArticle nav={nav}/>
                 </View>
-                <View tabLabel={'回收站'}>
-                    <ShortArticle nav={nav}/>
-                </View>
+                {/*
+                    <View tabLabel={'回收站'}>
+                        <ShortArticle nav={nav}/>
+                    </View>
+                */}
             </ScrollableTabView>
         );
     }
