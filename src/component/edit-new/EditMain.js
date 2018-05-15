@@ -227,7 +227,7 @@ let actions={
             //passages:JSON.stringify(passage),
             coverImg: {
                 uri: coverImg.path,
-                type: 'multipart/form-data',
+                type: coverImg.mime,
                 name: coverImg.path.slice(coverImg.path.lastIndexOf('\/')+1, coverImg.path.length)
             }
         });
@@ -242,7 +242,7 @@ let actions={
             }
         });
         return myFetch(`http://${ip}:4441/api/img/upload`,{
-            timeout:30000,
+            timeout:120000,
             method:'POST',
             headers:{
                 'Content-Type':'multipart/form-data',
@@ -279,7 +279,6 @@ let actions={
                 }
             })
             .catch(err=>{
-                alert(err);
                 cb();
                 Toast.show('上传失败',{
                     position: Toast.positions.BOTTOM,

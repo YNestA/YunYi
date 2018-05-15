@@ -89,11 +89,11 @@ export default class PassagesPush extends Component{
                     return(
                         <TouchableWithoutFeedback>
                             <View style={styles.passageContainer}>
-                                <Image style={styles.coverImg} source={require('../../img/asuka.jpg')}/>
+                                <Image style={styles.coverImg}/>
                                 <View style={styles.passageRight}>
                                     <Text style={styles.title} numberOfLines={2}>{item.title}</Text>
                                     <View style={styles.readCount}>
-                                        <Image style={styles.readCountImg} source={require('../../img/common/read-blue.png')}/>
+                                        <Image style={styles.readCountImg}/>
                                         <Text style={styles.readCountText}>{item.readCount}</Text>
                                     </View>
                                 </View>

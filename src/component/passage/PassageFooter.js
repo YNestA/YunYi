@@ -259,7 +259,6 @@ let actions={
                     cb(false);
                 }
             }).catch(err=>{
-                alert(err);
                 cb(false);
             })
     }

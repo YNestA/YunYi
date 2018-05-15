@@ -10,7 +10,7 @@ import {
     Picker,
     TextInput,
     findNodeHandle,
-    UIManager
+    UIManager, BackHandler
 } from 'react-native'
 import {connect} from "react-redux"
 import NetworkError from '../../tools/NetworkError'
@@ -31,6 +31,7 @@ class SignNameChangeDetail extends Component {
         this._sendImg = this._sendImg.bind(this);
         this._changeNickName = this._changeNickName.bind(this);
         this._Toast = this._Toast.bind(this);
+        this._backHandler=this._backHandler.bind(this);
         this.state = {text: ''}
     }
 
@@ -40,7 +41,17 @@ class SignNameChangeDetail extends Component {
             headerRight:<View/>
         };
     };
-
+    componentDidMount(){
+        BackHandler.addEventListener('hardwareBackPress', this._backHandler);
+    }
+    componentWillUnmount(){
+        clearInterval(this.intervalId);
+        BackHandler.removeEventListener('hardwareBackPress', this._backHandler);
+    }
+    _backHandler(){
+        this.props.navigation.goBack(null);
+        return true;
+    }
     _changeNickName(nickName) {
         let userBasic = this.props.userMessageLogIn;
         let r = /^\d+$/;
@@ -92,7 +103,7 @@ class SignNameChangeDetail extends Component {
             body:getFormData({
                 avatar: {
                     uri: image.path,
-                    type: 'multipart/form-data',
+                    type: image.mime,
                     name: image.path.slice(image.path.lastIndexOf('\/')+1, image.path.length)
                 }
             })

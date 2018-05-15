@@ -338,7 +338,7 @@ let actions={
                             }));
                             break;
                         case 'thumb':
-                            content=data.notifyList.map((item)=>{
+                            content=messages.content.concat(data.notifyList.map((item)=>{
                                 return {
                                     userID:item.userUuid,
                                     headImg:item.avatar,
@@ -347,10 +347,10 @@ let actions={
                                     time:item.createTime,
                                     passageID:item.targetUuid,
                                 };
-                            });
+                            }));
                             break;
                         case 'comment':
-                            content=data.notifyList.map((item)=>{
+                            content=messages.content.concat(data.notifyList.map((item)=>{
                                 return {
                                     userID:item.userUuid,
                                     headImg:item.avatar,
@@ -360,7 +360,7 @@ let actions={
                                     passageID:item.targetUuid,
                                     content:item.content
                                 };
-                            });
+                            }));
                             break;
                     }
                     payload[messages.type] = Object.assign({}, messages, {

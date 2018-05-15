@@ -116,7 +116,6 @@ let actions={
         return myFetch(`http://${ip}:4441/api/articles/${classify}/refresh/`,{method:'GET',timeout:10000})
             .then((response)=>response.json())
             .then((responseData)=>{
-                //alert(JSON.stringify(responseData));
                 let data=responseData.data,
                     newPassageLists=Object.assign({},passageLists);
                 newPassageLists[classify]={

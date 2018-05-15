@@ -12,7 +12,7 @@ export default class PassageWebView extends Component{
         };
     }
     render(){
-        let html=`<!DOCTYPE html><html>
+        let html=`<!DOCTYPE html><html><head>
             <meta charset="utf-8">
             <title></title>
             <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no">
@@ -31,13 +31,14 @@ export default class PassageWebView extends Component{
                 }
                 window.addEventListener('load', _autoHeight)
               </script>
+              </head>
             <body><div id="passage">${this.props.html}</div>
             </body></html>`;
         return(
             <View>
                 <AutoHeightWebView
                     onLoadEnd={this.props.onLoadEnd}
-                    source={{html}}
+                    source={{html:html,baseUrl: ''}}
                 />
             </View>
         );

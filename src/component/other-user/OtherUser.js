@@ -169,6 +169,7 @@ class OtherUser extends Component{
                     <Header user={otherUser} navigation={navigation} opacity={this.state.headerOpacity}/>
                     <OtherUserPassages onScroll={this._scroll} otherUserId={this.otherUserId} navigation={navigation}
                                        cover={this._renderCover()}/>
+                    {user.userInfo.userID!=this.otherUserId?
                     <View style={styles.followFooter}>
                         <TouchableOpacity onPress={()=>{
                             if(user.isLogin) {
@@ -183,7 +184,8 @@ class OtherUser extends Component{
                                 <Text style={[styles.followText,otherUser.relation.isFollow?{color:'#d81e06'}:{}]}>{otherUser.relation.isFollow?'取消关注':'关注'}</Text>
                             </View>
                         </TouchableOpacity>
-                    </View>
+                    </View>:null
+                    }
                 </View>
             );
         }else{

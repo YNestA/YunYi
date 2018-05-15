@@ -121,7 +121,7 @@ let actions = {
             }).catch((error) => {
             })
     }
-}
+};
 
 function mapStateToProps(state) {
     return {

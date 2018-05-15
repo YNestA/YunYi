@@ -192,13 +192,13 @@ class OtherUserPassages extends Component{
     }
     render(){
         let {passages}=this.props.otherUsers[this.props.otherUserId],
-            {navigation}=this.props;
+            {navigation,user}=this.props;
         return (
             <FlatList
                 onScroll={this.props.onScroll}
-                style={{
+                style={[user.userInfo.userID!=this.props.otherUserId?{
                     marginBottom:screenUtils.autoSize(60)
-                }}
+                }:{marginBottom:screenUtils.autoSize(10)}]}
                 ListHeaderComponent={this._renderHeader(passages.length)}
                 ListFooterComponent={this._renderFooter}
                 //onEndReachedThreshold={0.1}

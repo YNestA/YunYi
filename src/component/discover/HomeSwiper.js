@@ -8,6 +8,7 @@ import {ip} from "../../settings";
 
 const styles=StyleSheet.create({
     warp:{
+        width:screenUtils.screenWidth,
         height:screenUtils.autoSize(150),
     },
     slide:{
@@ -22,10 +23,16 @@ class HomeSwiper extends Component{
     constructor(props){
         super(props);
         this._openPassage=this._openPassage.bind(this);
+        this.state={
+            visiableSwiper: false
+        }
     }
     componentDidMount(){
         let {navigation,getSwiper}=this.props;
         getSwiper();
+        setTimeout(() => {
+            this.setState({ visiableSwiper: true })
+        }, 0);
     }
     _openPassage(passage){
         this.props.navigation.navigate('Passage',{passage:passage});
@@ -33,7 +40,7 @@ class HomeSwiper extends Component{
 
     render(){
         let {swiper}=this.props;
-        if(swiper.length) {
+        if(this.state.visiableSwiper) {
             return (
                 <Swiper
                     style={styles.warp}
@@ -90,7 +97,6 @@ let actions={
                     }
                 }
             }).catch((err)=>{
-
             });
     }
 };
