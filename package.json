@@ -19,6 +19,7 @@
     "react-native-scrollable-tab-view": "https://github.com/YNestA/react-native-scrollable-tab-view.git",
     "react-native-storage": "^0.2.2",
     "react-native-swiper": "^1.5.13",
+    "react-native-update": "^5.0.0",
     "react-native-webview-bridge": "^0.33.0",
     "react-native-zss-rich-text-editor": "https://github.com/YNestA/react-native-zss-rich-text-editor.git",
     "react-navigation": "^1.5.11",

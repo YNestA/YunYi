@@ -39,6 +39,7 @@
 		4EBF4F6E58A54C51A419D7AE /* libimageCropPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = D0788FC9F1AE450EBB3B0178 /* libimageCropPicker.a */; };
 		E027636A66C341E28E7FBD92 /* libRCTBEEPickerManager.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A48504FF436A421F9617E96D /* libRCTBEEPickerManager.a */; };
 		9439CB77108B445EA09E1303 /* libRNBlur.a in Frameworks */ = {isa = PBXBuildFile; fileRef = A9D5CFF42A944305A5E1C5B2 /* libRNBlur.a */; };
+		510B0D96C7594C9883B9D8C0 /* libRCTHotUpdate.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6BAF30F9FDBE4BA98C59890C /* libRCTHotUpdate.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -295,6 +296,8 @@
 		B8E0708E46394D2ABA845BA8 /* RNBlur.xcodeproj */ = {isa = PBXFileReference; name = "RNBlur.xcodeproj"; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		A9D5CFF42A944305A5E1C5B2 /* libRNBlur.a */ = {isa = PBXFileReference; name = "libRNBlur.a"; path = "libRNBlur.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		1047EF2A104D4A719B6FCE8C /* RNBlur.xcodeproj */ = {isa = PBXFileReference; name = "RNBlur.xcodeproj"; path = "../node_modules/react-native-blur/ios/RNBlur.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		699081F7BA734AE2A40792FD /* RCTHotUpdate.xcodeproj */ = {isa = PBXFileReference; name = "RCTHotUpdate.xcodeproj"; path = "../node_modules/react-native-update/ios/RCTHotUpdate.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		6BAF30F9FDBE4BA98C59890C /* libRCTHotUpdate.a */ = {isa = PBXFileReference; name = "libRCTHotUpdate.a"; path = "libRCTHotUpdate.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -326,6 +329,7 @@
 				4EBF4F6E58A54C51A419D7AE /* libimageCropPicker.a in Frameworks */,
 				E027636A66C341E28E7FBD92 /* libRCTBEEPickerManager.a in Frameworks */,
 				9439CB77108B445EA09E1303 /* libRNBlur.a in Frameworks */,
+				510B0D96C7594C9883B9D8C0 /* libRCTHotUpdate.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,6 +511,7 @@
 				F85DE1F33C6844B59FDD7E21 /* RCTBEEPickerManager.xcodeproj */,
 				B8E0708E46394D2ABA845BA8 /* RNBlur.xcodeproj */,
 				1047EF2A104D4A719B6FCE8C /* RNBlur.xcodeproj */,
+				699081F7BA734AE2A40792FD /* RCTHotUpdate.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1080,6 +1085,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1087,6 +1093,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
+					"$(SRCROOT)\..\node_modules\react-native-update\ios\RCTHotUpdate/**",
 				);
 			};
 			name = Debug;
@@ -1110,6 +1117,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1117,6 +1125,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
+					"$(SRCROOT)\..\node_modules\react-native-update\ios\RCTHotUpdate/**",
 				);
 			};
 			name = Release;
@@ -1142,6 +1151,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
+					"$(SRCROOT)\..\node_modules\react-native-update\ios\RCTHotUpdate/**",
 				);
 			};
 			name = Debug;
@@ -1166,6 +1176,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
+					"$(SRCROOT)\..\node_modules\react-native-update\ios\RCTHotUpdate/**",
 				);
 			};
 			name = Release;
@@ -1198,6 +1209,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1205,6 +1217,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
+					"$(SRCROOT)\..\node_modules\react-native-update\ios\RCTHotUpdate/**",
 				);
 			};
 			name = Debug;
@@ -1237,6 +1250,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1244,6 +1258,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-picker\ios\RCTBEEPickerManager",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
 					"$(SRCROOT)\..\node_modules\react-native-blur\ios",
+					"$(SRCROOT)\..\node_modules\react-native-update\ios\RCTHotUpdate/**",
 				);
 			};
 			name = Release;
@@ -1271,6 +1286,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 			};
 			name = Debug;
@@ -1295,6 +1311,7 @@
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 				LIBRARY_SEARCH_PATHS = (
 					"$(inherited)",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",

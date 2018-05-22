@@ -2,7 +2,9 @@ package com.yun;
 
 import android.app.Application;
 
+import cn.reactnative.modules.update.UpdateContext;
 import com.facebook.react.ReactApplication;
+import cn.reactnative.modules.update.UpdatePackage;
 import com.dscj.autoheightwebview.AutoHeightWebViewPackage;
 import com.beefe.picker.PickerViewPackage;
 import com.reactnative.ivpusic.imagepicker.PickerPackage;
@@ -25,9 +27,15 @@ public class MainApplication extends Application implements ReactApplication {
     }
 
     @Override
+    protected String getJSBundleFile() {
+        return UpdateContext.getBundleUrl(MainApplication.this);
+    }
+
+    @Override
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new UpdatePackage(),
             new AutoHeightWebViewPackage(),
             new PickerViewPackage(),
             new PickerPackage(),
