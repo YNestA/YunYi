@@ -12,6 +12,7 @@ import {isFirstTime,
     switchVersionLater,
     markSuccess,} from 'react-native-update'
 import {screenUtils} from "../tools/ScreenUtils";
+import ScreenTip from "../tools/ScreenTip"
 
 import _updateConfig from '../../update.json';
 const {appKey} = _updateConfig[Platform.OS];
@@ -23,6 +24,8 @@ class Welcome extends Component{
     constructor(props){
         super(props);
         this._checkLogin=this._checkLogin.bind(this);
+        this.checkUpdate=this.checkUpdate.bind(this);
+        this.doUpdate=this.doUpdate.bind(this);
     }
     _checkLogin(){
         myStorage.sync={
@@ -54,15 +57,18 @@ class Welcome extends Component{
         });
     }
     doUpdate = info => {
+        this.refs.screenTip.show();
         downloadUpdate(info).then(hash => {
-            Alert.alert('提示', '下载完毕,是否重启应用?', [
+            this.refs.screenTip.dismiss();
+            Alert.alert('提示', '下载完毕,请重启应用', [
                 {text: '是', onPress: ()=>{switchVersion(hash);}},
-                {text: '否',onPress:()=>{switchVersion(hash);}},
-                {text: '下次启动时', onPress: ()=>{switchVersionLater(hash);}},
             ]);
         }).catch(err => {
-            alert(err);
-            // Alert.alert('提示', '更新失败.');
+            //alert(err);
+            this.refs.screenTip.dismiss();
+            Alert.alert('提示', '更新失败.');
+            this._checkLogin();
+            //
         });
     };
     checkUpdate = () => {
@@ -75,13 +81,15 @@ class Welcome extends Component{
                 this._checkLogin();
             } else {
                 Alert.alert('提示', '检查到新的版本'+info.name+',是否下载?\n'+ info.description, [
-                    {text: '是', onPress: ()=>{this.doUpdate(info)}},
+                    {text: '是', onPress: ()=>{
+                        this.doUpdate(info);
+                    }},
                     {text: '否',onPress:()=>{this._checkLogin()}},
                 ]);
             }
         }).catch(err => {
-            alert(err);
-            //Alert.alert('提示', '更新失败.');
+            Alert.alert('提示', '更新失败.');
+            this._checkLogin();
         });
     };
     componentWillMount(){
@@ -106,6 +114,7 @@ class Welcome extends Component{
                     flex:1,
                     width:screenUtils.screenWidth
                 }} source={require('../img/welcome2.png')}/>
+                <ScreenTip ref={'screenTip'} text={'下载新版本中'}/>
             </View>
         );
     }

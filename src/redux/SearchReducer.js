@@ -1,7 +1,7 @@
 const initialState={
     keyword:'',
     showHotWords:true,
-    hotWords:['围棋','eva','笑傲江湖','异度之刃','拜仁慕尼黑','dota2','热更新测试','川端康成','浪客剑心'],
+    hotWords:['围棋','eva','笑傲江湖','异度之刃','拜仁慕尼黑','dota2','支持热更新','川端康成','浪客剑心'],
     result:{
         users:[],
         passages:[]
